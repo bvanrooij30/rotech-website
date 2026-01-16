@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" fill="none">
+  <!-- RoTech Development Icon - Enhanced with Gold Accent -->
+  
+  <!-- Main circle background with gradient -->
+  <circle cx="25" cy="25" r="22" fill="url(#gradient1)" />
+  
+  <!-- Gold accent ring for uniqueness -->
+  <circle cx="25" cy="25" r="20" fill="none" stroke="url(#gradientGold)" stroke-width="1.5" opacity="0.8"/>
+  
+  <!-- Inner "R" with tech style -->
+  <path d="M15 15 L15 35 L20 35 L20 28 L28 35 L35 35 L25 25 L32 18 L32 15 L20 15 L20 22 L25 22 L20 18" 
+        fill="white" opacity="0.95"/>
+  
+  <!-- Gold accent dot on "R" -->
+  <circle cx="28" cy="20" r="2.5" fill="url(#gradientGold)" opacity="0.9"/>
+  
+  <!-- Circuit dots with gold accent -->
+  <circle cx="35" cy="25" r="2" fill="white" opacity="0.6"/>
+  <circle cx="25" cy="38" r="1.5" fill="url(#gradientGold)" opacity="0.7"/>
+  
+  <!-- Tech lines with gold accent -->
+  <line x1="32" y1="25" x2="40" y2="25" stroke="white" stroke-width="1" opacity="0.4"/>
+  <line x1="25" y1="35" x2="25" y2="44" stroke="url(#gradientGold)" stroke-width="1.2" opacity="0.6"/>
+  
+  <!-- Gradient definitions -->
+  <defs>
+    <!-- Primary gradient: Indigo to Violet -->
+    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+    
+    <!-- Gold accent gradient -->
+    <linearGradient id="gradientGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+</svg>
