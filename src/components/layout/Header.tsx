@@ -52,9 +52,9 @@ export default function Header() {
               <Phone className="w-4 h-4" />
               <span>+31 6 57 23 55 74</span>
             </a>
-            <a href="mailto:contact@ro-techdevelopment.com" className="flex items-center gap-2 hover:text-indigo-400 transition-colors">
+            <a href="mailto:contact@ro-techdevelopment.dev" className="flex items-center gap-2 hover:text-indigo-400 transition-colors">
               <Mail className="w-4 h-4" />
-              <span>contact@ro-techdevelopment.com</span>
+              <span>contact@ro-techdevelopment.dev</span>
             </a>
           </div>
           <div className="text-slate-400">
@@ -217,9 +217,9 @@ export default function Header() {
                     <Phone className="w-4 h-4" />
                     +31 6 57 23 55 74
                   </a>
-                  <a href="mailto:contact@ro-techdevelopment.com" className="flex items-center gap-2">
+                  <a href="mailto:contact@ro-techdevelopment.dev" className="flex items-center gap-2">
                     <Mail className="w-4 h-4" />
-                    contact@ro-techdevelopment.com
+                    contact@ro-techdevelopment.dev
                   </a>
                 </div>
               </div>

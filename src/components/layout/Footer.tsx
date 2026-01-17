@@ -61,11 +61,11 @@ export default function Footer() {
                 +31 6 57 23 55 74
               </a>
               <a 
-                href="mailto:contact@ro-techdevelopment.com" 
+                href="mailto:contact@ro-techdevelopment.dev" 
                 className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors"
               >
                 <Mail className="w-5 h-5 text-amber-400" />
-                contact@ro-techdevelopment.com
+                contact@ro-techdevelopment.dev
               </a>
               <div className="flex items-center gap-3 text-slate-400">
                 <MapPin className="w-5 h-5 text-amber-400" />

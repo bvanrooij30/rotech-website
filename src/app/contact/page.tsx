@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { Mail, Phone, MapPin, Clock, MessageCircle } from "lucide-react";
+import { Mail, Phone, Clock, MessageCircle } from "lucide-react";
 import ContactForm from "@/components/forms/ContactForm";
 import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
@@ -22,16 +22,9 @@ const contactInfo = [
   {
     icon: Mail,
     title: "E-mail",
-    value: "contact@ro-techdevelopment.com",
-    href: "mailto:contact@ro-techdevelopment.com",
+    value: "contact@ro-techdevelopment.dev",
+    href: "mailto:contact@ro-techdevelopment.dev",
     description: "Reactie binnen 24 uur",
-  },
-  {
-    icon: MapPin,
-    title: "Locatie",
-    value: "Veldhoven",
-    href: null,
-    description: "Noord-Brabant, Nederland",
   },
   {
     icon: Clock,
