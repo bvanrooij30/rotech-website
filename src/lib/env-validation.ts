@@ -9,6 +9,7 @@ interface EnvConfig {
   RESEND_API_KEY?: string;
   FROM_EMAIL?: string;
   OPENAI_API_KEY?: string;
+  MOLLIE_API_KEY?: string;
 }
 
 /**
@@ -58,6 +59,13 @@ export function validateEnv(): void {
     console.warn("⚠️  OPENAI_API_KEY format looks incorrect (should start with 'sk-')");
   }
   
+  // MOLLIE_API_KEY for payments
+  if (!process.env.MOLLIE_API_KEY) {
+    console.warn("⚠️  MOLLIE_API_KEY not set - payment functionality will not work");
+  } else if (!process.env.MOLLIE_API_KEY.startsWith("test_") && !process.env.MOLLIE_API_KEY.startsWith("live_")) {
+    console.warn("⚠️  MOLLIE_API_KEY format looks incorrect (should start with 'test_' or 'live_')");
+  }
+  
   if (errors.length > 0) {
     throw new Error(`Environment validation failed:\n${errors.join("\n")}`);
   }
@@ -68,11 +76,12 @@ export function validateEnv(): void {
  */
 export function getEnvConfig(): EnvConfig {
   return {
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.com",
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.dev",
     CONTACT_EMAIL: process.env.CONTACT_EMAIL,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     FROM_EMAIL: process.env.FROM_EMAIL,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    MOLLIE_API_KEY: process.env.MOLLIE_API_KEY,
   };
 }
 

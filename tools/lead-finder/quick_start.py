@@ -10,7 +10,10 @@ from dotenv import load_dotenv
 
 # Fix Windows console encoding voor emoji's
 if sys.platform == 'win32':
-    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    except AttributeError:
+        pass  # Python < 3.7 fallback
 
 load_dotenv()
 

@@ -635,8 +635,8 @@ class EmailOutreach:
             try:
                 with open(EmailConfig.SENT_LOG, 'r', encoding='utf-8') as f:
                     return json.load(f)
-            except:
-                pass
+            except (json.JSONDecodeError, IOError, OSError) as e:
+                logger.warning(f"Kon sent log niet laden: {e}")
         return {"emails": {}, "daily_counts": {}}
     
     def _save_sent_log(self):
@@ -667,8 +667,8 @@ class EmailOutreach:
             try:
                 with open(EmailConfig.STATS_FILE, 'r', encoding='utf-8') as f:
                     return json.load(f)
-            except:
-                pass
+            except (json.JSONDecodeError, IOError, OSError) as e:
+                logger.warning(f"Kon stats niet laden: {e}")
         return {"total_sent": 0, "total_responses": 0, "total_unsubscribes": 0}
     
     def _save_stats(self):
@@ -691,35 +691,82 @@ class EmailOutreach:
         today = datetime.now().strftime('%Y-%m-%d')
         return self.sent_log.get("daily_counts", {}).get(today, 0)
     
+    def _get_hourly_count(self) -> int:
+        """Haal aantal verzonden emails dit uur op"""
+        current_hour = datetime.now().strftime('%Y-%m-%d-%H')
+        return self.sent_log.get("hourly_counts", {}).get(current_hour, 0)
+    
     def _increment_daily_count(self):
-        """Verhoog dagelijkse counter"""
+        """Verhoog dagelijkse en uurlijkse counter"""
         today = datetime.now().strftime('%Y-%m-%d')
+        current_hour = datetime.now().strftime('%Y-%m-%d-%H')
+        
         if "daily_counts" not in self.sent_log:
             self.sent_log["daily_counts"] = {}
+        if "hourly_counts" not in self.sent_log:
+            self.sent_log["hourly_counts"] = {}
+        
         self.sent_log["daily_counts"][today] = self.sent_log["daily_counts"].get(today, 0) + 1
+        self.sent_log["hourly_counts"][current_hour] = self.sent_log["hourly_counts"].get(current_hour, 0) + 1
     
     def _can_send_email(self) -> Tuple[bool, str]:
         """Check of we een email mogen versturen (rate limiting)"""
         daily_count = self._get_daily_count()
+        hourly_count = self._get_hourly_count()
         
         if daily_count >= EmailConfig.MAX_EMAILS_PER_DAY:
             return False, f"Dagelijks limiet bereikt ({EmailConfig.MAX_EMAILS_PER_DAY})"
         
+        if hourly_count >= EmailConfig.MAX_EMAILS_PER_HOUR:
+            return False, f"Uurlijks limiet bereikt ({EmailConfig.MAX_EMAILS_PER_HOUR})"
+        
+        return True, ""
+    
+    def _validate_smtp_config(self) -> Tuple[bool, str]:
+        """Valideer SMTP configuratie vóór gebruik"""
+        errors = []
+        
+        if not EmailConfig.SMTP_USER:
+            errors.append("SMTP_USER niet geconfigureerd")
+        if not EmailConfig.SMTP_PASSWORD:
+            errors.append("SMTP_PASSWORD niet geconfigureerd")
+        if not EmailConfig.SENDER_EMAIL:
+            errors.append("SENDER_EMAIL niet geconfigureerd")
+        if not EmailConfig.REPLY_TO:
+            errors.append("REPLY_TO niet geconfigureerd")
+        
+        if errors:
+            return False, "; ".join(errors)
         return True, ""
     
     def _connect_smtp(self) -> bool:
         """Maak SMTP verbinding"""
-        if not EmailConfig.SMTP_USER or not EmailConfig.SMTP_PASSWORD:
-            logger.error("SMTP credentials niet geconfigureerd in .env")
+        # Valideer eerst configuratie
+        is_valid, error_msg = self._validate_smtp_config()
+        if not is_valid:
+            logger.error(f"SMTP configuratie ongeldig: {error_msg}")
             return False
         
         try:
             context = ssl.create_default_context()
-            self.smtp_connection = smtplib.SMTP(EmailConfig.SMTP_SERVER, EmailConfig.SMTP_PORT)
+            self.smtp_connection = smtplib.SMTP(
+                EmailConfig.SMTP_SERVER, 
+                EmailConfig.SMTP_PORT,
+                timeout=30  # 30 seconden timeout
+            )
             self.smtp_connection.starttls(context=context)
             self.smtp_connection.login(EmailConfig.SMTP_USER, EmailConfig.SMTP_PASSWORD)
             logger.info("SMTP verbinding succesvol")
             return True
+        except smtplib.SMTPAuthenticationError as e:
+            logger.error(f"SMTP authenticatie mislukt - check SMTP_USER en SMTP_PASSWORD: {e}")
+            return False
+        except smtplib.SMTPConnectError as e:
+            logger.error(f"Kon geen verbinding maken met SMTP server: {e}")
+            return False
+        except TimeoutError:
+            logger.error("SMTP verbinding timeout - server niet bereikbaar")
+            return False
         except Exception as e:
             logger.error(f"SMTP verbinding mislukt: {e}")
             return False
@@ -873,13 +920,17 @@ class EmailOutreach:
                     if not email or '@' not in email:
                         continue
                     
+                    # has_website: default Nee als niet aanwezig (veiliger voor lead gen)
+                    has_website_val = row.get('has_website', '').lower()
+                    has_website = has_website_val in ['ja', 'yes', 'true', '1']
+                    
                     lead = EmailLead(
                         email=email,
                         name=row.get('name', ''),
                         company=row.get('name', ''),  # Vaak is name = company
                         city=row.get('city', ''),
                         phone=row.get('phone', ''),
-                        has_website=row.get('has_website', 'Ja').lower() in ['ja', 'yes', 'true', '1'],
+                        has_website=has_website,
                         lead_priority=row.get('lead_priority', ''),
                         lead_score=int(row.get('lead_score', 0) or 0),
                         categories=row.get('categories', ''),
@@ -994,6 +1045,7 @@ class EmailOutreach:
         print(f"📥 Responses: {self.stats['total_responses']}")
         print(f"🚫 Uitgeschreven: {len(self.blacklist)}")
         print(f"📅 Vandaag verstuurd: {self._get_daily_count()}/{EmailConfig.MAX_EMAILS_PER_DAY}")
+        print(f"⏰ Dit uur verstuurd: {self._get_hourly_count()}/{EmailConfig.MAX_EMAILS_PER_HOUR}")
         print("="*40)
 
 

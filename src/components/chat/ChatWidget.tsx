@@ -1,13 +1,18 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { useChat } from "ai/react";
+import { useState, useRef, useEffect, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Bot, User, Loader2, Sparkles } from "lucide-react";
 
-const WELCOME_MESSAGE = {
+interface Message {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+}
+
+const WELCOME_MESSAGE: Message = {
   id: "welcome",
-  role: "assistant" as const,
+  role: "assistant",
   content: "Hoi! Ik ben Ro, de virtuele assistent van Ro-Tech Development. Hoe kan ik je helpen?",
 };
 
@@ -20,16 +25,12 @@ const QUICK_SUGGESTIONS = [
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpened, setHasOpened] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const { messages, input, handleInputChange, handleSubmit, isLoading, error } = useChat({
-    api: "/api/chat",
-    initialMessages: [WELCOME_MESSAGE],
-    onError: (error) => {
-      console.error("Chat error:", error);
-    },
-  });
 
   // Scroll naar beneden bij nieuwe berichten
   useEffect(() => {
@@ -50,19 +51,79 @@ export function ChatWidget() {
     setHasOpened(true);
   };
 
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: "user",
+      content: input.trim(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [...messages, userMessage].map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Chat request failed");
+      }
+
+      // Handle streaming response
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let assistantContent = "";
+
+      const assistantMessageId = (Date.now() + 1).toString();
+      setMessages((prev) => [
+        ...prev,
+        { id: assistantMessageId, role: "assistant", content: "" },
+      ]);
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value);
+          assistantContent += chunk;
+
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === assistantMessageId
+                ? { ...m, content: assistantContent }
+                : m
+            )
+          );
+        }
+      }
+    } catch (err) {
+      console.error("Chat error:", err);
+      setError("Er ging iets mis. Probeer het opnieuw.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSuggestionClick = (suggestion: string) => {
-    // Simuleer input change en submit
-    const fakeEvent = {
-      target: { value: suggestion },
-    } as React.ChangeEvent<HTMLInputElement>;
-    handleInputChange(fakeEvent);
-    
-    // Submit na korte delay zodat input wordt bijgewerkt
+    setInput(suggestion);
+    // Submit after short delay
     setTimeout(() => {
       const form = document.getElementById("chat-form") as HTMLFormElement;
-      if (form) {
-        form.requestSubmit();
-      }
+      if (form) form.requestSubmit();
     }, 50);
   };
 
@@ -175,7 +236,7 @@ export function ChatWidget() {
               {/* Error message */}
               {error && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">
-                  Er ging iets mis. Probeer het opnieuw.
+                  {error}
                 </div>
               )}
 
@@ -211,7 +272,7 @@ export function ChatWidget() {
                   ref={inputRef}
                   type="text"
                   value={input}
-                  onChange={handleInputChange}
+                  onChange={(e) => setInput(e.target.value)}
                   placeholder="Stel je vraag..."
                   disabled={isLoading}
                   className="flex-1 px-4 py-2.5 bg-slate-100 border-0 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors disabled:opacity-50"

@@ -67,11 +67,9 @@ export async function POST(req: Request) {
       model: openai("gpt-4o-mini"),
       system: SYSTEM_PROMPT,
       messages: recentMessages,
-      maxTokens: 500,
-      temperature: 0.7,
     });
 
-    return result.toDataStreamResponse();
+    return result.toTextStreamResponse();
   } catch (error) {
     console.error("Chat API error:", error);
     return new Response(
