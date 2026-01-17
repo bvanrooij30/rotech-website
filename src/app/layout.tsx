@@ -24,7 +24,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.dev"),
   title: {
     default: "Ro-Tech Development | Professionele Websites & Applicaties op Maat",
     template: "%s | Ro-Tech Development",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "nl_NL",
-    url: "https://ro-techdevelopment.com",
+    url: "https://ro-techdevelopment.dev",
     siteName: "Ro-Tech Development",
     title: "Ro-Tech Development | Professionele Websites & Applicaties op Maat",
     description: "Ro-Tech Development bouwt professionele websites, webshops en web applicaties op maat. Vraag nu een vrijblijvende offerte aan!",

@@ -3,7 +3,7 @@ import { services } from "@/data/services";
 import { projects } from "@/data/portfolio";
 import { blogArticles } from "@/data/blog-articles";
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.com";
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.dev";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const currentDate = new Date().toISOString();

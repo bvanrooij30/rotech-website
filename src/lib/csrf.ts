@@ -16,7 +16,7 @@ export function validateCSRF(request: NextRequest): { valid: boolean; reason?: s
   const referer = request.headers.get("referer");
   
   // Get expected origin from environment
-  const expectedOrigin = process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.com";
+  const expectedOrigin = process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.dev";
   const expectedHost = new URL(expectedOrigin).host;
   
   // For same-origin requests, origin might be null (browser behavior)

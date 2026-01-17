@@ -39,7 +39,7 @@ export default function PrivacyPage() {
                 Handelend onder: Ro-Tech Development<br />
                 Adres: Kruisstraat 64, 5502 JG Veldhoven<br />
                 KvK-nummer: 86858173<br />
-                E-mail: contact@ro-techdevelopment.com<br />
+                E-mail: contact@ro-techdevelopment.dev<br />
                 Telefoon: +31 6 57 23 55 74
               </p>
               <p>
@@ -138,7 +138,7 @@ export default function PrivacyPage() {
               </ul>
               <p>
                 Wilt u gebruik maken van deze rechten? Stuur dan een e-mail naar 
-                contact@ro-techdevelopment.com. Wij reageren binnen 30 dagen.
+                contact@ro-techdevelopment.dev. Wij reageren binnen 30 dagen.
               </p>
 
               <h2>7. Beveiliging</h2>
@@ -181,7 +181,7 @@ export default function PrivacyPage() {
                 <p className="mb-0">
                   BVR Services (Ro-Tech Development)<br />
                   Kruisstraat 64, 5502 JG Veldhoven<br />
-                  E-mail: contact@ro-techdevelopment.com<br />
+                  E-mail: contact@ro-techdevelopment.dev<br />
                   Telefoon: +31 6 57 23 55 74<br />
                   KvK: 86858173
                 </p>

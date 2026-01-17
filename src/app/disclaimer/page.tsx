@@ -28,7 +28,7 @@ export default function DisclaimerPage() {
             <div className="prose prose-slate max-w-none prose-headings:text-slate-900 prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-p:text-slate-600 prose-li:text-slate-600">
               
               <p className="text-lg">
-                Deze disclaimer is van toepassing op de website ro-techdevelopment.com, 
+                Deze disclaimer is van toepassing op de website ro-techdevelopment.dev, 
                 eigendom van BVR Services, handelend onder de naam Ro-Tech Development.
               </p>
 
@@ -113,7 +113,7 @@ export default function DisclaimerPage() {
                 <p className="mb-0">
                   BVR Services (Ro-Tech Development)<br />
                   Kruisstraat 64, 5502 JG Veldhoven<br />
-                  E-mail: contact@ro-techdevelopment.com<br />
+                  E-mail: contact@ro-techdevelopment.dev<br />
                   Telefoon: +31 6 57 23 55 74<br />
                   KvK: 86858173
                 </p>

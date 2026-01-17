@@ -3,7 +3,7 @@ interface StructuredDataProps {
   data?: Record<string, unknown>;
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.com";
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.dev";
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -13,7 +13,7 @@ const organizationSchema = {
   url: baseUrl,
   logo: `${baseUrl}/images/rotech/rotech-logo.svg`,
   description: "Ro-Tech Development bouwt professionele websites, webshops en web applicaties op maat.",
-  email: "contact@ro-techdevelopment.com",
+  email: "contact@ro-techdevelopment.dev",
   telephone: "+31657235574",
   address: {
     "@type": "PostalAddress",
@@ -63,7 +63,7 @@ const localBusinessSchema = {
   image: `${baseUrl}/images/rotech/rotech-logo.svg`,
   url: baseUrl,
   telephone: "+31657235574",
-  email: "contact@ro-techdevelopment.com",
+  email: "contact@ro-techdevelopment.dev",
   description: "Web development agency gespecialiseerd in websites, webshops en web applicaties op maat.",
   address: {
     "@type": "PostalAddress",

@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
         const safeHowDidYouFindUs = howDidYouFindUs ? escapeHtml(howDidYouFindUs) : "Niet opgegeven";
         const safeAdditionalInfo = additionalInfo ? escapeHtml(additionalInfo) : "Geen";
 
-        const fromEmail = process.env.FROM_EMAIL || "noreply@ro-techdevelopment.com";
+        const fromEmail = process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev";
 
         // Send notification to owner
         await resend.emails.send({
@@ -184,7 +184,7 @@ export async function POST(request: NextRequest) {
             <p><strong>Opmerkingen:</strong> ${safeAdditionalInfo}</p>
             <hr>
             <p style="color: #666; font-size: 12px;">
-              Dit bericht is verzonden via het offerte formulier op ro-techdevelopment.com<br>
+              Dit bericht is verzonden via het offerte formulier op ro-techdevelopment.dev<br>
               <a href="mailto:${safeEmail}">Reageer direct</a>
             </p>
           `,
@@ -211,7 +211,7 @@ export async function POST(request: NextRequest) {
             
             <p>Heeft u in de tussentijd vragen? Neem gerust contact op via:</p>
             <ul>
-              <li>E-mail: <a href="mailto:contact@ro-techdevelopment.com">contact@ro-techdevelopment.com</a></li>
+              <li>E-mail: <a href="mailto:contact@ro-techdevelopment.dev">contact@ro-techdevelopment.dev</a></li>
               <li>Telefoon: <a href="tel:+31657235574">+31 6 57 23 55 74</a></li>
               <li>WhatsApp: <a href="https://wa.me/31657235574">+31 6 57 23 55 74</a></li>
             </ul>

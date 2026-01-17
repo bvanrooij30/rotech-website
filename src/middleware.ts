@@ -20,7 +20,7 @@ export function middleware(request: NextRequest) {
     // CORS headers (if needed for external access)
     // For now, we only allow same-origin requests
     const origin = request.headers.get("origin");
-    const expectedOrigin = process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.com";
+    const expectedOrigin = process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.dev";
     
     if (origin && origin === expectedOrigin) {
       response.headers.set("Access-Control-Allow-Origin", origin);

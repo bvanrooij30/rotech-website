@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
         const safeSubject = escapeHtml(subject);
         const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
 
-        const fromEmail = process.env.FROM_EMAIL || "noreply@ro-techdevelopment.com";
+        const fromEmail = process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev";
 
         // Send notification to owner
         await resend.emails.send({
@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
             <p>${safeMessage}</p>
             <hr>
             <p style="color: #666; font-size: 12px;">
-              Dit bericht is verzonden via het contactformulier op ro-techdevelopment.com
+              Dit bericht is verzonden via het contactformulier op ro-techdevelopment.dev
             </p>
           `,
           replyTo: email, // Allow direct reply to user
@@ -147,7 +147,7 @@ export async function POST(request: NextRequest) {
             <hr>
             <p>Heeft u in de tussentijd vragen? Neem gerust contact op via:</p>
             <ul>
-              <li>E-mail: contact@ro-techdevelopment.com</li>
+              <li>E-mail: contact@ro-techdevelopment.dev</li>
               <li>Telefoon: +31 6 57 23 55 74</li>
               <li>WhatsApp: +31 6 57 23 55 74</li>
             </ul>

@@ -150,7 +150,7 @@ export default function CookiebeleidPage() {
                 <p className="mb-0">
                   Heeft u vragen over ons cookiebeleid? Neem contact op:<br /><br />
                   BVR Services (Ro-Tech Development)<br />
-                  E-mail: contact@ro-techdevelopment.com<br />
+                  E-mail: contact@ro-techdevelopment.dev<br />
                   Telefoon: +31 6 57 23 55 74
                 </p>
               </div>
