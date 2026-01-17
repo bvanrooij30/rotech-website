@@ -14,82 +14,116 @@ export const metadata: Metadata = {
 
 const packages = [
   {
-    name: "Starter Website",
-    description: "Perfect voor ZZP'ers en starters",
-    price: "Op maat",
-    priceNote: "offerte",
+    name: "Starter",
+    subtitle: "One-page Website",
+    description: "Ideaal voor ZZP'ers, freelancers en starters die professioneel online willen",
+    price: "997",
+    priceNote: "vanaf",
     popular: false,
-    features: [
-      "Professionele one-page of kleine website",
-      "Responsive design (mobiel-vriendelijk)",
-      "Basis SEO optimalisatie",
-      "Contactformulier",
-      "Snelle oplevering",
-      "Persoonlijke begeleiding",
+    idealFor: "ZZP'ers, coaches, fotografen, consultants",
+    deliverables: [
+      "1-3 pagina's",
+      "Oplevering: 1-2 weken",
     ],
-    notIncluded: [],
-    cta: "Offerte aanvragen",
-    ctaLink: "/offerte",
+    features: [
+      "Volledig responsive design",
+      "Basis SEO optimalisatie",
+      "Contactformulier met e-mail notificatie",
+      "Snelle laadtijd (<2 sec)",
+      "SSL certificaat (HTTPS)",
+      "1 maand gratis support",
+    ],
+    notIncluded: [
+      "CMS (zelf aanpassen)",
+      "Blog functionaliteit",
+      "Meertaligheid",
+    ],
+    cta: "Start met Starter",
+    ctaLink: "/offerte?pakket=starter",
   },
   {
-    name: "Business Website",
-    description: "Voor groeiende MKB bedrijven",
-    price: "Op maat",
-    priceNote: "offerte",
+    name: "Business",
+    subtitle: "Professionele Website",
+    description: "Complete bedrijfswebsite die klanten overtuigt en goed vindbaar is",
+    price: "2.497",
+    priceNote: "vanaf",
     popular: true,
-    features: [
-      "Uitgebreide bedrijfswebsite",
-      "Premium responsive design",
-      "Geavanceerde SEO optimalisatie",
-      "CMS voor zelf aanpassen",
-      "Blog functionaliteit",
-      "Google Analytics integratie",
-      "Snelle oplevering",
-      "Persoonlijke begeleiding",
+    idealFor: "MKB, dienstverleners, lokale bedrijven",
+    deliverables: [
+      "5-10 pagina's",
+      "Oplevering: 2-4 weken",
     ],
-    notIncluded: [],
-    cta: "Offerte aanvragen",
-    ctaLink: "/offerte",
+    features: [
+      "Alles van Starter, plus:",
+      "Premium maatwerk design",
+      "CMS - zelf content aanpassen",
+      "Geavanceerde SEO (lokaal vindbaar)",
+      "Blog/nieuws module",
+      "Google Analytics & Search Console",
+      "Social media integratie",
+      "3 maanden gratis support",
+    ],
+    notIncluded: [
+      "E-commerce functionaliteit",
+      "Klantportaal met login",
+    ],
+    cta: "Kies Business",
+    ctaLink: "/offerte?pakket=business",
   },
   {
     name: "Webshop",
-    description: "Complete e-commerce oplossing",
-    price: "Op maat",
-    priceNote: "offerte",
+    subtitle: "E-commerce Platform",
+    description: "Verkoop online met een professionele webshop die converteert",
+    price: "3.997",
+    priceNote: "vanaf",
     popular: false,
-    features: [
-      "Professionele webshop",
-      "iDEAL & online betalingen",
-      "Voorraad & orderbeheer",
-      "Automatische facturen",
-      "Complete SEO optimalisatie",
-      "Performance geoptimaliseerd",
-      "Snelle oplevering",
-      "Persoonlijke begeleiding",
+    idealFor: "Retailers, merken, productverkoop",
+    deliverables: [
+      "Tot 100 producten",
+      "Oplevering: 3-5 weken",
     ],
-    notIncluded: [],
-    cta: "Offerte aanvragen",
-    ctaLink: "/offerte",
+    features: [
+      "Alles van Business, plus:",
+      "iDEAL, creditcard & PayPal",
+      "Voorraad- en orderbeheer",
+      "Automatische e-mails (bevestiging, verzending)",
+      "Productfilters en zoekfunctie",
+      "Koppeling met boekhouding mogelijk",
+      "Performance geoptimaliseerd",
+      "6 maanden gratis support",
+    ],
+    notIncluded: [
+      "Maatwerk koppelingen",
+      "Marketplace integraties",
+    ],
+    cta: "Start Webshop",
+    ctaLink: "/offerte?pakket=webshop",
   },
   {
     name: "Maatwerk",
-    description: "Web applicaties & complexe projecten",
-    price: "Op maat",
-    priceNote: "offerte",
+    subtitle: "Op Maat Gebouwd",
+    description: "Complexe web applicaties, portalen en integraties volledig op maat",
+    price: "7.500",
+    priceNote: "vanaf",
     popular: false,
+    idealFor: "Scale-ups, SaaS, complexe bedrijfsprocessen",
+    deliverables: [
+      "Volledig op specificatie",
+      "Oplevering: in overleg",
+    ],
     features: [
       "Custom web applicatie",
-      "Complexe integraties & APIs",
-      "Gebruikersbeheer & rollen",
-      "Database op maat",
-      "Schaalbare architectuur",
-      "Uitgebreide testing",
-      "Persoonlijke projectbegeleiding",
-      "Doorlopend onderhoud optie",
+      "API integraties (CRM, ERP, etc.)",
+      "Gebruikersbeheer met rollen",
+      "Database architectuur op maat",
+      "Schaalbaar voor groei",
+      "Uitgebreide documentatie",
+      "Persoonlijke projectmanager",
+      "SLA & doorlopend onderhoud mogelijk",
     ],
     notIncluded: [],
-    cta: "Neem contact op",
-    ctaLink: "/contact",
+    cta: "Plan een gesprek",
+    ctaLink: "/contact?type=maatwerk",
   },
 ];
 
@@ -141,8 +175,8 @@ export default function PrijzenPage() {
               Investeer in uw digitale toekomst
             </h1>
             <p className="text-xl text-slate-300">
-              Elke website is uniek, daarom werken wij met prijzen op maat. 
-              U betaalt voor waarde, niet voor uren. Vraag een vrijblijvende offerte aan.
+              Duidelijke startprijzen, geen verrassingen. Elke offerte is maatwerk 
+              op basis van uw specifieke wensen - u weet vooraf precies waar u aan toe bent.
             </p>
           </div>
         </div>
@@ -178,14 +212,37 @@ export default function PrijzenPage() {
                 )}
 
                 <div className={`p-6 ${pkg.popular ? "pt-10" : ""}`}>
-                  <h3 className="text-xl font-bold text-slate-900 mb-1">
-                    {pkg.name}
-                  </h3>
-                  <p className="text-sm text-slate-500 mb-4">{pkg.description}</p>
+                  <div className="mb-4">
+                    <h3 className="text-xl font-bold text-slate-900">
+                      {pkg.name}
+                    </h3>
+                    <p className="text-sm text-indigo-600 font-medium">{pkg.subtitle}</p>
+                  </div>
+                  
+                  <p className="text-sm text-slate-600 mb-4 min-h-[40px]">{pkg.description}</p>
 
-                  <div className="mb-6">
-                    <span className="text-2xl font-bold text-slate-900">Op maat</span>
-                    <p className="text-sm text-slate-500 mt-1">Prijs op basis van uw wensen</p>
+                  {/* Prijs */}
+                  <div className="mb-4 pb-4 border-b border-slate-100">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-sm text-slate-500">{pkg.priceNote}</span>
+                      <span className="text-3xl font-bold text-slate-900">€{pkg.price}</span>
+                    </div>
+                    <p className="text-xs text-slate-400 mt-1">Exacte prijs na kennismaking</p>
+                  </div>
+
+                  {/* Ideaal voor */}
+                  <div className="mb-4 p-3 bg-slate-50 rounded-lg">
+                    <p className="text-xs text-slate-500 mb-1">Ideaal voor:</p>
+                    <p className="text-sm font-medium text-slate-700">{pkg.idealFor}</p>
+                  </div>
+
+                  {/* Deliverables */}
+                  <div className="mb-4 flex flex-wrap gap-2">
+                    {pkg.deliverables.map((item, i) => (
+                      <span key={i} className="text-xs px-2 py-1 bg-indigo-50 text-indigo-700 rounded-full">
+                        {item}
+                      </span>
+                    ))}
                   </div>
 
                   <Link
@@ -199,16 +256,16 @@ export default function PrijzenPage() {
                     {pkg.cta}
                   </Link>
 
-                  <ul className="space-y-3">
+                  <ul className="space-y-2">
                     {pkg.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm">
-                        <Check className="w-5 h-5 text-emerald-500 shrink-0" />
+                        <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
                         <span className="text-slate-700">{feature}</span>
                       </li>
                     ))}
                     {pkg.notIncluded.map((feature, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-slate-400">
-                        <span className="w-5 h-5 shrink-0 text-center">—</span>
+                        <span className="w-4 h-4 shrink-0 text-center mt-0.5">—</span>
                         <span>{feature}</span>
                       </li>
                     ))}
@@ -218,9 +275,15 @@ export default function PrijzenPage() {
             ))}
           </div>
 
-          <p className="text-center text-slate-500 mt-8">
-            * Prijzen worden bepaald op basis van uw specifieke wensen en projectomvang. Vraag een vrijblijvende offerte aan.
-          </p>
+          <div className="mt-12 p-6 bg-slate-50 rounded-2xl max-w-3xl mx-auto">
+            <h3 className="font-bold text-slate-900 mb-2">Hoe werken onze prijzen?</h3>
+            <ul className="text-sm text-slate-600 space-y-2">
+              <li>• <strong>Vanaf-prijzen</strong> zijn startprijzen voor standaard projecten</li>
+              <li>• <strong>Exacte prijs</strong> wordt bepaald na een vrijblijvend kennismakingsgesprek</li>
+              <li>• <strong>Geen verrassingen</strong> - u ontvangt een gedetailleerde offerte vooraf</li>
+              <li>• <strong>Betaling in termijnen</strong> mogelijk bij grotere projecten</li>
+            </ul>
+          </div>
         </div>
       </section>
 

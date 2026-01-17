@@ -112,9 +112,9 @@ export default function OverOnsPage() {
             <div className="prose prose-lg text-slate-600">
               <p>
                 Ro-Tech Development is opgericht door Bart van Rooij vanuit een passie voor technologie 
-                en het helpen van bedrijven om online te groeien. Met jarenlange ervaring in web development 
-                en software engineering weet ik precies wat er nodig is om een succesvol digitaal product 
-                te bouwen. Bij Ro-Tech staat persoonlijk contact centraal - u werkt altijd direct met mij.
+                en het helpen van bedrijven om online te groeien. Met een sterke technische achtergrond 
+                en continue focus op de nieuwste technologieën, bouw ik digitale oplossingen die écht werken. 
+                Bij Ro-Tech staat persoonlijk contact centraal - u werkt altijd direct met mij.
               </p>
               <p>
                 Wij geloven dat elk bedrijf, groot of klein, toegang verdient tot professionele 

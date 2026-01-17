@@ -8,6 +8,7 @@ interface EnvConfig {
   CONTACT_EMAIL?: string;
   RESEND_API_KEY?: string;
   FROM_EMAIL?: string;
+  OPENAI_API_KEY?: string;
 }
 
 /**
@@ -50,6 +51,13 @@ export function validateEnv(): void {
     console.warn("⚠️  FROM_EMAIL not set - email sending may fail");
   }
   
+  // OPENAI_API_KEY for chatbot
+  if (!process.env.OPENAI_API_KEY) {
+    console.warn("⚠️  OPENAI_API_KEY not set - AI chatbot will not work");
+  } else if (!process.env.OPENAI_API_KEY.startsWith("sk-")) {
+    console.warn("⚠️  OPENAI_API_KEY format looks incorrect (should start with 'sk-')");
+  }
+  
   if (errors.length > 0) {
     throw new Error(`Environment validation failed:\n${errors.join("\n")}`);
   }
@@ -64,6 +72,7 @@ export function getEnvConfig(): EnvConfig {
     CONTACT_EMAIL: process.env.CONTACT_EMAIL,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     FROM_EMAIL: process.env.FROM_EMAIL,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   };
 }
 

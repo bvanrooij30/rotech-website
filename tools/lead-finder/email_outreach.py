@@ -68,9 +68,10 @@ class EmailConfig:
     SMTP_PASSWORD = os.getenv('SMTP_PASSWORD', '')  # App password voor Gmail
     
     # Sender info - Bart van Rooij | Ro-Tech Development
+    # BELANGRIJK: Configureer deze via .env met je werkende email!
     SENDER_NAME = os.getenv('SENDER_NAME', 'Bart van Rooij | Ro-Tech Development')
-    SENDER_EMAIL = os.getenv('SENDER_EMAIL', 'contact@ro-techdevelopment.com')
-    REPLY_TO = os.getenv('REPLY_TO', 'contact@ro-techdevelopment.com')
+    SENDER_EMAIL = os.getenv('SENDER_EMAIL', '')  # Vul in via .env
+    REPLY_TO = os.getenv('REPLY_TO', '')  # Vul in via .env
     
     # Rate limiting
     MAX_EMAILS_PER_HOUR = int(os.getenv('MAX_EMAILS_PER_HOUR', 20))

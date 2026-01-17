@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/ui/WhatsAppButton";
+import { ChatWidget } from "@/components/chat";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 // Validate environment variables on startup
 import "@/lib/env-validation";
@@ -108,6 +109,7 @@ export default function RootLayout({
           <main className="min-h-screen">{children}</main>
           <Footer />
           <WhatsAppButton />
+          <ChatWidget />
         </ErrorBoundary>
       </body>
     </html>

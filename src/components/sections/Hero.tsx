@@ -49,34 +49,47 @@ export default function Hero() {
 
       <div className="container-custom relative z-10 py-20">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Badge with logo accent */}
+          {/* Logo & Brand Name - Prominent Display */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur rounded-full border border-indigo-100 shadow-sm mb-8"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+            className="mb-8"
           >
-            <div className="relative">
+            {/* Logo - Large & Prominent */}
+            <div className="relative inline-block mb-6">
               <Image
-                src="/images/rotech/rotech-icon.svg"
-                alt="RoTech"
-                width={20}
-                height={20}
-                className="w-5 h-5"
+                src="/images/rotech/rotech-logo.svg"
+                alt="RoTech Development Logo"
+                width={200}
+                height={200}
+                className="w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 mx-auto"
+                priority
               />
-              {/* Subtle gold glow */}
-              <div className="absolute inset-0 bg-gradient-to-r from-amber-400/20 to-amber-500/20 rounded-full blur-sm" />
+              {/* Glow effect behind logo */}
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-violet-500/20 rounded-full blur-3xl -z-10 scale-125" />
             </div>
-            <span className="text-sm font-medium text-slate-700">
-              Uw digitale partner
-            </span>
+            
+            {/* Brand Name */}
+            <h2 className="text-2xl sm:text-3xl font-bold mb-2">
+              <span className="gradient-text">RoTech</span>
+              <span className="text-slate-800"> Development</span>
+            </h2>
+            
+            {/* Tagline Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur rounded-full border border-indigo-100 shadow-sm">
+              <Sparkles className="w-4 h-4 text-amber-500" />
+              <span className="text-sm font-medium text-slate-700">
+                Uw visie, vakkundig gebouwd
+              </span>
+            </div>
           </motion.div>
 
           {/* Main heading */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 mb-6 leading-tight"
           >
             Professionele{" "}
@@ -89,7 +102,7 @@ export default function Hero() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             className="text-lg sm:text-xl text-slate-600 mb-10 max-w-2xl mx-auto"
           >
             Wij bouwen moderne websites, webshops en web applicaties die uw bedrijf 
@@ -103,7 +116,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
             className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
           >
             <Link
@@ -125,7 +138,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
             className="flex flex-wrap justify-center gap-6"
           >
             {trustBadges.map((badge, index) => (
