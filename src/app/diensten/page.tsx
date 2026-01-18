@@ -73,11 +73,9 @@ export default function DienstenPage() {
                       : "border border-slate-100 shadow-sm hover:shadow-lg hover:border-indigo-100"
                   }`}>
                     <div className="flex gap-6">
-                      {/* Icon */}
+                      {/* Icon - Always purple gradient */}
                       <div className="shrink-0">
-                        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${
-                          isHighlighted ? "bg-emerald-500" : "gradient-bg"
-                        }`}>
+                        <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                           <IconComponent className="w-8 h-8 text-white" />
                         </div>
                       </div>

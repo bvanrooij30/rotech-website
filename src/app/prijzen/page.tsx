@@ -195,11 +195,14 @@ export default function PrijzenPage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {packages.map((pkg) => (
+            {packages.map((pkg) => {
+              const isWebshop = pkg.name === "Webshop";
+              const hasGreenBorder = pkg.popular || isWebshop;
+              return (
               <div
                 key={pkg.name}
                 className={`relative rounded-2xl border-2 ${
-                  pkg.popular
+                  hasGreenBorder
                     ? "border-emerald-500 shadow-xl shadow-emerald-500/20"
                     : "border-slate-200"
                 } bg-white overflow-hidden`}
@@ -213,7 +216,7 @@ export default function PrijzenPage() {
 
                 <div className={`p-6 ${pkg.popular ? "pt-10" : ""}`}>
                   <div className="mb-4">
-                    <h3 className="text-xl font-bold text-slate-900">
+                    <h3 className={`text-xl font-bold ${isWebshop ? "text-emerald-700" : "text-slate-900"}`}>
                       {pkg.name}
                     </h3>
                     <p className="text-sm text-indigo-600 font-medium">{pkg.subtitle}</p>
@@ -272,7 +275,8 @@ export default function PrijzenPage() {
                   </ul>
                 </div>
               </div>
-            ))}
+            );
+            })}
           </div>
 
           <div className="mt-12 p-6 bg-gradient-to-br from-emerald-50 to-white rounded-2xl max-w-3xl mx-auto border border-emerald-100">

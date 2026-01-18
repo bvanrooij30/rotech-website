@@ -87,10 +87,8 @@ export default function Services() {
                       ? "border-2 border-emerald-500 shadow-xl shadow-emerald-500/20 hover:shadow-2xl hover:shadow-emerald-500/30" 
                       : "border border-slate-100 shadow-sm hover:shadow-lg hover:border-slate-200"
                   }`}>
-                    {/* Icon */}
-                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 ${
-                      isHighlighted ? "bg-emerald-500" : "gradient-bg"
-                    }`}>
+                    {/* Icon - Always purple gradient */}
+                    <div className="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                       <IconComponent className="w-7 h-7 text-white" />
                     </div>
 
