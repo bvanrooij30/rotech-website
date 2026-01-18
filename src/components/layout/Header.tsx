@@ -58,7 +58,7 @@ export default function Header() {
             </a>
           </div>
           <div className="text-slate-400">
-            Veldhoven & heel Nederland
+            Maandag - Vrijdag: 09:00 - 18:00
           </div>
         </div>
       </div>

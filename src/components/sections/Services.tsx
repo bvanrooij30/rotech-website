@@ -85,19 +85,28 @@ export default function Services() {
                   className="group block h-full"
                 >
                   <div className={`
-                    relative h-full flex flex-col rounded-2xl p-6 transition-all duration-300
+                    relative h-full flex flex-col rounded-2xl p-6 transition-all duration-300 overflow-hidden
                     ${isTopService 
-                      ? 'bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 border border-slate-200/80 hover:border-indigo-300/60 hover:shadow-xl hover:shadow-indigo-500/10' 
-                      : 'bg-gradient-to-br from-slate-50 via-white to-violet-50/30 border border-slate-200/60 hover:border-violet-300/60 hover:shadow-lg hover:shadow-violet-500/10'
+                      ? 'bg-gradient-to-br from-indigo-50/80 via-white to-violet-50/60 border-2 border-indigo-100 hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-500/15' 
+                      : 'bg-gradient-to-br from-violet-50/70 via-white to-purple-50/50 border-2 border-violet-100 hover:border-violet-300 hover:shadow-lg hover:shadow-violet-500/15'
                     }
-                    hover:-translate-y-1
+                    hover:-translate-y-1.5
                   `}>
-                    {/* Subtle corner accent */}
+                    {/* Corner accent - more visible */}
                     <div className={`
-                      absolute top-0 right-0 w-24 h-24 rounded-bl-[80px] opacity-40
+                      absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-60
                       ${isTopService 
-                        ? 'bg-gradient-to-bl from-indigo-100 to-transparent' 
-                        : 'bg-gradient-to-bl from-violet-100 to-transparent'
+                        ? 'bg-gradient-to-bl from-indigo-200/80 via-indigo-100/50 to-transparent' 
+                        : 'bg-gradient-to-bl from-violet-200/80 via-violet-100/50 to-transparent'
+                      }
+                    `} />
+                    
+                    {/* Bottom accent line */}
+                    <div className={`
+                      absolute bottom-0 left-0 right-0 h-1
+                      ${isTopService 
+                        ? 'bg-gradient-to-r from-indigo-400 via-violet-400 to-indigo-400' 
+                        : 'bg-gradient-to-r from-violet-400 via-purple-400 to-violet-400'
                       }
                     `} />
                     
