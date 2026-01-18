@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Clock, CheckCircle } from "lucide-react";
+import { Mail, Clock, CheckCircle, Shield } from "lucide-react";
 
 const footerLinks = {
   diensten: [
