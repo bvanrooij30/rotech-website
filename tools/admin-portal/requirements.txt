@@ -1,0 +1,24 @@
+# Ro-Tech Admin Portal - Python Dependencies
+
+# GUI
+customtkinter>=5.2.0
+Pillow>=10.0.0                  # Image handling voor icons
+
+# Database
+SQLAlchemy>=2.0.0
+alembic>=1.13.0                 # Database migrations
+
+# Email
+imapclient>=3.0.0               # Betere IMAP wrapper dan imaplib
+mail-parser>=3.15.0             # Email parsing
+
+# Security
+cryptography>=41.0.0            # Password encryption
+python-dotenv>=1.0.0            # Environment variables
+
+# Async & Threading
+schedule>=1.2.0                 # Background task scheduling
+
+# Utilities
+python-dateutil>=2.8.0          # Date parsing
+requests>=2.31.0                # HTTP requests voor webhook

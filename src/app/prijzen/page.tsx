@@ -103,8 +103,8 @@ const packages = [
     name: "Maatwerk",
     subtitle: "Op Maat Gebouwd",
     description: "Complexe web applicaties, portalen en integraties volledig op maat",
-    price: "7.500",
-    priceNote: "vanaf",
+    price: "7.500 - 30.000",
+    priceNote: "indicatie",
     popular: false,
     idealFor: "Scale-ups, SaaS, complexe bedrijfsprocessen",
     deliverables: [
@@ -122,7 +122,7 @@ const packages = [
       "SLA & doorlopend onderhoud mogelijk",
     ],
     notIncluded: [],
-    cta: "Plan een gesprek",
+    cta: "Gratis adviesgesprek",
     ctaLink: "/contact?type=maatwerk",
   },
 ];
@@ -295,9 +295,229 @@ export default function PrijzenPage() {
               </li>
               <li className="flex items-start gap-2">
                 <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                <span><strong>Betaling in termijnen</strong> mogelijk bij grotere projecten</span>
+                <span><strong>Betaling in termijnen</strong> - 50% vooraf, 50% bij oplevering</span>
               </li>
             </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Voorbeeldprojecten - Transparantie sectie */}
+      <section className="section-padding bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+        <div className="container-custom">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <span className="inline-block px-4 py-1.5 bg-indigo-600/20 text-indigo-300 rounded-full text-sm font-medium mb-4">
+                Prijsindicaties
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Wat kosten vergelijkbare projecten?
+              </h2>
+              <p className="text-lg text-slate-300">
+                Om u een realistisch beeld te geven: dit zijn prijsranges van projecten die wij hebben gerealiseerd.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Eenvoudige projecten */}
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+                <h3 className="text-xl font-bold mb-4 text-indigo-300">Websites</h3>
+                <ul className="space-y-4">
+                  <li className="flex justify-between items-start border-b border-white/10 pb-3">
+                    <div>
+                      <p className="font-medium">One-page / Visitekaartje</p>
+                      <p className="text-sm text-slate-400">1-3 pagina&apos;s, contactformulier, basis SEO</p>
+                    </div>
+                    <span className="text-emerald-400 font-bold whitespace-nowrap">€997 - €1.500</span>
+                  </li>
+                  <li className="flex justify-between items-start border-b border-white/10 pb-3">
+                    <div>
+                      <p className="font-medium">Bedrijfswebsite</p>
+                      <p className="text-sm text-slate-400">5-10 pagina&apos;s, CMS, blog, geavanceerde SEO</p>
+                    </div>
+                    <span className="text-emerald-400 font-bold whitespace-nowrap">€2.497 - €4.000</span>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <div>
+                      <p className="font-medium">Webshop</p>
+                      <p className="text-sm text-slate-400">Tot 100 producten, betalingen, voorraadbeheer</p>
+                    </div>
+                    <span className="text-emerald-400 font-bold whitespace-nowrap">€3.997 - €7.000</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Complexe projecten */}
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+                <h3 className="text-xl font-bold mb-4 text-violet-300">Maatwerk Applicaties</h3>
+                <ul className="space-y-4">
+                  <li className="flex justify-between items-start border-b border-white/10 pb-3">
+                    <div>
+                      <p className="font-medium">Eenvoudige web app</p>
+                      <p className="text-sm text-slate-400">Login, dashboard, basis functionaliteit</p>
+                    </div>
+                    <span className="text-emerald-400 font-bold whitespace-nowrap">€7.500 - €12.000</span>
+                  </li>
+                  <li className="flex justify-between items-start border-b border-white/10 pb-3">
+                    <div>
+                      <p className="font-medium">Klantportaal + Admin</p>
+                      <p className="text-sm text-slate-400">Gebruikersbeheer, bestellingen, API integraties</p>
+                    </div>
+                    <span className="text-emerald-400 font-bold whitespace-nowrap">€15.000 - €25.000</span>
+                  </li>
+                  <li className="flex justify-between items-start">
+                    <div>
+                      <p className="font-medium">B2B Platform / SaaS</p>
+                      <p className="text-sm text-slate-400">Volledig ecosysteem, meerdere integraties</p>
+                    </div>
+                    <span className="text-emerald-400 font-bold whitespace-nowrap">€25.000 - €50.000+</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Wat beïnvloedt de prijs */}
+            <div className="mt-12 bg-amber-500/10 border border-amber-500/30 rounded-2xl p-6">
+              <h3 className="text-lg font-bold text-amber-300 mb-4">💡 Wat beïnvloedt de uiteindelijke prijs?</h3>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <ul className="space-y-2">
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <span>Aantal pagina&apos;s of schermen</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <span>Complexiteit van het design</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <span>Gebruikersrollen en permissies</span>
+                  </li>
+                </ul>
+                <ul className="space-y-2">
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <span>Integraties (CRM, boekhouding, API&apos;s)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <span>E-commerce functionaliteit</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <span>Meertaligheid en speciale eisen</span>
+                  </li>
+                </ul>
+              </div>
+              <p className="mt-4 text-slate-300 text-sm">
+                Tijdens het gratis kennismakingsgesprek bespreken we uw wensen en krijgt u direct een realistische prijsindicatie.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Transparantie - Wat zit er WEL en NIET in */}
+      <section className="section-padding bg-white">
+        <div className="container-custom">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-4">
+                <Check className="w-4 h-4" />
+                Volledige Transparantie
+              </span>
+              <h2 className="text-3xl font-bold text-slate-900 mb-4">
+                Geen verborgen kosten
+              </h2>
+              <p className="text-lg text-slate-600">
+                Wij communiceren altijd vooraf wat wel en niet in de prijs zit.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Altijd inbegrepen */}
+              <div className="bg-emerald-50 rounded-2xl p-6 border border-emerald-200">
+                <h3 className="text-xl font-bold text-emerald-800 mb-4 flex items-center gap-2">
+                  <Check className="w-5 h-5" />
+                  Altijd inbegrepen
+                </h3>
+                <ul className="space-y-3 text-slate-700">
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-1" />
+                    <span>Responsive design (mobiel, tablet, desktop)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-1" />
+                    <span>SSL certificaat (HTTPS)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-1" />
+                    <span>Basis SEO optimalisatie</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-1" />
+                    <span>Snelle laadtijd optimalisatie</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-1" />
+                    <span>2 revisierondes</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-1" />
+                    <span>Gratis support na oplevering (duur afhankelijk van pakket)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-1" />
+                    <span>Volledige eigendom van de code</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Niet standaard inbegrepen */}
+              <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+                <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                  <Star className="w-5 h-5 text-amber-500" />
+                  Extra / op aanvraag
+                </h3>
+                <ul className="space-y-3 text-slate-700">
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-slate-400 shrink-0 mt-1" />
+                    <span>Hosting (vanaf €10/maand of eigen hosting)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-slate-400 shrink-0 mt-1" />
+                    <span>Domeinregistratie (€15-25/jaar)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-slate-400 shrink-0 mt-1" />
+                    <span>Extra pagina&apos;s boven pakketlimiet</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-slate-400 shrink-0 mt-1" />
+                    <span>Copywriting / content creatie</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-slate-400 shrink-0 mt-1" />
+                    <span>Professionele fotografie</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-slate-400 shrink-0 mt-1" />
+                    <span>Doorlopend onderhoud (optioneel abonnement)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="w-4 h-4 text-slate-400 shrink-0 mt-1" />
+                    <span>Extra revisierondes (€75/ronde)</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-8 p-4 bg-indigo-50 rounded-xl border border-indigo-100 text-center">
+              <p className="text-slate-700">
+                <strong>Ons meerwerk-tarief:</strong> €75/uur voor extra werk buiten de scope. 
+                Dit wordt altijd vooraf besproken en goedgekeurd.
+              </p>
+            </div>
           </div>
         </div>
       </section>
