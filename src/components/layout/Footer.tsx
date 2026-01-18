@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin, Shield, Clock, CheckCircle } from "lucide-react";
+import { Mail, Clock, CheckCircle } from "lucide-react";
 
 const footerLinks = {
   diensten: [
@@ -54,13 +54,6 @@ export default function Footer() {
             </p>
             <div className="space-y-3">
               <a 
-                href="tel:+31657235574" 
-                className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors"
-              >
-                <Phone className="w-5 h-5 text-amber-400" />
-                +31 6 57 23 55 74
-              </a>
-              <a 
                 href="mailto:contact@ro-techdevelopment.dev" 
                 className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors"
               >
@@ -68,8 +61,8 @@ export default function Footer() {
                 contact@ro-techdevelopment.dev
               </a>
               <div className="flex items-center gap-3 text-slate-400">
-                <MapPin className="w-5 h-5 text-amber-400" />
-                Veldhoven, Nederland
+                <Clock className="w-5 h-5 text-amber-400" />
+                Ma - Vr: 09:00 - 18:00
               </div>
             </div>
           </div>

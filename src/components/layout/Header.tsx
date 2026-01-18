@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, Phone, Mail } from "lucide-react";
+import { Menu, X, ChevronDown, Mail, Clock } from "lucide-react";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -48,14 +48,14 @@ export default function Header() {
       <div className="bg-slate-900 text-white py-2 hidden lg:block">
         <div className="container-custom flex justify-between items-center text-sm">
           <div className="flex items-center gap-6">
-            <a href="tel:+31657235574" className="flex items-center gap-2 hover:text-indigo-400 transition-colors">
-              <Phone className="w-4 h-4" />
-              <span>+31 6 57 23 55 74</span>
-            </a>
             <a href="mailto:contact@ro-techdevelopment.dev" className="flex items-center gap-2 hover:text-indigo-400 transition-colors">
               <Mail className="w-4 h-4" />
               <span>contact@ro-techdevelopment.dev</span>
             </a>
+            <div className="flex items-center gap-2 text-slate-400">
+              <Clock className="w-4 h-4" />
+              <span>Ma - Vr: 09:00 - 18:00</span>
+            </div>
           </div>
           <div className="text-slate-400">
             Maandag - Vrijdag: 09:00 - 18:00
@@ -213,14 +213,14 @@ export default function Header() {
                 </div>
 
                 <div className="mt-4 flex flex-col gap-2 text-sm text-slate-600">
-                  <a href="tel:+31657235574" className="flex items-center gap-2">
-                    <Phone className="w-4 h-4" />
-                    +31 6 57 23 55 74
-                  </a>
                   <a href="mailto:contact@ro-techdevelopment.dev" className="flex items-center gap-2">
                     <Mail className="w-4 h-4" />
                     contact@ro-techdevelopment.dev
                   </a>
+                  <div className="flex items-center gap-2 text-slate-400">
+                    <Clock className="w-4 h-4" />
+                    Ma - Vr: 09:00 - 18:00
+                  </div>
                 </div>
               </div>
             </motion.div>

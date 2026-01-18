@@ -212,8 +212,6 @@ export async function POST(request: NextRequest) {
             <p>Heeft u in de tussentijd vragen? Neem gerust contact op via:</p>
             <ul>
               <li>E-mail: <a href="mailto:contact@ro-techdevelopment.dev">contact@ro-techdevelopment.dev</a></li>
-              <li>Telefoon: <a href="tel:+31657235574">+31 6 57 23 55 74</a></li>
-              <li>WhatsApp: <a href="https://wa.me/31657235574">+31 6 57 23 55 74</a></li>
             </ul>
             
             <br>

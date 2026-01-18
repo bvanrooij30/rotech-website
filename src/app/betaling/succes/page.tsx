@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle, ArrowRight, Mail, Phone } from "lucide-react";
+import { CheckCircle, ArrowRight, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Betaling Succesvol | Ro-Tech Development",
@@ -64,14 +64,7 @@ export default function BetalingSuccesPage() {
           {/* Contact info */}
           <div className="bg-slate-900 text-white rounded-2xl p-6 mb-8">
             <p className="text-slate-300 mb-4">Heeft u vragen? Neem contact met ons op:</p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <a 
-                href="tel:+31657235574" 
-                className="flex items-center justify-center gap-2 hover:text-indigo-400 transition-colors"
-              >
-                <Phone className="w-5 h-5" />
-                +31 6 57 23 55 74
-              </a>
+            <div className="flex justify-center">
               <a 
                 href="mailto:contact@ro-techdevelopment.dev" 
                 className="flex items-center justify-center gap-2 hover:text-indigo-400 transition-colors"

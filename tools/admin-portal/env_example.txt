@@ -1,0 +1,35 @@
+# Ro-Tech Admin Portal - Environment Configuration
+# Hernoem dit bestand naar .env en vul je gegevens in
+
+# ============ EMAIL ACCOUNT ============
+# Primaire email account (contact@ro-techdevelopment.com)
+EMAIL_HOST=mail.ro-techdevelopment.com
+EMAIL_PORT_IMAP=993
+EMAIL_PORT_SMTP=587
+EMAIL_USERNAME=contact@ro-techdevelopment.com
+EMAIL_PASSWORD=jouw-email-wachtwoord
+
+# ============ WEBSITE INTEGRATION ============
+# Secret key voor webhook authenticatie (zelfde als op website)
+WEBHOOK_SECRET=genereer-een-lange-random-string
+
+# Website API URL (voor polling mode)
+WEBSITE_API_URL=https://ro-techdevelopment.dev/api
+
+# ============ LEAD FINDER ============
+# Pad naar lead-finder output folder (relatief of absoluut)
+LEAD_FINDER_OUTPUT=../lead-finder/output
+
+# ============ APP SETTINGS ============
+# Theme: dark of light
+APP_THEME=dark
+
+# Log level: DEBUG, INFO, WARNING, ERROR
+LOG_LEVEL=INFO
+
+# Sync interval in minuten
+EMAIL_SYNC_INTERVAL=5
+
+# ============ SECURITY ============
+# Encryption key voor gevoelige data (auto-generated bij eerste start)
+# ENCRYPTION_KEY=

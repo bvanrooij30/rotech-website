@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { Mail, Phone, Clock, MessageCircle } from "lucide-react";
+import { Mail, Clock } from "lucide-react";
 import ContactForm from "@/components/forms/ContactForm";
 import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
@@ -13,13 +13,6 @@ export const metadata: Metadata = {
 
 const contactInfo = [
   {
-    icon: Phone,
-    title: "Telefoon",
-    value: "+31 6 57 23 55 74",
-    href: "tel:+31657235574",
-    description: "Ma-Vr: 09:00 - 17:30",
-  },
-  {
     icon: Mail,
     title: "E-mail",
     value: "contact@ro-techdevelopment.dev",
@@ -29,7 +22,7 @@ const contactInfo = [
   {
     icon: Clock,
     title: "Openingstijden",
-    value: "Ma - Vr: 09:00 - 17:30",
+    value: "Ma - Vr: 09:00 - 18:00",
     href: null,
     description: "Weekend op afspraak",
   },
@@ -102,17 +95,6 @@ export default function ContactPage() {
                   );
                 })}
               </div>
-
-              {/* WhatsApp */}
-              <a
-                href="https://wa.me/31657235574"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-3 w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-semibold transition-colors"
-              >
-                <MessageCircle className="w-5 h-5" />
-                Chat via WhatsApp
-              </a>
 
               {/* Extra info */}
               <div className="mt-8 p-6 bg-slate-50 rounded-xl">

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, MessageCircle, CheckCircle } from "lucide-react";
+import { ArrowRight, CheckCircle } from "lucide-react";
 
 export default function CTA() {
   return (
@@ -55,17 +55,8 @@ export default function CTA() {
               href="/contact"
               className="btn-secondary border-white/30 text-white hover:bg-white hover:text-slate-900 inline-flex items-center justify-center gap-2 text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 whitespace-nowrap"
             >
-              Neem Contact Met Ons Op
+              Neem Contact Op
             </Link>
-            <a
-              href="https://wa.me/31657235574"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-whatsapp inline-flex items-center justify-center gap-2 text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 whitespace-nowrap"
-            >
-              <MessageCircle className="w-5 h-5" />
-              WhatsApp
-            </a>
           </motion.div>
 
           {/* Trust indicators */}

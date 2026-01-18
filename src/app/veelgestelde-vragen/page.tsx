@@ -124,14 +124,9 @@ export default function FAQPage() {
                 Contact Opnemen
                 <ArrowRight className="w-4 h-4" />
               </Link>
-              <a
-                href="https://wa.me/31657235574"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-semibold transition-colors"
-              >
-                WhatsApp
-              </a>
+              <Link href="/offerte" className="btn-secondary inline-flex items-center justify-center gap-2">
+                Offerte Aanvragen
+              </Link>
             </div>
           </div>
         </div>

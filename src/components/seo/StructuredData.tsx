@@ -14,7 +14,6 @@ const organizationSchema = {
   logo: `${baseUrl}/images/rotech/rotech-logo.svg`,
   description: "Ro-Tech Development bouwt professionele websites, webshops en web applicaties op maat.",
   email: "contact@ro-techdevelopment.dev",
-  telephone: "+31657235574",
   address: {
     "@type": "PostalAddress",
     streetAddress: "Kruisstraat 64",
@@ -32,7 +31,7 @@ const organizationSchema = {
   },
   contactPoint: {
     "@type": "ContactPoint",
-    telephone: "+31657235574",
+    email: "contact@ro-techdevelopment.dev",
     contactType: "customer service",
     availableLanguage: ["Dutch", "English"],
   },
@@ -62,7 +61,6 @@ const localBusinessSchema = {
   name: "Ro-Tech Development",
   image: `${baseUrl}/images/rotech/rotech-logo.svg`,
   url: baseUrl,
-  telephone: "+31657235574",
   email: "contact@ro-techdevelopment.dev",
   description: "Web development agency gespecialiseerd in websites, webshops en web applicaties op maat.",
   address: {
