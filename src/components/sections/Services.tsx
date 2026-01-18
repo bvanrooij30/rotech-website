@@ -70,8 +70,11 @@ export default function Services() {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
-          {services.map((service) => {
+          {services.map((service, index) => {
             const IconComponent = service.icon;
+            // First row (top 4) gets special styling
+            const isTopService = index < 4;
+            
             return (
               <motion.div
                 key={service.slug}
@@ -81,31 +84,56 @@ export default function Services() {
                   href={`/diensten/${service.slug}`}
                   className="group block h-full"
                 >
-                  <div className="card h-full flex flex-col">
+                  <div className={`
+                    relative h-full flex flex-col rounded-2xl p-6 transition-all duration-300
+                    ${isTopService 
+                      ? 'bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 border border-slate-200/80 hover:border-indigo-300/60 hover:shadow-xl hover:shadow-indigo-500/10' 
+                      : 'bg-gradient-to-br from-slate-50 via-white to-violet-50/30 border border-slate-200/60 hover:border-violet-300/60 hover:shadow-lg hover:shadow-violet-500/10'
+                    }
+                    hover:-translate-y-1
+                  `}>
+                    {/* Subtle corner accent */}
+                    <div className={`
+                      absolute top-0 right-0 w-24 h-24 rounded-bl-[80px] opacity-40
+                      ${isTopService 
+                        ? 'bg-gradient-to-bl from-indigo-100 to-transparent' 
+                        : 'bg-gradient-to-bl from-violet-100 to-transparent'
+                      }
+                    `} />
+                    
                     {/* Icon */}
-                    <div className="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                    <div className={`
+                      relative z-10 w-14 h-14 rounded-xl flex items-center justify-center mb-5 
+                      transition-all duration-300 group-hover:scale-110 group-hover:rotate-3
+                      ${isTopService 
+                        ? 'bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/30' 
+                        : 'bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/30'
+                      }
+                    `}>
                       <IconComponent className="w-7 h-7 text-white" />
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">
+                    <h3 className="relative z-10 text-xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">
                       {service.shortTitle}
                     </h3>
 
                     {/* Description */}
-                    <p className="text-slate-600 mb-4 flex-grow">
+                    <p className="relative z-10 text-slate-600 mb-4 flex-grow leading-relaxed">
                       {service.description}
                     </p>
 
                     {/* Delivery info */}
-                    <div className="text-sm text-slate-500 mb-4">
-                      <span className="font-semibold text-slate-800">{service.deliveryTime}</span>
+                    <div className="relative z-10 text-sm mb-4">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-medium">
+                        {service.deliveryTime}
+                      </span>
                     </div>
 
                     {/* Link */}
-                    <div className="flex items-center text-indigo-600 font-medium group-hover:gap-3 gap-2 transition-all">
+                    <div className="relative z-10 flex items-center text-indigo-600 font-semibold group-hover:gap-3 gap-2 transition-all">
                       <span>Meer info</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                     </div>
                   </div>
                 </Link>

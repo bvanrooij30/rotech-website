@@ -55,22 +55,47 @@ export default function DienstenPage() {
       </section>
 
       {/* Services Grid */}
-      <section className="section-padding bg-white">
+      <section className="section-padding bg-gradient-to-b from-slate-50 to-white">
         <div className="container-custom">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {services.map((service) => {
+            {services.map((service, index) => {
               const IconComponent = service.icon;
+              const isTopService = index < 4;
+              
               return (
                 <Link
                   key={service.slug}
                   href={`/diensten/${service.slug}`}
                   className="group"
                 >
-                  <div className="card h-full border-2 border-transparent hover:border-indigo-100">
-                    <div className="flex gap-6">
+                  <div className={`
+                    relative h-full rounded-2xl p-6 transition-all duration-300 overflow-hidden
+                    ${isTopService 
+                      ? 'bg-gradient-to-br from-white via-slate-50/50 to-indigo-50/40 border border-slate-200 hover:border-indigo-300/60 hover:shadow-xl hover:shadow-indigo-500/10' 
+                      : 'bg-gradient-to-br from-white via-slate-50/50 to-violet-50/30 border border-slate-200 hover:border-violet-300/60 hover:shadow-lg hover:shadow-violet-500/10'
+                    }
+                    hover:-translate-y-1
+                  `}>
+                    {/* Subtle corner accent */}
+                    <div className={`
+                      absolute top-0 right-0 w-32 h-32 rounded-bl-[100px] opacity-30
+                      ${isTopService 
+                        ? 'bg-gradient-to-bl from-indigo-100 to-transparent' 
+                        : 'bg-gradient-to-bl from-violet-100 to-transparent'
+                      }
+                    `} />
+                    
+                    <div className="relative z-10 flex gap-6">
                       {/* Icon */}
                       <div className="shrink-0">
-                        <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <div className={`
+                          w-16 h-16 rounded-2xl flex items-center justify-center 
+                          transition-all duration-300 group-hover:scale-110 group-hover:rotate-3
+                          ${isTopService 
+                            ? 'bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/30' 
+                            : 'bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/30'
+                          }
+                        `}>
                           <IconComponent className="w-8 h-8 text-white" />
                         </div>
                       </div>
@@ -80,7 +105,7 @@ export default function DienstenPage() {
                         <h2 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">
                           {service.title}
                         </h2>
-                        <p className="text-slate-600 mb-4">
+                        <p className="text-slate-600 mb-4 leading-relaxed">
                           {service.description}
                         </p>
 
@@ -97,12 +122,12 @@ export default function DienstenPage() {
                         </ul>
 
                         <div className="flex items-center justify-between">
-                          <div>
-                            <span className="text-sm font-medium text-slate-700">{service.deliveryTime}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-indigo-600 font-medium group-hover:gap-3 transition-all">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-sm font-medium">
+                            {service.deliveryTime}
+                          </span>
+                          <div className="flex items-center gap-2 text-indigo-600 font-semibold group-hover:gap-3 transition-all">
                             <span>Meer informatie</span>
-                            <ArrowRight className="w-4 h-4" />
+                            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                           </div>
                         </div>
                       </div>
