@@ -10,6 +10,9 @@ from .models import (
     Lead,
     Client,
     Project,
+    Invoice,
+    InvoiceStatus,
+    InvoiceType,
     Note,
     Setting
 )

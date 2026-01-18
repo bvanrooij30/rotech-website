@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getMollieClient } from "@/lib/mollie";
 import { Resend } from "resend";
+import { storePayment, updatePaymentStatus } from "@/lib/payments-store";
+import { getPackageById, getMaintenancePlanById } from "@/data/packages";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -33,6 +35,34 @@ export async function POST(request: NextRequest) {
     if (payment.status === "paid") {
       // Payment successful!
       console.log(`Payment ${paymentId} is paid!`);
+      
+      // Get package and plan names for invoice description
+      const packageInfo = metadata.packageId ? getPackageById(metadata.packageId) : null;
+      const planInfo = metadata.maintenancePlanId ? getMaintenancePlanById(metadata.maintenancePlanId) : null;
+      
+      // Store payment for Admin Portal sync
+      try {
+        await storePayment({
+          molliePaymentId: paymentId,
+          customerName: metadata.customerName,
+          customerEmail: metadata.customerEmail,
+          customerPhone: metadata.customerPhone,
+          companyName: metadata.companyName,
+          amount: parseFloat(payment.amount.value),
+          currency: payment.amount.currency,
+          description: payment.description || `Betaling ${metadata.paymentType}`,
+          paymentType: (metadata.paymentType as "deposit" | "final" | "subscription") || "other",
+          packageId: metadata.packageId,
+          packageName: packageInfo?.name,
+          maintenancePlanId: metadata.maintenancePlanId,
+          maintenancePlanName: planInfo?.name,
+          status: "paid",
+          paidAt: new Date().toISOString(),
+        });
+        console.log(`Payment ${paymentId} stored for Admin Portal sync`);
+      } catch (storeError) {
+        console.error("Failed to store payment:", storeError);
+      }
       
       // Send confirmation email to customer
       if (metadata.customerEmail) {

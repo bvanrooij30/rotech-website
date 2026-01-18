@@ -3,17 +3,20 @@ Main Application Window voor Ro-Tech Admin Portal.
 """
 
 import customtkinter as ctk
+from tkinter import messagebox
 from typing import Optional, Dict, Type
 import threading
 
 from ..utils.config import Config, logger
 from ..database import get_db, init_db
+from ..database.models import EmailAccount
 from .sidebar import Sidebar
 from .dashboard import DashboardView
 from .email_view import EmailView
 from .leads_view import LeadsView
 from .inbox_view import InboxView
 from .clients_view import ClientsView
+from .invoices_view import InvoicesView
 from .settings_view import SettingsView
 
 
@@ -38,6 +41,9 @@ class AdminPortalApp(ctk.CTk):
         # Views registry
         self._views: Dict[str, ctk.CTkFrame] = {}
         self._current_view: Optional[str] = None
+        
+        # Sync scheduler reference
+        self._sync_scheduler = None
         
         # Build UI
         self._setup_ui()
@@ -81,6 +87,7 @@ class AdminPortalApp(ctk.CTk):
             "inbox": InboxView,
             "leads": LeadsView,
             "clients": ClientsView,
+            "invoices": InvoicesView,
             "settings": SettingsView,
         }
     
@@ -120,34 +127,81 @@ class AdminPortalApp(ctk.CTk):
     
     def _start_background_services(self):
         """Start background sync services."""
-        # Email sync thread
-        if Config.is_email_configured():
+        # Check if any email accounts are configured
+        db = get_db()
+        with db.session() as session:
+            account_count = session.query(EmailAccount).filter_by(is_active=True).count()
+        
+        if account_count > 0:
             self._start_email_sync()
+        else:
+            logger.info("No email accounts configured, skipping auto-sync")
     
     def _start_email_sync(self):
-        """Start email sync in background."""
-        def sync_loop():
-            import time
-            while True:
-                try:
-                    # TODO: Implement email sync
-                    logger.debug("Email sync tick")
-                except Exception as e:
-                    logger.error(f"Email sync error: {e}")
-                time.sleep(Config.EMAIL_SYNC_INTERVAL * 60)
+        """Start automatic email sync in background."""
+        from ..services.sync_service import start_background_sync
         
-        thread = threading.Thread(target=sync_loop, daemon=True)
-        thread.start()
+        def on_new_emails(count: int):
+            """Callback when new emails arrive."""
+            # Update UI on main thread
+            self.after(0, lambda: self._notify_new_emails(count))
+        
+        # Start scheduler with callback
+        self._sync_scheduler = start_background_sync(
+            interval_minutes=Config.EMAIL_SYNC_INTERVAL,
+            on_new_emails=on_new_emails
+        )
+        
+        logger.info(f"Auto-sync started: checking every {Config.EMAIL_SYNC_INTERVAL} minutes")
+    
+    def _notify_new_emails(self, count: int):
+        """Show notification for new emails."""
+        # Update sidebar badge (future enhancement)
+        # For now, just refresh the current view if it's email or dashboard
+        if self._current_view in ['email', 'dashboard']:
+            if self._current_view in self._views:
+                self._views[self._current_view].refresh()
+        
+        # Show subtle notification
+        self._show_toast(f"📧 {count} nieuwe email{'s' if count > 1 else ''} ontvangen!")
+    
+    def _show_toast(self, message: str, duration: int = 3000):
+        """Show a toast notification."""
+        # Create toast frame
+        toast = ctk.CTkFrame(
+            self,
+            fg_color="#34a853",
+            corner_radius=8
+        )
+        
+        label = ctk.CTkLabel(
+            toast,
+            text=message,
+            font=ctk.CTkFont(size=13),
+            text_color="white"
+        )
+        label.pack(padx=20, pady=10)
+        
+        # Position at bottom right
+        toast.place(relx=0.98, rely=0.98, anchor="se")
+        
+        # Auto-hide after duration
+        def hide_toast():
+            toast.destroy()
+        
+        self.after(duration, hide_toast)
     
     def _show_error(self, title: str, message: str):
         """Show error dialog."""
-        dialog = ctk.CTkInputDialog(
-            text=message,
-            title=title
-        )
+        messagebox.showerror(title, message)
     
     def on_closing(self):
         """Handle window close."""
+        # Stop sync scheduler
+        if self._sync_scheduler:
+            from ..services.sync_service import stop_background_sync
+            stop_background_sync()
+        
         logger.info("Admin Portal closing")
         self.destroy()
     

@@ -23,7 +23,6 @@ const packages = [
     idealFor: "ZZP'ers, coaches, fotografen, consultants",
     deliverables: [
       "1-3 pagina's",
-      "Oplevering: 1-2 weken",
     ],
     features: [
       "Volledig responsive design",
@@ -51,7 +50,6 @@ const packages = [
     idealFor: "MKB, dienstverleners, lokale bedrijven",
     deliverables: [
       "5-10 pagina's",
-      "Oplevering: 2-4 weken",
     ],
     features: [
       "Alles van Starter, plus:",
@@ -80,7 +78,6 @@ const packages = [
     idealFor: "Retailers, merken, productverkoop",
     deliverables: [
       "Tot 100 producten",
-      "Oplevering: 3-5 weken",
     ],
     features: [
       "Alles van Business, plus:",
@@ -109,7 +106,6 @@ const packages = [
     idealFor: "Scale-ups, SaaS, complexe bedrijfsprocessen",
     deliverables: [
       "Volledig op specificatie",
-      "Oplevering: in overleg",
     ],
     features: [
       "Custom web applicatie",

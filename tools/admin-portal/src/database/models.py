@@ -57,6 +57,19 @@ class ProjectStatus(str, enum.Enum):
     CANCELLED = "cancelled"
 
 
+class InvoiceStatus(str, enum.Enum):
+    DRAFT = "draft"
+    SENT = "sent"
+    PAID = "paid"
+    OVERDUE = "overdue"
+    CANCELLED = "cancelled"
+
+
+class InvoiceType(str, enum.Enum):
+    OUTGOING = "outgoing"  # Facturen die je verstuurt (verkoop)
+    INCOMING = "incoming"  # Facturen die je ontvangt (inkoop)
+
+
 # =============================================================================
 # EMAIL MODELS
 # =============================================================================
@@ -273,6 +286,7 @@ class Client(Base):
     form_submissions = relationship("FormSubmission", back_populates="client")
     leads = relationship("Lead", back_populates="client")
     projects = relationship("Project", back_populates="client", cascade="all, delete-orphan")
+    invoices = relationship("Invoice", back_populates="client")
     notes = relationship("Note", back_populates="client", cascade="all, delete-orphan")
     
     def __repr__(self):
@@ -305,6 +319,67 @@ class Project(Base):
     
     def __repr__(self):
         return f"<Project {self.name}>"
+
+
+# =============================================================================
+# INVOICES
+# =============================================================================
+
+class Invoice(Base):
+    """Factuur (inkomend of uitgaand)."""
+    __tablename__ = "invoices"
+    
+    id = Column(Integer, primary_key=True)
+    
+    # Type & Status
+    invoice_type = Column(String(20), default=InvoiceType.OUTGOING.value)  # outgoing/incoming
+    status = Column(String(20), default=InvoiceStatus.DRAFT.value)
+    
+    # Invoice details
+    invoice_number = Column(String(50), nullable=False)
+    reference = Column(String(100), nullable=True)  # PO number, reference
+    
+    # Client/Vendor info
+    client_id = Column(Integer, ForeignKey("clients.id"), nullable=True)
+    client = relationship("Client", back_populates="invoices")
+    company_name = Column(String(255), nullable=True)  # If no client linked
+    
+    # Description
+    description = Column(Text, nullable=True)
+    
+    # Amounts (in EUR)
+    amount_excl_vat = Column(Float, default=0.0)
+    vat_percentage = Column(Float, default=21.0)
+    vat_amount = Column(Float, default=0.0)
+    amount_incl_vat = Column(Float, default=0.0)
+    
+    # Dates
+    invoice_date = Column(DateTime, nullable=False)
+    due_date = Column(DateTime, nullable=True)
+    paid_date = Column(DateTime, nullable=True)
+    
+    # File
+    file_path = Column(String(500), nullable=True)  # Path to PDF
+    file_name = Column(String(255), nullable=True)
+    
+    # Notes
+    notes = Column(Text, nullable=True)
+    
+    # Snelstart export
+    exported_to_snelstart = Column(Boolean, default=False)
+    exported_at = Column(DateTime, nullable=True)
+    
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def __repr__(self):
+        return f"<Invoice {self.invoice_number}>"
+    
+    def calculate_vat(self):
+        """Calculate VAT and total from excl amount."""
+        self.vat_amount = round(self.amount_excl_vat * (self.vat_percentage / 100), 2)
+        self.amount_incl_vat = round(self.amount_excl_vat + self.vat_amount, 2)
 
 
 class Note(Base):

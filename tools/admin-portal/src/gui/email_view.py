@@ -1,14 +1,17 @@
 """
 Email View - Email inbox, compose, en detail view.
+Supports multiple email accounts.
 """
 
 import customtkinter as ctk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 from typing import Optional, List
 from datetime import datetime
+import threading
 
 from ..database import get_db
 from ..database.models import Email, EmailAccount
+from ..utils.config import Config, logger
 from ..utils.helpers import format_datetime, truncate_text, extract_email_name
 
 
@@ -377,18 +380,20 @@ class EmailView(ctk.CTkFrame):
         super().__init__(parent, fg_color="transparent")
         
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(2, weight=1)
         
         self._current_folder = "inbox"
+        self._account_filter = None  # None = all accounts
         self._showing_detail = False
+        self._syncing = False
         
         self._setup_ui()
     
     def _setup_ui(self):
         """Setup email view UI."""
-        # Header
+        # Header row 1: Title
         header_frame = ctk.CTkFrame(self, fg_color="transparent")
-        header_frame.grid(row=0, column=0, sticky="ew", pady=(0, 15))
+        header_frame.grid(row=0, column=0, sticky="ew", pady=(0, 10))
         header_frame.grid_columnconfigure(1, weight=1)
         
         title = ctk.CTkLabel(
@@ -399,12 +404,56 @@ class EmailView(ctk.CTkFrame):
         )
         title.grid(row=0, column=0, sticky="w")
         
-        # Folder tabs
-        tabs_frame = ctk.CTkFrame(header_frame, fg_color="transparent")
-        tabs_frame.grid(row=0, column=1, sticky="e")
+        # Actions (right side)
+        actions_frame = ctk.CTkFrame(header_frame, fg_color="transparent")
+        actions_frame.grid(row=0, column=1, sticky="e")
         
+        # Compose button
+        compose_btn = ctk.CTkButton(
+            actions_frame,
+            text="✏️ Nieuw",
+            width=80,
+            fg_color="#34a853",
+            hover_color="#2d8f47",
+            command=self._on_compose
+        )
+        compose_btn.pack(side="left", padx=(0, 10))
+        
+        # Sync button
+        self.sync_btn = ctk.CTkButton(
+            actions_frame,
+            text="🔄 Sync",
+            width=70,
+            fg_color="gray40",
+            command=self._on_sync
+        )
+        self.sync_btn.pack(side="left")
+        
+        # Header row 2: Filters
+        filter_frame = ctk.CTkFrame(self, fg_color="transparent")
+        filter_frame.grid(row=1, column=0, sticky="ew", pady=(0, 10))
+        
+        # Account filter dropdown
+        ctk.CTkLabel(
+            filter_frame,
+            text="Account:",
+            font=ctk.CTkFont(size=12)
+        ).pack(side="left", padx=(0, 5))
+        
+        self._account_filter = "all"
+        self.account_var = ctk.StringVar(value="Alle accounts")
+        self.account_dropdown = ctk.CTkOptionMenu(
+            filter_frame,
+            variable=self.account_var,
+            values=["Alle accounts"],
+            command=self._on_account_filter,
+            width=200
+        )
+        self.account_dropdown.pack(side="left", padx=(0, 20))
+        
+        # Folder tabs
         self.inbox_btn = ctk.CTkButton(
-            tabs_frame,
+            filter_frame,
             text="Inbox",
             width=80,
             command=lambda: self._switch_folder("inbox")
@@ -412,7 +461,7 @@ class EmailView(ctk.CTkFrame):
         self.inbox_btn.pack(side="left", padx=2)
         
         self.sent_btn = ctk.CTkButton(
-            tabs_frame,
+            filter_frame,
             text="Verzonden",
             width=80,
             fg_color="gray40",
@@ -420,30 +469,9 @@ class EmailView(ctk.CTkFrame):
         )
         self.sent_btn.pack(side="left", padx=2)
         
-        # Compose button
-        compose_btn = ctk.CTkButton(
-            tabs_frame,
-            text="✏️ Nieuw",
-            width=80,
-            fg_color="#34a853",
-            hover_color="#2d8f47",
-            command=self._on_compose
-        )
-        compose_btn.pack(side="left", padx=(20, 0))
-        
-        # Sync button
-        sync_btn = ctk.CTkButton(
-            tabs_frame,
-            text="🔄",
-            width=40,
-            fg_color="gray40",
-            command=self._on_sync
-        )
-        sync_btn.pack(side="left", padx=(10, 0))
-        
         # Content area (list or detail)
         self.content_frame = ctk.CTkFrame(self, fg_color="transparent")
-        self.content_frame.grid(row=1, column=0, sticky="nsew")
+        self.content_frame.grid(row=2, column=0, sticky="nsew")
         self.content_frame.grid_columnconfigure(0, weight=1)
         self.content_frame.grid_rowconfigure(0, weight=1)
         
@@ -456,11 +484,17 @@ class EmailView(ctk.CTkFrame):
         
         # Detail view (hidden initially)
         self.detail_view = EmailDetailView(self.content_frame, self._on_back_to_list)
+        
+        # Load account options
+        self._load_account_options()
     
     def refresh(self):
         """Refresh email list."""
         if self._showing_detail:
             return
+        
+        # Reload account options
+        self._load_account_options()
         
         # Clear list
         for widget in self.list_frame.winfo_children():
@@ -468,14 +502,26 @@ class EmailView(ctk.CTkFrame):
         
         db = get_db()
         with db.session() as session:
-            emails = session.query(Email).filter_by(
-                folder=self._current_folder
-            ).order_by(Email.sent_at.desc()).limit(50).all()
+            query = session.query(Email).filter_by(folder=self._current_folder)
+            
+            # Filter by account if selected
+            if self._account_filter:
+                query = query.filter_by(account_id=self._account_filter)
+            
+            emails = query.order_by(Email.sent_at.desc()).limit(50).all()
+            
+            # Check if any accounts configured
+            accounts_count = session.query(EmailAccount).count()
             
             if not emails:
+                if accounts_count == 0:
+                    empty_text = "Geen email accounts geconfigureerd.\n\nGa naar ⚙️ Instellingen om je email accounts toe te voegen."
+                else:
+                    empty_text = "Geen emails in deze folder.\n\nKlik op 🔄 Sync om emails op te halen."
+                
                 empty_label = ctk.CTkLabel(
                     self.list_frame,
-                    text="Geen emails.\n\nConfigureer je email account in Instellingen\nen klik op 🔄 om te synchroniseren.",
+                    text=empty_text,
                     text_color="gray50",
                     justify="center"
                 )
@@ -517,11 +563,103 @@ class EmailView(ctk.CTkFrame):
         self.list_frame.grid(row=0, column=0, sticky="nsew")
         self.refresh()
     
+    def _load_account_options(self):
+        """Load email accounts into dropdown."""
+        db = get_db()
+        with db.session() as session:
+            accounts = session.query(EmailAccount).filter_by(is_active=True).all()
+            
+            options = ["Alle accounts"]
+            self._account_map = {"Alle accounts": None}
+            
+            for acc in accounts:
+                label = f"{acc.name} ({acc.email})"
+                options.append(label)
+                self._account_map[label] = acc.id
+            
+            self.account_dropdown.configure(values=options)
+    
+    def _on_account_filter(self, selection: str):
+        """Handle account filter change."""
+        self._account_filter = self._account_map.get(selection)
+        self.refresh()
+    
     def _on_compose(self):
         """Open compose dialog."""
         ComposeDialog(self)
     
     def _on_sync(self):
-        """Sync emails."""
-        # TODO: Implement email sync
-        pass
+        """Sync emails from all accounts."""
+        if self._syncing:
+            return
+        
+        self._syncing = True
+        self.sync_btn.configure(text="⏳...", state="disabled")
+        
+        def do_sync():
+            from ..services.email_service import EmailService
+            
+            db = get_db()
+            total_new = 0
+            errors = []
+            
+            with db.session() as session:
+                accounts = session.query(EmailAccount).filter_by(is_active=True).all()
+                
+                if not accounts:
+                    self.after(0, lambda: messagebox.showinfo(
+                        "Sync",
+                        "Geen email accounts geconfigureerd.\n\nGa naar Instellingen om accounts toe te voegen."
+                    ))
+                    return
+                
+                for account in accounts:
+                    try:
+                        password = Config.decrypt(account.password_encrypted)
+                        
+                        service = EmailService(
+                            host=account.imap_host,
+                            imap_port=account.imap_port,
+                            smtp_port=account.smtp_port,
+                            username=account.username,
+                            password=password
+                        )
+                        
+                        # Fetch emails
+                        new_emails = service.fetch_emails(folder="INBOX", limit=30)
+                        total_new += len(new_emails)
+                        
+                        # Update account_id on fetched emails
+                        for email in new_emails:
+                            email.account_id = account.id
+                        
+                        service.disconnect_imap()
+                        logger.info(f"Synced {len(new_emails)} emails from {account.email}")
+                        
+                    except Exception as e:
+                        errors.append(f"{account.name}: {e}")
+                        logger.error(f"Sync error for {account.email}: {e}")
+            
+            # Update UI on main thread
+            def finish():
+                self._syncing = False
+                self.sync_btn.configure(text="🔄 Sync", state="normal")
+                self._load_account_options()
+                self.refresh()
+                
+                if errors:
+                    messagebox.showwarning(
+                        "Sync Resultaat",
+                        f"Sync voltooid met fouten:\n\n" + "\n".join(errors)
+                    )
+                else:
+                    messagebox.showinfo(
+                        "Sync Voltooid",
+                        f"✅ {total_new} nieuwe emails opgehaald!"
+                    )
+            
+            self.after(0, finish)
+        
+        # Run sync in background thread
+        thread = threading.Thread(target=do_sync, daemon=True)
+        thread.start()
