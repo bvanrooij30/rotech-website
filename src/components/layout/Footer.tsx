@@ -1,13 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin, Linkedin, Github, Twitter, Shield, Clock, CheckCircle } from "lucide-react";
+import { Mail, Phone, MapPin, Shield, Clock, CheckCircle } from "lucide-react";
 
 const footerLinks = {
   diensten: [
     { name: "Website Laten Maken", href: "/diensten/website-laten-maken" },
     { name: "Webshop Laten Maken", href: "/diensten/webshop-laten-maken" },
     { name: "Web Applicatie", href: "/diensten/web-applicatie-ontwikkeling" },
-    { name: "Mobile App", href: "/diensten/mobile-app-ontwikkeling" },
+    { name: "Progressive Web App", href: "/diensten/progressive-web-app" },
     { name: "SEO Optimalisatie", href: "/diensten/seo-optimalisatie" },
     { name: "Website Onderhoud", href: "/diensten/website-onderhoud" },
   ],

@@ -15,7 +15,7 @@ const navigation = [
       { name: "Website Laten Maken", href: "/diensten/website-laten-maken" },
       { name: "Webshop Laten Maken", href: "/diensten/webshop-laten-maken" },
       { name: "Web Applicatie", href: "/diensten/web-applicatie-ontwikkeling" },
-      { name: "Mobile App", href: "/diensten/mobile-app-ontwikkeling" },
+      { name: "Progressive Web App", href: "/diensten/progressive-web-app" },
       { name: "SEO Optimalisatie", href: "/diensten/seo-optimalisatie" },
       { name: "Website Onderhoud", href: "/diensten/website-onderhoud" },
       { name: "Digital Process Automation", href: "/diensten/digital-process-automation" },

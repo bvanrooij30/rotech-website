@@ -1040,7 +1040,7 @@ Voorbeelden:
         print("1. Ga naar https://apify.com/ en maak een account")
         print("2. Ga naar Settings > Integrations > API tokens")
         print("3. Kopieer je Personal API token")
-        print("4. Voeg toe aan .env: APIFY_API_TOKEN=jouw_token")
+        print("4. Voeg toe aan .env: APIFY_API_TOKEN=jouw_api_token_hier")
         sys.exit(1)
     
     # Presets - Nederland & België
