@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import { ChatWidget } from "@/components/chat";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import DevelopmentBanner from "@/components/ui/DevelopmentBanner";
 // Validate environment variables on startup
 import "@/lib/env-validation";
 
@@ -105,6 +106,8 @@ export default function RootLayout({
         className={`${spaceGrotesk.variable} ${inter.variable} antialiased bg-slate-50 text-slate-900`}
       >
         <ErrorBoundary>
+          {/* TODO: Verwijder DevelopmentBanner wanneer website volledig klaar is */}
+          <DevelopmentBanner />
           <Header />
           <main className="min-h-screen">{children}</main>
           <Footer />
