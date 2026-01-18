@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin, Linkedin, Github, Twitter } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Github, Twitter, Shield, Clock, CheckCircle } from "lucide-react";
 
 const footerLinks = {
   diensten: [
@@ -141,6 +141,26 @@ export default function Footer() {
               </div>
             </div>
             */}
+          </div>
+        </div>
+      </div>
+
+      {/* Trust Badges Bar */}
+      <div className="border-t border-white/10">
+        <div className="container-custom py-4">
+          <div className="flex flex-wrap justify-center gap-6 text-sm">
+            <div className="flex items-center gap-2 text-emerald-400">
+              <Shield className="w-4 h-4" />
+              <span>SSL Beveiligd</span>
+            </div>
+            <div className="flex items-center gap-2 text-emerald-400">
+              <CheckCircle className="w-4 h-4" />
+              <span>100% Maatwerk</span>
+            </div>
+            <div className="flex items-center gap-2 text-emerald-400">
+              <Clock className="w-4 h-4" />
+              <span>Reactie binnen 24u</span>
+            </div>
           </div>
         </div>
       </div>

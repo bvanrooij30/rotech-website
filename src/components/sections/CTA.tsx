@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { ArrowRight, MessageCircle, CheckCircle } from "lucide-react";
 
 export default function CTA() {
   return (
@@ -66,6 +66,28 @@ export default function CTA() {
               <MessageCircle className="w-5 h-5" />
               WhatsApp
             </a>
+          </motion.div>
+
+          {/* Trust indicators */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+            className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-slate-400"
+          >
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-emerald-400" />
+              <span>Gratis & vrijblijvend</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-emerald-400" />
+              <span>Reactie binnen 24 uur</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-emerald-400" />
+              <span>Geen verplichtingen</span>
+            </div>
           </motion.div>
         </div>
       </div>

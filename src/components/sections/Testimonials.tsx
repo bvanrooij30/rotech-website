@@ -143,7 +143,7 @@ export default function Testimonials() {
           ))}
         </motion.div>
 
-        {/* Stats met psychologische elementen */}
+          {/* Stats met psychologische elementen */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -151,18 +151,24 @@ export default function Testimonials() {
           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6"
         >
           {[
-            { value: "50+", label: "Projecten afgerond", icon: "✓" },
-            { value: "45+", label: "Tevreden klanten", icon: "👥" },
-            { value: "4.9/5", label: "Gemiddelde rating", icon: "⭐" },
-            { value: "98%", label: "Tevredenheid", icon: "💯" },
+            { value: "50+", label: "Projecten afgerond", icon: "✓", highlight: true },
+            { value: "45+", label: "Tevreden klanten", icon: "👥", highlight: false },
+            { value: "4.9/5", label: "Gemiddelde rating", icon: "⭐", highlight: false },
+            { value: "98%", label: "Tevredenheid", icon: "💯", highlight: true },
           ].map((stat, index) => (
             <motion.div
               key={index}
               whileHover={{ scale: 1.05 }}
-              className="text-center p-6 bg-gradient-to-br from-slate-50 to-white rounded-xl border border-slate-100 hover:border-indigo-200 hover:shadow-md transition-all"
+              className={`text-center p-6 rounded-xl border transition-all ${
+                stat.highlight 
+                  ? "bg-gradient-to-br from-emerald-50 to-white border-emerald-200 hover:border-emerald-300 hover:shadow-emerald-100" 
+                  : "bg-gradient-to-br from-slate-50 to-white border-slate-100 hover:border-indigo-200"
+              } hover:shadow-md`}
             >
-              <div className="text-3xl mb-2">{stat.icon}</div>
-              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">
+              <div className={`text-3xl mb-2 ${stat.highlight ? "text-emerald-500" : ""}`}>{stat.icon}</div>
+              <div className={`text-3xl md:text-4xl font-bold mb-2 ${
+                stat.highlight ? "text-emerald-600" : "gradient-text"
+              }`}>
                 {stat.value}
               </div>
               <div className="text-sm text-slate-600">{stat.label}</div>

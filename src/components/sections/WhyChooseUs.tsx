@@ -16,31 +16,37 @@ const reasons = [
     icon: Rocket,
     title: "Snelle Oplevering",
     description: "Geen maandenlange trajecten. Wij leveren snel, zonder concessies aan kwaliteit.",
+    trustHighlight: false,
   },
   {
     icon: Code2,
     title: "Moderne Technologie",
     description: "Wij gebruiken de nieuwste technologieën voor snelle, veilige en schaalbare oplossingen.",
+    trustHighlight: false,
   },
   {
     icon: TrendingUp,
     title: "SEO Geoptimaliseerd",
     description: "Elke website is gebouwd met SEO in gedachten. Gevonden worden in Google is essentieel.",
+    trustHighlight: false,
   },
   {
     icon: Shield,
     title: "Veilig & Betrouwbaar",
     description: "SSL, regelmatige updates en beveiligingsmonitoring zijn standaard inbegrepen.",
+    trustHighlight: true, // Security = trust = green
   },
   {
     icon: Headphones,
     title: "Persoonlijke Support",
     description: "Direct contact met uw developer. Geen helpdesk of wachtrijen, maar persoonlijke aandacht.",
+    trustHighlight: true, // Support = trust = green
   },
   {
     icon: Heart,
     title: "100% Maatwerk",
     description: "Geen templates of standaardoplossingen. Alles wordt specifiek voor uw bedrijf gebouwd.",
+    trustHighlight: false,
   },
 ];
 
@@ -118,8 +124,14 @@ export default function WhyChooseUs() {
                 <div className="flex gap-5">
                   {/* Icon */}
                   <div className="shrink-0">
-                    <div className="w-14 h-14 rounded-xl bg-indigo-100 group-hover:gradient-bg flex items-center justify-center transition-all duration-300">
-                      <IconComponent className="w-7 h-7 text-indigo-600 group-hover:text-white transition-colors" />
+                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                      reason.trustHighlight 
+                        ? "bg-emerald-100 group-hover:bg-emerald-500" 
+                        : "bg-indigo-100 group-hover:gradient-bg"
+                    }`}>
+                      <IconComponent className={`w-7 h-7 group-hover:text-white transition-colors ${
+                        reason.trustHighlight ? "text-emerald-600" : "text-indigo-600"
+                      }`} />
                     </div>
                   </div>
 

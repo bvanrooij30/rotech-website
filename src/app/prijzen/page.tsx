@@ -275,13 +275,28 @@ export default function PrijzenPage() {
             ))}
           </div>
 
-          <div className="mt-12 p-6 bg-slate-50 rounded-2xl max-w-3xl mx-auto">
-            <h3 className="font-bold text-slate-900 mb-2">Hoe werken onze prijzen?</h3>
+          <div className="mt-12 p-6 bg-gradient-to-br from-emerald-50 to-white rounded-2xl max-w-3xl mx-auto border border-emerald-100">
+            <div className="flex items-center gap-2 mb-3">
+              <Check className="w-5 h-5 text-emerald-600" />
+              <h3 className="font-bold text-slate-900">Hoe werken onze prijzen?</h3>
+            </div>
             <ul className="text-sm text-slate-600 space-y-2">
-              <li>• <strong>Vanaf-prijzen</strong> zijn startprijzen voor standaard projecten</li>
-              <li>• <strong>Exacte prijs</strong> wordt bepaald na een vrijblijvend kennismakingsgesprek</li>
-              <li>• <strong>Geen verrassingen</strong> - u ontvangt een gedetailleerde offerte vooraf</li>
-              <li>• <strong>Betaling in termijnen</strong> mogelijk bij grotere projecten</li>
+              <li className="flex items-start gap-2">
+                <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                <span><strong>Vanaf-prijzen</strong> zijn startprijzen voor standaard projecten</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                <span><strong>Exacte prijs</strong> wordt bepaald na een vrijblijvend kennismakingsgesprek</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                <span><strong>Geen verrassingen</strong> - u ontvangt een gedetailleerde offerte vooraf</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                <span><strong>Betaling in termijnen</strong> mogelijk bij grotere projecten</span>
+              </li>
             </ul>
           </div>
         </div>

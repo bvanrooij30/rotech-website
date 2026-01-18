@@ -258,20 +258,98 @@ class ApifyLeadFinder:
     Met retry mechanisme, fallback actors en resume functionaliteit
     """
     
-    # Nederlandse steden met coördinaten (voor latere uitbreiding)
+    # =================================================================
+    # NEDERLAND - Alle belangrijke steden per provincie
+    # =================================================================
     DUTCH_CITIES = [
-        # Grote steden
-        "Amsterdam", "Rotterdam", "Den Haag", "Utrecht", "Eindhoven",
-        "Groningen", "Tilburg", "Almere", "Breda", "Nijmegen",
-        # Middelgrote steden
-        "Apeldoorn", "Haarlem", "Arnhem", "Enschede", "Amersfoort",
-        "Zaanstad", "Den Bosch", "Haarlemmermeer", "Zwolle", "Maastricht",
-        "Leiden", "Dordrecht", "Zoetermeer", "Emmen", "Ede",
-        "Venlo", "Delft", "Deventer", "Alkmaar", "Leeuwarden",
-        # Brabant regio
-        "Veldhoven", "Best", "Son en Breugel", "Helmond", "Valkenswaard",
-        "Geldrop", "Nuenen", "Waalre", "Oirschot", "Eersel",
+        # Noord-Holland
+        "Amsterdam", "Haarlem", "Zaanstad", "Haarlemmermeer", "Alkmaar",
+        "Hilversum", "Amstelveen", "Purmerend", "Hoorn", "Velsen",
+        "Den Helder", "Heerhugowaard", "Beverwijk", "Castricum",
+        
+        # Zuid-Holland  
+        "Rotterdam", "Den Haag", "Leiden", "Dordrecht", "Zoetermeer",
+        "Delft", "Westland", "Schiedam", "Vlaardingen", "Gouda",
+        "Alphen aan den Rijn", "Capelle aan den IJssel", "Spijkenisse",
+        "Leidschendam-Voorburg", "Rijswijk", "Katwijk", "Nissewaard",
+        
+        # Utrecht
+        "Utrecht", "Amersfoort", "Veenendaal", "Zeist", "Nieuwegein",
+        "Houten", "IJsselstein", "Woerden", "Soest", "Leusden",
+        
+        # Noord-Brabant
+        "Eindhoven", "Tilburg", "Breda", "Den Bosch", "Helmond",
+        "Oss", "Roosendaal", "Bergen op Zoom", "Veldhoven", "Waalwijk",
+        "Best", "Valkenswaard", "Geldrop", "Nuenen", "Waalre",
+        "Oirschot", "Eersel", "Son en Breugel", "Boxtel", "Veghel",
+        
+        # Gelderland
+        "Arnhem", "Nijmegen", "Apeldoorn", "Ede", "Deventer",
+        "Zutphen", "Doetinchem", "Harderwijk", "Zevenaar", "Wageningen",
+        "Tiel", "Barneveld", "Winterswijk", "Culemborg",
+        
+        # Overijssel
+        "Zwolle", "Enschede", "Almelo", "Hengelo", "Deventer",
+        "Kampen", "Oldenzaal", "Rijssen", "Hardenberg", "Raalte",
+        
+        # Limburg
+        "Maastricht", "Venlo", "Sittard-Geleen", "Heerlen", "Roermond",
+        "Weert", "Kerkrade", "Venray", "Landgraaf", "Brunssum",
+        
+        # Groningen
+        "Groningen", "Hoogezand-Sappemeer", "Veendam", "Stadskanaal",
+        "Delfzijl", "Winschoten", "Leek",
+        
+        # Friesland
+        "Leeuwarden", "Drachten", "Sneek", "Heerenveen", "Harlingen",
+        "Franeker", "Dokkum", "Joure",
+        
+        # Drenthe
+        "Emmen", "Assen", "Hoogeveen", "Meppel", "Coevorden",
+        
+        # Flevoland
+        "Almere", "Lelystad", "Dronten", "Zeewolde",
+        
+        # Zeeland
+        "Middelburg", "Vlissingen", "Goes", "Terneuzen", "Zierikzee",
     ]
+    
+    # =================================================================
+    # BELGIË - Alle belangrijke steden per regio
+    # =================================================================
+    BELGIAN_CITIES = [
+        # Vlaanderen - Antwerpen
+        "Antwerpen", "Mechelen", "Turnhout", "Lier", "Herentals",
+        "Geel", "Mol", "Hoogstraten", "Brasschaat", "Schoten",
+        "Mortsel", "Boom", "Wilrijk", "Berchem", "Deurne",
+        
+        # Vlaanderen - Oost-Vlaanderen
+        "Gent", "Aalst", "Sint-Niklaas", "Dendermonde", "Lokeren",
+        "Ronse", "Wetteren", "Zele", "Geraardsbergen", "Ninove",
+        
+        # Vlaanderen - West-Vlaanderen
+        "Brugge", "Oostende", "Kortrijk", "Roeselare", "Ieper",
+        "Knokke-Heist", "Waregem", "Blankenberge", "Torhout", "Izegem",
+        
+        # Vlaanderen - Vlaams-Brabant
+        "Leuven", "Vilvoorde", "Halle", "Tienen", "Aarschot",
+        "Diest", "Zaventem", "Overijse", "Tervuren", "Grimbergen",
+        
+        # Vlaanderen - Limburg (BE)
+        "Hasselt", "Genk", "Sint-Truiden", "Beringen", "Lommel",
+        "Tongeren", "Maasmechelen", "Bilzen", "Leopoldsburg",
+        
+        # Brussel
+        "Brussel", "Schaarbeek", "Anderlecht", "Molenbeek", "Elsene",
+        "Ukkel", "Vorst", "Etterbeek", "Jette", "Sint-Gillis",
+        
+        # Wallonië (Franstalig - ook potentie)
+        "Luik", "Charleroi", "Namen", "Bergen", "La Louvière",
+        "Doornik", "Verviers", "Moeskroen", "Seraing", "Aarlen",
+    ]
+    
+    # Gecombineerde lijst voor gemak
+    ALL_CITIES = DUTCH_CITIES + BELGIAN_CITIES
     
     # Business categorieën met Nederlandse zoektermen
     BUSINESS_CATEGORIES = {
@@ -921,7 +999,11 @@ Voorbeelden:
     parser.add_argument('--no-wait', action='store_true', help='Start en sluit af (async)')
     parser.add_argument('--no-resume', action='store_true', help='Negeer resume state')
     parser.add_argument('--clear-cache', action='store_true', help='Wis resume cache')
-    parser.add_argument('--preset', choices=['lokaal', 'brabant', 'randstad', 'nederland'])
+    parser.add_argument('--preset', choices=[
+        'lokaal', 'brabant', 'randstad', 'noord', 'oost', 'zuid', 'nederland',  # NL
+        'vlaanderen', 'brussel', 'belgie',  # BE
+        'alles'  # NL + BE
+    ], help='Preset regio')
     parser.add_argument('--list-cities', action='store_true', help='Toon steden')
     parser.add_argument('--list-categories', action='store_true', help='Toon categorieën')
     parser.add_argument('--output', type=str, help='Output bestandsnaam')
@@ -930,9 +1012,13 @@ Voorbeelden:
     
     # Info commands
     if args.list_cities:
-        print("\n📍 Beschikbare steden:")
+        print("\n🇳🇱 Nederlandse steden:")
         for city in sorted(ApifyLeadFinder.DUTCH_CITIES):
             print(f"  - {city}")
+        print(f"\n🇧🇪 Belgische steden:")
+        for city in sorted(ApifyLeadFinder.BELGIAN_CITIES):
+            print(f"  - {city}")
+        print(f"\n📊 Totaal: {len(ApifyLeadFinder.DUTCH_CITIES)} NL + {len(ApifyLeadFinder.BELGIAN_CITIES)} BE = {len(ApifyLeadFinder.ALL_CITIES)} steden")
         return
     
     if args.list_categories:
@@ -957,22 +1043,66 @@ Voorbeelden:
         print("4. Voeg toe aan .env: APIFY_API_TOKEN=jouw_token")
         sys.exit(1)
     
-    # Presets
+    # Presets - Nederland & België
     presets = {
+        # Lokale tests
         'lokaal': {
             'cities': ["Veldhoven", "Eindhoven", "Best"],
             'categories': ["kapper", "restaurant", "fysiotherapeut", "autobedrijf"]
         },
+        
+        # Nederlandse regio's
         'brabant': {
-            'cities': ["Eindhoven", "Veldhoven", "Best", "Helmond", "Tilburg", "Den Bosch", "Breda"],
-            'categories': list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:15]
+            'cities': ["Eindhoven", "Tilburg", "Breda", "Den Bosch", "Helmond", "Oss", 
+                       "Roosendaal", "Bergen op Zoom", "Veldhoven", "Waalwijk", "Best"],
+            'categories': list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:20]
         },
         'randstad': {
-            'cities': ["Amsterdam", "Rotterdam", "Den Haag", "Utrecht", "Haarlem", "Leiden", "Delft"],
-            'categories': list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:15]
+            'cities': ["Amsterdam", "Rotterdam", "Den Haag", "Utrecht", "Haarlem", 
+                       "Leiden", "Delft", "Dordrecht", "Zoetermeer", "Amstelveen"],
+            'categories': list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:20]
         },
+        'noord': {
+            'cities': ["Groningen", "Leeuwarden", "Assen", "Emmen", "Zwolle", 
+                       "Drachten", "Sneek", "Heerenveen", "Hoogeveen", "Meppel"],
+            'categories': list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:20]
+        },
+        'oost': {
+            'cities': ["Arnhem", "Nijmegen", "Apeldoorn", "Enschede", "Deventer",
+                       "Zutphen", "Harderwijk", "Almelo", "Hengelo", "Ede"],
+            'categories': list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:20]
+        },
+        'zuid': {
+            'cities': ["Maastricht", "Venlo", "Heerlen", "Sittard-Geleen", "Roermond",
+                       "Weert", "Kerkrade", "Venray", "Middelburg", "Vlissingen"],
+            'categories': list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:20]
+        },
+        
+        # Heel Nederland
         'nederland': {
-            'cities': ApifyLeadFinder.DUTCH_CITIES[:25],
+            'cities': ApifyLeadFinder.DUTCH_CITIES,
+            'categories': list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())
+        },
+        
+        # België
+        'vlaanderen': {
+            'cities': ["Antwerpen", "Gent", "Brugge", "Leuven", "Mechelen", "Hasselt",
+                       "Kortrijk", "Oostende", "Aalst", "Sint-Niklaas", "Roeselare"],
+            'categories': list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:20]
+        },
+        'brussel': {
+            'cities': ["Brussel", "Schaarbeek", "Anderlecht", "Molenbeek", "Elsene",
+                       "Ukkel", "Vorst", "Etterbeek", "Jette", "Sint-Gillis"],
+            'categories': list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:20]
+        },
+        'belgie': {
+            'cities': ApifyLeadFinder.BELGIAN_CITIES,
+            'categories': list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())
+        },
+        
+        # ALLES - Nederland + België
+        'alles': {
+            'cities': ApifyLeadFinder.ALL_CITIES,
             'categories': list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())
         }
     }

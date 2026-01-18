@@ -62,46 +62,77 @@ EXTRACT_EMAILS = True
 # ============================================================
 
 PRESETS = {
+    # === LOKAAL / TEST ===
     "lokaal": {
         "steden": ["Veldhoven", "Eindhoven", "Best"],
         "categorieen": ["kapper", "restaurant", "fysiotherapeut", "autobedrijf"],
-        "beschrijving": "Jouw directe regio - 3 steden, 4 categorieën"
+        "beschrijving": "Jouw directe regio - 3 steden, 4 cat."
     },
+    
+    # === NEDERLANDSE REGIO'S ===
     "brabant": {
-        "steden": [
-            "Eindhoven", "Veldhoven", "Best", "Helmond", "Tilburg", 
-            "Den Bosch", "Breda", "Valkenswaard", "Geldrop", "Nuenen"
-        ],
-        "categorieen": [
-            "kapper", "restaurant", "fysiotherapeut", "tandarts", "autobedrijf",
-            "installateur", "aannemer", "schoonheidssalon", "advocaat", "accountant",
-            "sportschool", "bloemenwinkel", "opticien", "bakkerij", "garage"
-        ],
-        "beschrijving": "Noord-Brabant - 10 steden, 15 categorieën"
+        "steden": ["Eindhoven", "Tilburg", "Breda", "Den Bosch", "Helmond", 
+                   "Oss", "Roosendaal", "Bergen op Zoom", "Veldhoven", "Waalwijk"],
+        "categorieen": list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:20],
+        "beschrijving": "Noord-Brabant - 10 steden, 20 cat."
     },
     "randstad": {
-        "steden": [
-            "Amsterdam", "Rotterdam", "Den Haag", "Utrecht", 
-            "Haarlem", "Leiden", "Delft", "Dordrecht", "Zoetermeer", "Almere"
-        ],
-        "categorieen": [
-            "kapper", "restaurant", "fysiotherapeut", "tandarts", "autobedrijf",
-            "installateur", "aannemer", "schoonheidssalon", "advocaat", "accountant",
-            "sportschool", "bloemenwinkel", "opticien", "bakkerij", "garage"
-        ],
-        "beschrijving": "Randstad - 10 steden, 15 categorieën"
+        "steden": ["Amsterdam", "Rotterdam", "Den Haag", "Utrecht", "Haarlem", 
+                   "Leiden", "Delft", "Dordrecht", "Zoetermeer", "Amstelveen"],
+        "categorieen": list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:20],
+        "beschrijving": "Randstad - 10 steden, 20 cat."
+    },
+    "noord": {
+        "steden": ["Groningen", "Leeuwarden", "Assen", "Emmen", "Zwolle", 
+                   "Drachten", "Sneek", "Heerenveen", "Hoogeveen", "Meppel"],
+        "categorieen": list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:20],
+        "beschrijving": "Noord-Nederland - 10 steden, 20 cat."
+    },
+    "oost": {
+        "steden": ["Arnhem", "Nijmegen", "Apeldoorn", "Enschede", "Deventer",
+                   "Zutphen", "Harderwijk", "Almelo", "Hengelo", "Ede"],
+        "categorieen": list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:20],
+        "beschrijving": "Oost-Nederland - 10 steden, 20 cat."
+    },
+    "zuid": {
+        "steden": ["Maastricht", "Venlo", "Heerlen", "Sittard-Geleen", "Roermond",
+                   "Weert", "Kerkrade", "Venray", "Middelburg", "Vlissingen"],
+        "categorieen": list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:20],
+        "beschrijving": "Zuid-Nederland (Limburg/Zeeland) - 10 steden, 20 cat."
     },
     "nederland": {
-        "steden": [
-            "Amsterdam", "Rotterdam", "Den Haag", "Utrecht", "Eindhoven",
-            "Groningen", "Tilburg", "Almere", "Breda", "Nijmegen",
-            "Apeldoorn", "Haarlem", "Arnhem", "Enschede", "Amersfoort",
-            "Den Bosch", "Zwolle", "Maastricht", "Leiden", "Dordrecht",
-            "Veldhoven", "Best", "Helmond", "Delft", "Alkmaar"
-        ],
+        "steden": ApifyLeadFinder.DUTCH_CITIES,
         "categorieen": list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys()),
-        "beschrijving": "Heel Nederland - 25 steden, alle categorieën"
+        "beschrijving": f"HEEL NEDERLAND - {len(ApifyLeadFinder.DUTCH_CITIES)} steden, alle cat."
     },
+    
+    # === BELGISCHE REGIO'S ===
+    "vlaanderen": {
+        "steden": ["Antwerpen", "Gent", "Brugge", "Leuven", "Mechelen", "Hasselt",
+                   "Kortrijk", "Oostende", "Aalst", "Sint-Niklaas", "Roeselare"],
+        "categorieen": list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:20],
+        "beschrijving": "Vlaanderen - 11 steden, 20 cat."
+    },
+    "brussel": {
+        "steden": ["Brussel", "Schaarbeek", "Anderlecht", "Molenbeek", "Elsene",
+                   "Ukkel", "Vorst", "Etterbeek", "Jette", "Sint-Gillis"],
+        "categorieen": list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys())[:20],
+        "beschrijving": "Brussel regio - 10 gemeenten, 20 cat."
+    },
+    "belgie": {
+        "steden": ApifyLeadFinder.BELGIAN_CITIES,
+        "categorieen": list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys()),
+        "beschrijving": f"HEEL BELGIE - {len(ApifyLeadFinder.BELGIAN_CITIES)} steden, alle cat."
+    },
+    
+    # === ALLES ===
+    "alles": {
+        "steden": ApifyLeadFinder.ALL_CITIES,
+        "categorieen": list(ApifyLeadFinder.BUSINESS_CATEGORIES.keys()),
+        "beschrijving": f"NL + BE - {len(ApifyLeadFinder.ALL_CITIES)} steden, alle cat."
+    },
+    
+    # === CUSTOM ===
     "custom": {
         "steden": CUSTOM_STEDEN,
         "categorieen": CUSTOM_CATEGORIEEN,
