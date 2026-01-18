@@ -17,6 +17,13 @@ import sys
 import argparse
 from pathlib import Path
 
+# Fix Windows console encoding voor emoji's
+if sys.platform == 'win32':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    except AttributeError:
+        pass  # Python < 3.7 fallback
+
 # Voeg src toe aan path
 sys.path.insert(0, str(Path(__file__).parent))
 

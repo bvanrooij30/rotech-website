@@ -92,20 +92,12 @@ const localBusinessSchema = {
   },
   areaServed: [
     {
-      "@type": "City",
-      name: "Veldhoven",
-    },
-    {
-      "@type": "City",
-      name: "Eindhoven",
-    },
-    {
-      "@type": "State",
-      name: "Noord-Brabant",
+      "@type": "Country",
+      name: "Nederland",
     },
     {
       "@type": "Country",
-      name: "Nederland",
+      name: "België",
     },
   ],
 };
@@ -175,10 +167,16 @@ export function ServiceSchema({ service }: { service: { title: string; descripti
       name: "RoTech Development",
       url: baseUrl,
     },
-    areaServed: {
-      "@type": "Country",
-      name: "Nederland",
-    },
+    areaServed: [
+      {
+        "@type": "Country",
+        name: "Nederland",
+      },
+      {
+        "@type": "Country",
+        name: "België",
+      },
+    ],
     offers: {
       "@type": "Offer",
       priceSpecification: {

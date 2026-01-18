@@ -16,7 +16,7 @@ export const faqItems: FAQItem[] = [
   {
     id: "2",
     question: "In welke regio zijn jullie actief?",
-    answer: "Wij zijn gevestigd in de regio Eindhoven maar werken voor klanten door heel Nederland. Dankzij online communicatietools kunnen we effectief samenwerken, ongeacht uw locatie.",
+    answer: "Wij zijn gevestigd in Nederland maar werken voor klanten door heel Nederland én België. Dankzij online communicatietools kunnen we effectief samenwerken, ongeacht uw locatie.",
     category: "algemeen",
   },
   {
@@ -36,7 +36,7 @@ export const faqItems: FAQItem[] = [
   {
     id: "5",
     question: "Moet ik alles vooraf betalen?",
-    answer: "Nee, wij werken met een betaling in termijnen: 30% bij start, 40% halverwege en 30% bij oplevering. Bij grotere projecten kunnen we een aangepast betalingsschema afspreken.",
+    answer: "Nee, wij werken met een betaling in twee termijnen: 50% bij akkoord op de offerte en 50% bij oplevering. Zo heeft u zekerheid en wij ook. Bij grotere projecten kunnen we een aangepast betalingsschema afspreken.",
     category: "prijzen",
   },
   {
