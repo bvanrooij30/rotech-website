@@ -72,7 +72,6 @@ export default function Services() {
         >
           {services.map((service) => {
             const IconComponent = service.icon;
-            const isHighlighted = service.slug === "webshop-laten-maken";
             return (
               <motion.div
                 key={service.slug}
@@ -82,22 +81,14 @@ export default function Services() {
                   href={`/diensten/${service.slug}`}
                   className="group block h-full"
                 >
-                  <div className={`h-full flex flex-col bg-white rounded-2xl p-6 transition-all duration-300 ${
-                    isHighlighted 
-                      ? "border-2 border-emerald-500 shadow-xl shadow-emerald-500/20 hover:shadow-2xl hover:shadow-emerald-500/30" 
-                      : "border border-slate-100 shadow-sm hover:shadow-lg hover:border-slate-200"
-                  }`}>
-                    {/* Icon - Always purple gradient */}
+                  <div className="card h-full flex flex-col">
+                    {/* Icon */}
                     <div className="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                       <IconComponent className="w-7 h-7 text-white" />
                     </div>
 
                     {/* Title */}
-                    <h3 className={`text-xl font-bold mb-3 transition-colors ${
-                      isHighlighted 
-                        ? "text-emerald-700 group-hover:text-emerald-600" 
-                        : "text-slate-900 group-hover:text-indigo-600"
-                    }`}>
+                    <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">
                       {service.shortTitle}
                     </h3>
 
@@ -108,15 +99,11 @@ export default function Services() {
 
                     {/* Delivery info */}
                     <div className="text-sm text-slate-500 mb-4">
-                      <span className={`font-semibold ${isHighlighted ? "text-emerald-600" : "text-slate-800"}`}>
-                        {service.deliveryTime}
-                      </span>
+                      <span className="font-semibold text-slate-800">{service.deliveryTime}</span>
                     </div>
 
                     {/* Link */}
-                    <div className={`flex items-center font-medium group-hover:gap-3 gap-2 transition-all ${
-                      isHighlighted ? "text-emerald-600" : "text-indigo-600"
-                    }`}>
+                    <div className="flex items-center text-indigo-600 font-medium group-hover:gap-3 gap-2 transition-all">
                       <span>Meer info</span>
                       <ArrowRight className="w-4 h-4" />
                     </div>

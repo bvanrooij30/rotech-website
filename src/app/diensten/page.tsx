@@ -60,20 +60,15 @@ export default function DienstenPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {services.map((service) => {
               const IconComponent = service.icon;
-              const isHighlighted = service.slug === "webshop-laten-maken";
               return (
                 <Link
                   key={service.slug}
                   href={`/diensten/${service.slug}`}
                   className="group"
                 >
-                  <div className={`h-full bg-white rounded-2xl p-6 transition-all duration-300 ${
-                    isHighlighted 
-                      ? "border-2 border-emerald-500 shadow-xl shadow-emerald-500/20 hover:shadow-2xl hover:shadow-emerald-500/30" 
-                      : "border border-slate-100 shadow-sm hover:shadow-lg hover:border-indigo-100"
-                  }`}>
+                  <div className="card h-full border-2 border-transparent hover:border-indigo-100">
                     <div className="flex gap-6">
-                      {/* Icon - Always purple gradient */}
+                      {/* Icon */}
                       <div className="shrink-0">
                         <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                           <IconComponent className="w-8 h-8 text-white" />
@@ -82,11 +77,7 @@ export default function DienstenPage() {
 
                       {/* Content */}
                       <div className="flex-grow">
-                        <h2 className={`text-2xl font-bold mb-3 transition-colors ${
-                          isHighlighted 
-                            ? "text-emerald-700 group-hover:text-emerald-600" 
-                            : "text-slate-900 group-hover:text-indigo-600"
-                        }`}>
+                        <h2 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">
                           {service.title}
                         </h2>
                         <p className="text-slate-600 mb-4">
@@ -107,13 +98,9 @@ export default function DienstenPage() {
 
                         <div className="flex items-center justify-between">
                           <div>
-                            <span className={`text-sm font-medium ${isHighlighted ? "text-emerald-600" : "text-slate-700"}`}>
-                              {service.deliveryTime}
-                            </span>
+                            <span className="text-sm font-medium text-slate-700">{service.deliveryTime}</span>
                           </div>
-                          <div className={`flex items-center gap-2 font-medium group-hover:gap-3 transition-all ${
-                            isHighlighted ? "text-emerald-600" : "text-indigo-600"
-                          }`}>
+                          <div className="flex items-center gap-2 text-indigo-600 font-medium group-hover:gap-3 transition-all">
                             <span>Meer informatie</span>
                             <ArrowRight className="w-4 h-4" />
                           </div>
