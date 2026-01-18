@@ -200,12 +200,12 @@ export default function PrijzenPage() {
                 key={pkg.name}
                 className={`relative rounded-2xl border-2 ${
                   pkg.popular
-                    ? "border-amber-500 shadow-xl shadow-amber-500/15"
+                    ? "border-emerald-500 shadow-xl shadow-emerald-500/20"
                     : "border-slate-200"
                 } bg-white overflow-hidden`}
               >
                 {pkg.popular && (
-                  <div className="absolute top-0 left-0 right-0 bg-amber-500 text-slate-900 text-center py-1 text-sm font-bold">
+                  <div className="absolute top-0 left-0 right-0 bg-emerald-500 text-white text-center py-1 text-sm font-bold">
                     <Star className="w-4 h-4 inline mr-1" />
                     Populairste keuze
                   </div>
