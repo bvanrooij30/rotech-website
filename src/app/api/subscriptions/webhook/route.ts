@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getMollieClient } from "@/lib/mollie";
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,8 +9,6 @@ export async function POST(request: NextRequest) {
         { status: 503 }
       );
     }
-
-    const mollieClient = getMollieClient();
     const body = await request.text();
     const params = new URLSearchParams(body);
     const subscriptionId = params.get("id");

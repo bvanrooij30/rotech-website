@@ -44,8 +44,6 @@ const offerteSchema = z.object({
   }),
 });
 
-type OfferteFormData = z.infer<typeof offerteSchema>;
-
 // Project type labels
 const projectTypeLabels: Record<string, string> = {
   website: "Website",

@@ -125,16 +125,13 @@ class EmailSyncScheduler:
                             password=password
                         )
                         
-                        # Fetch new emails
+                        # Fetch new emails with account_id
                         new_emails = service.fetch_emails(
                             folder="INBOX",
                             limit=50,
-                            since_date=account.last_sync
+                            since_date=account.last_sync,
+                            account_id=account.id
                         )
-                        
-                        # Update account_id on emails
-                        for email in new_emails:
-                            email.account_id = account.id
                         
                         # Update last sync time
                         account.last_sync = datetime.now()

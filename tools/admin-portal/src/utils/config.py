@@ -48,6 +48,7 @@ class Config:
     WEBHOOK_SECRET: str = os.getenv("WEBHOOK_SECRET", "")
     WEBSITE_API_URL: str = os.getenv("WEBSITE_API_URL", "https://ro-techdevelopment.dev/api")
     WEBSITE_ADMIN_API_KEY: str = os.getenv("WEBSITE_ADMIN_API_KEY", "rotech-admin-secret-key")
+    PAYMENT_SYNC_INTERVAL: int = int(os.getenv("PAYMENT_SYNC_INTERVAL", "5"))  # minutes
     
     # === LEAD FINDER ===
     LEAD_FINDER_OUTPUT: Path = Path(os.getenv("LEAD_FINDER_OUTPUT", "../lead-finder/output"))

@@ -172,7 +172,7 @@ export default function LeadDashboard() {
   const filteredLeads = useMemo(() => {
     if (!data?.leads) return [];
     
-    let filtered = data.leads.filter(lead => {
+    const filtered = data.leads.filter(lead => {
       // Search
       if (searchQuery) {
         const query = searchQuery.toLowerCase();

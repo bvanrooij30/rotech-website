@@ -42,8 +42,9 @@ class AdminPortalApp(ctk.CTk):
         self._views: Dict[str, ctk.CTkFrame] = {}
         self._current_view: Optional[str] = None
         
-        # Sync scheduler reference
+        # Sync scheduler references
         self._sync_scheduler = None
+        self._payment_scheduler = None
         
         # Build UI
         self._setup_ui()
@@ -127,7 +128,7 @@ class AdminPortalApp(ctk.CTk):
     
     def _start_background_services(self):
         """Start background sync services."""
-        # Check if any email accounts are configured
+        # Email sync
         db = get_db()
         with db.session() as session:
             account_count = session.query(EmailAccount).filter_by(is_active=True).count()
@@ -135,7 +136,10 @@ class AdminPortalApp(ctk.CTk):
         if account_count > 0:
             self._start_email_sync()
         else:
-            logger.info("No email accounts configured, skipping auto-sync")
+            logger.info("No email accounts configured, skipping email auto-sync")
+        
+        # Payment sync from website
+        self._start_payment_sync()
     
     def _start_email_sync(self):
         """Start automatic email sync in background."""
@@ -153,6 +157,33 @@ class AdminPortalApp(ctk.CTk):
         )
         
         logger.info(f"Auto-sync started: checking every {Config.EMAIL_SYNC_INTERVAL} minutes")
+    
+    def _start_payment_sync(self):
+        """Start automatic payment sync from website."""
+        from ..services.payment_sync_service import start_payment_sync
+        
+        def on_new_payments(count: int):
+            """Callback when new payments are synced."""
+            # Update UI on main thread
+            self.after(0, lambda: self._notify_new_payments(count))
+        
+        # Start scheduler with callback
+        self._payment_scheduler = start_payment_sync(
+            interval_minutes=Config.PAYMENT_SYNC_INTERVAL,
+            on_new_payments=on_new_payments
+        )
+        
+        logger.info(f"Payment auto-sync started: checking every {Config.PAYMENT_SYNC_INTERVAL} minutes")
+    
+    def _notify_new_payments(self, count: int):
+        """Show notification for new payments/invoices."""
+        # Refresh invoices view if it's active
+        if self._current_view in ['invoices', 'dashboard']:
+            if self._current_view in self._views:
+                self._views[self._current_view].refresh()
+        
+        # Show notification
+        self._show_toast(f"💰 {count} nieuwe betaling{'en' if count > 1 else ''} geïmporteerd!")
     
     def _notify_new_emails(self, count: int):
         """Show notification for new emails."""
@@ -197,10 +228,15 @@ class AdminPortalApp(ctk.CTk):
     
     def on_closing(self):
         """Handle window close."""
-        # Stop sync scheduler
+        # Stop email sync scheduler
         if self._sync_scheduler:
             from ..services.sync_service import stop_background_sync
             stop_background_sync()
+        
+        # Stop payment sync scheduler
+        if self._payment_scheduler:
+            from ..services.payment_sync_service import stop_payment_sync
+            stop_payment_sync()
         
         logger.info("Admin Portal closing")
         self.destroy()

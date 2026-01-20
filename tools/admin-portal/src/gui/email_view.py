@@ -9,6 +9,8 @@ from typing import Optional, List
 from datetime import datetime
 import threading
 
+from sqlalchemy.orm import joinedload
+
 from ..database import get_db
 from ..database.models import Email, EmailAccount
 from ..utils.config import Config, logger
@@ -16,19 +18,23 @@ from ..utils.helpers import format_datetime, truncate_text, extract_email_name
 
 
 class EmailListItem(ctk.CTkFrame):
-    """Email list item widget."""
+    """Email list item widget - improved layout with more info."""
     
     def __init__(
         self, 
         parent, 
         email: Email,
         on_click: callable,
+        show_account: bool = True,
         **kwargs
     ):
-        super().__init__(parent, corner_radius=8, **kwargs)
+        # Darker background for unread
+        bg_color = ("gray85", "gray20") if not email.is_read else ("gray90", "gray17")
+        super().__init__(parent, corner_radius=8, fg_color=bg_color, **kwargs)
         
         self.email = email
         self.on_click = on_click
+        self.show_account = show_account
         
         # Make clickable
         self.bind("<Button-1>", self._handle_click)
@@ -37,64 +43,136 @@ class EmailListItem(ctk.CTkFrame):
         self._setup_ui()
     
     def _setup_ui(self):
-        """Setup email item UI."""
+        """Setup email item UI with improved layout."""
         self.grid_columnconfigure(1, weight=1)
         
-        # Read indicator
-        indicator_color = "#1a73e8" if not self.email.is_read else "transparent"
+        # Read indicator (left border)
+        indicator_color = "#1a73e8" if not self.email.is_read else "gray40"
         indicator = ctk.CTkFrame(
             self,
             width=4,
             fg_color=indicator_color,
             corner_radius=2
         )
-        indicator.grid(row=0, column=0, rowspan=2, sticky="ns", padx=(0, 10), pady=5)
+        indicator.grid(row=0, column=0, rowspan=3, sticky="ns", padx=(0, 12), pady=8)
         
-        # From name
-        from_text = extract_email_name(self.email.from_name or self.email.from_address)
+        # Content container
+        content = ctk.CTkFrame(self, fg_color="transparent")
+        content.grid(row=0, column=1, rowspan=3, sticky="nsew", pady=8)
+        content.grid_columnconfigure(0, weight=1)
+        content.bind("<Button-1>", self._handle_click)
+        
+        # === ROW 1: From + Account badge + Time ===
+        row1 = ctk.CTkFrame(content, fg_color="transparent")
+        row1.grid(row=0, column=0, sticky="ew")
+        row1.grid_columnconfigure(1, weight=1)
+        row1.bind("<Button-1>", self._handle_click)
+        
+        # From name (bold for unread)
+        from_name = extract_email_name(self.email.from_name or self.email.from_address)
         font_weight = "bold" if not self.email.is_read else "normal"
         
         from_label = ctk.CTkLabel(
-            self,
-            text=from_text,
-            font=ctk.CTkFont(size=13, weight=font_weight),
+            row1,
+            text=from_name,
+            font=ctk.CTkFont(size=14, weight=font_weight),
             anchor="w"
         )
-        from_label.grid(row=0, column=1, sticky="w", pady=(8, 0))
+        from_label.grid(row=0, column=0, sticky="w")
         from_label.bind("<Button-1>", self._handle_click)
         
-        # Subject
-        subject_label = ctk.CTkLabel(
-            self,
-            text=truncate_text(self.email.subject or "(geen onderwerp)", 50),
-            font=ctk.CTkFont(size=12),
-            text_color="gray60",
-            anchor="w"
-        )
-        subject_label.grid(row=1, column=1, sticky="w", pady=(0, 8))
-        subject_label.bind("<Button-1>", self._handle_click)
+        # Account badge (which inbox received this)
+        if self.show_account and self.email.account:
+            account_name = self.email.account.name or self.email.account.email.split('@')[0]
+            badge = ctk.CTkLabel(
+                row1,
+                text=f"📥 {account_name}",
+                font=ctk.CTkFont(size=10),
+                text_color="gray50",
+                fg_color=("gray80", "gray25"),
+                corner_radius=4,
+                padx=6,
+                pady=2
+            )
+            badge.grid(row=0, column=1, sticky="w", padx=(10, 0))
+            badge.bind("<Button-1>", self._handle_click)
         
-        # Time
+        # Date/Time (right side)
+        time_text = format_datetime(self.email.sent_at)
         time_label = ctk.CTkLabel(
-            self,
-            text=format_datetime(self.email.sent_at),
+            row1,
+            text=time_text,
             font=ctk.CTkFont(size=11),
             text_color="gray50"
         )
-        time_label.grid(row=0, column=2, rowspan=2, padx=(10, 8))
+        time_label.grid(row=0, column=2, sticky="e", padx=(10, 0))
+        time_label.bind("<Button-1>", self._handle_click)
         
-        # Star button
+        # === ROW 2: Subject ===
+        subject_text = self.email.subject or "(geen onderwerp)"
+        subject_label = ctk.CTkLabel(
+            content,
+            text=truncate_text(subject_text, 80),
+            font=ctk.CTkFont(size=13, weight="bold" if not self.email.is_read else "normal"),
+            anchor="w"
+        )
+        subject_label.grid(row=1, column=0, sticky="w", pady=(4, 2))
+        subject_label.bind("<Button-1>", self._handle_click)
+        
+        # === ROW 3: Preview + From email ===
+        row3 = ctk.CTkFrame(content, fg_color="transparent")
+        row3.grid(row=2, column=0, sticky="ew")
+        row3.grid_columnconfigure(0, weight=1)
+        row3.bind("<Button-1>", self._handle_click)
+        
+        # Body preview (first line of content)
+        preview_text = ""
+        if self.email.body_text:
+            # Clean up and get first meaningful line
+            lines = self.email.body_text.strip().split('\n')
+            for line in lines:
+                clean = line.strip()
+                if clean and not clean.startswith('---') and not clean.startswith('>'):
+                    preview_text = clean
+                    break
+        
+        if preview_text:
+            preview_label = ctk.CTkLabel(
+                row3,
+                text=truncate_text(preview_text, 100),
+                font=ctk.CTkFont(size=11),
+                text_color="gray50",
+                anchor="w"
+            )
+            preview_label.grid(row=0, column=0, sticky="w")
+            preview_label.bind("<Button-1>", self._handle_click)
+        
+        # From email address (smaller, below preview)
+        from_email = self.email.from_address or ""
+        if from_email and from_email != from_name:
+            email_label = ctk.CTkLabel(
+                row3,
+                text=f"✉️ {from_email}",
+                font=ctk.CTkFont(size=10),
+                text_color="gray45",
+                anchor="w"
+            )
+            email_label.grid(row=1, column=0, sticky="w", pady=(2, 0))
+            email_label.bind("<Button-1>", self._handle_click)
+        
+        # === Right side: Star button ===
         star_text = "⭐" if self.email.is_starred else "☆"
         star_btn = ctk.CTkButton(
             self,
             text=star_text,
-            width=30,
-            height=30,
+            width=32,
+            height=32,
             fg_color="transparent",
             hover_color=("gray75", "gray30"),
+            font=ctk.CTkFont(size=16),
             command=self._toggle_star
         )
-        star_btn.grid(row=0, column=3, rowspan=2, padx=(0, 5))
+        star_btn.grid(row=0, column=2, rowspan=3, padx=(10, 8), sticky="e")
     
     def _handle_click(self, event=None):
         """Handle item click."""
@@ -502,11 +580,16 @@ class EmailView(ctk.CTkFrame):
         
         db = get_db()
         with db.session() as session:
-            query = session.query(Email).filter_by(folder=self._current_folder)
+            # Query with account relationship loaded
+            query = session.query(Email).options(
+                joinedload(Email.account)
+            ).filter_by(folder=self._current_folder)
             
             # Filter by account if selected
+            show_account_badge = True
             if self._account_filter:
                 query = query.filter_by(account_id=self._account_filter)
+                show_account_badge = False  # Don't show badge when filtering by account
             
             emails = query.order_by(Email.sent_at.desc()).limit(50).all()
             
@@ -531,9 +614,10 @@ class EmailView(ctk.CTkFrame):
                     item = EmailListItem(
                         self.list_frame,
                         email=email,
-                        on_click=self._on_email_click
+                        on_click=self._on_email_click,
+                        show_account=show_account_badge
                     )
-                    item.pack(fill="x", pady=2)
+                    item.pack(fill="x", pady=4)
     
     def _switch_folder(self, folder: str):
         """Switch email folder."""
@@ -625,13 +709,13 @@ class EmailView(ctk.CTkFrame):
                             password=password
                         )
                         
-                        # Fetch emails
-                        new_emails = service.fetch_emails(folder="INBOX", limit=30)
+                        # Fetch emails with account_id
+                        new_emails = service.fetch_emails(
+                            folder="INBOX", 
+                            limit=30,
+                            account_id=account.id
+                        )
                         total_new += len(new_emails)
-                        
-                        # Update account_id on fetched emails
-                        for email in new_emails:
-                            email.account_id = account.id
                         
                         service.disconnect_imap()
                         logger.info(f"Synced {len(new_emails)} emails from {account.email}")

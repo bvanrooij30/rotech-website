@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getMollieClient } from "@/lib/mollie";
 import { Resend } from "resend";
-import { storePayment, updatePaymentStatus } from "@/lib/payments-store";
+import { storePayment } from "@/lib/payments-store";
 import { getPackageById, getMaintenancePlanById } from "@/data/packages";
 
 const resend = new Resend(process.env.RESEND_API_KEY);

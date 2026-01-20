@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { rateLimit, getClientIdentifier } from "@/lib/rate-limit";
+import { rateLimit } from "@/lib/rate-limit";
 import { validateCSRF } from "@/lib/csrf";
 
 // HTML escape function for security
@@ -27,8 +27,6 @@ const contactSchema = z.object({
   subject: z.string().min(1, "Selecteer een onderwerp"),
   message: z.string().min(20, "Bericht moet minimaal 20 karakters zijn").max(5000),
 });
-
-type ContactFormData = z.infer<typeof contactSchema>;
 
 export async function POST(request: NextRequest) {
   try {

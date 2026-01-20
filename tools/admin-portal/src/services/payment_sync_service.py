@@ -4,8 +4,10 @@ Haalt betalingen op via de website API en maakt automatisch facturen aan.
 """
 
 import requests
+import threading
+import time
 from datetime import datetime
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Tuple, Optional, Callable
 
 from ..database import get_db
 from ..database.models import Invoice, InvoiceStatus, InvoiceType, Client
@@ -214,3 +216,141 @@ def get_payment_sync_service() -> PaymentSyncService:
     if _sync_service is None:
         _sync_service = PaymentSyncService()
     return _sync_service
+
+
+class PaymentSyncScheduler:
+    """Background scheduler voor automatische payment synchronisatie."""
+    
+    _instance: Optional['PaymentSyncScheduler'] = None
+    
+    def __new__(cls):
+        """Singleton pattern."""
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._initialized = False
+        return cls._instance
+    
+    def __init__(self):
+        if self._initialized:
+            return
+        
+        self._initialized = True
+        self._running = False
+        self._thread: Optional[threading.Thread] = None
+        self._interval = Config.PAYMENT_SYNC_INTERVAL * 60  # Convert to seconds
+        self._on_new_payments: Optional[Callable[[int], None]] = None
+        self._last_sync: Optional[datetime] = None
+        self._sync_service = get_payment_sync_service()
+    
+    def set_interval(self, minutes: int):
+        """Set sync interval in minutes."""
+        self._interval = minutes * 60
+        logger.info(f"Payment sync interval set to {minutes} minutes")
+    
+    def set_callback(self, callback: Callable[[int], None]):
+        """Set callback for when new payments are synced."""
+        self._on_new_payments = callback
+    
+    def start(self):
+        """Start de background sync scheduler."""
+        if self._running:
+            logger.warning("Payment sync scheduler already running")
+            return
+        
+        self._running = True
+        self._thread = threading.Thread(target=self._sync_loop, daemon=True)
+        self._thread.start()
+        logger.info(f"Payment sync scheduler started (interval: {self._interval // 60} min)")
+    
+    def stop(self):
+        """Stop de scheduler."""
+        self._running = False
+        logger.info("Payment sync scheduler stopped")
+    
+    def sync_now(self) -> Tuple[int, int, List[str]]:
+        """
+        Voer direct een sync uit.
+        
+        Returns:
+            Tuple van (synced, errors, error_messages)
+        """
+        return self._do_sync()
+    
+    def _sync_loop(self):
+        """Background sync loop."""
+        # Initial sync after 30 seconds (give app time to start)
+        time.sleep(30)
+        
+        while self._running:
+            try:
+                synced, errors, _ = self._do_sync()
+                
+                if synced > 0 and self._on_new_payments:
+                    self._on_new_payments(synced)
+                
+            except Exception as e:
+                logger.error(f"Payment sync loop error: {e}")
+            
+            # Wait for next interval
+            # Check every 5 seconds if still running
+            waited = 0
+            while waited < self._interval and self._running:
+                time.sleep(5)
+                waited += 5
+    
+    def _do_sync(self) -> Tuple[int, int, List[str]]:
+        """Execute sync."""
+        result = self._sync_service.sync_payments()
+        self._last_sync = datetime.now()
+        return result
+    
+    @property
+    def last_sync(self) -> Optional[datetime]:
+        """Get last sync timestamp."""
+        return self._last_sync
+    
+    @property
+    def is_running(self) -> bool:
+        """Check if scheduler is running."""
+        return self._running
+
+
+# Global scheduler instance
+_payment_scheduler: Optional[PaymentSyncScheduler] = None
+
+
+def get_payment_sync_scheduler() -> PaymentSyncScheduler:
+    """Get the global payment sync scheduler instance."""
+    global _payment_scheduler
+    if _payment_scheduler is None:
+        _payment_scheduler = PaymentSyncScheduler()
+    return _payment_scheduler
+
+
+def start_payment_sync(
+    interval_minutes: int = None,
+    on_new_payments: Callable[[int], None] = None
+) -> PaymentSyncScheduler:
+    """
+    Start background payment sync.
+    
+    Args:
+        interval_minutes: Sync interval (default from config)
+        on_new_payments: Callback when new payments are synced (receives count)
+    """
+    scheduler = get_payment_sync_scheduler()
+    
+    if interval_minutes:
+        scheduler.set_interval(interval_minutes)
+    
+    if on_new_payments:
+        scheduler.set_callback(on_new_payments)
+    
+    scheduler.start()
+    return scheduler
+
+
+def stop_payment_sync():
+    """Stop background payment sync."""
+    scheduler = get_payment_sync_scheduler()
+    scheduler.stop()

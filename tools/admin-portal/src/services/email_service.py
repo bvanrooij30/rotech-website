@@ -83,11 +83,79 @@ class EmailService:
                 pass
             self._imap = None
     
+    def list_folders(self) -> List[Tuple[str, int]]:
+        """
+        List all folders and their message counts.
+        
+        Returns:
+            List of (folder_name, message_count) tuples
+        """
+        if not self._imap:
+            if not self.connect_imap():
+                return []
+        
+        try:
+            status, folder_list = self._imap.list()
+            if status != "OK":
+                return []
+            
+            folders = []
+            for folder_data in folder_list:
+                # Parse folder name from IMAP response
+                if folder_data:
+                    parts = folder_data.decode().split(' "/" ')
+                    if len(parts) >= 2:
+                        folder_name = parts[-1].strip('"')
+                        
+                        # Get message count
+                        try:
+                            status, data = self._imap.select(folder_name, readonly=True)
+                            if status == "OK":
+                                count = int(data[0])
+                                folders.append((folder_name, count))
+                        except:
+                            folders.append((folder_name, 0))
+            
+            return folders
+        except Exception as e:
+            logger.error(f"Error listing folders: {e}")
+            return []
+    
+    def check_mailbox_status(self) -> dict:
+        """
+        Check mailbox status and return diagnostic info.
+        
+        Returns:
+            Dict with folder info and message counts
+        """
+        if not self._imap:
+            if not self.connect_imap():
+                return {"error": "Could not connect to IMAP"}
+        
+        try:
+            folders = self.list_folders()
+            
+            result = {
+                "connected": True,
+                "folders": {},
+                "total_messages": 0
+            }
+            
+            for folder_name, count in folders:
+                result["folders"][folder_name] = count
+                result["total_messages"] += count
+            
+            return result
+        except Exception as e:
+            return {"error": str(e)}
+    
     def fetch_emails(
         self,
         folder: str = "INBOX",
         limit: int = 50,
-        since_date: Optional[datetime] = None
+        since_date: Optional[datetime] = None,
+        skip_existing: bool = True,
+        account_id: Optional[int] = None
     ) -> List[Email]:
         """
         Haal emails op van server.
@@ -96,6 +164,8 @@ class EmailService:
             folder: Mailbox folder (INBOX, Sent, etc.)
             limit: Maximum aantal emails
             since_date: Alleen emails na deze datum
+            skip_existing: Skip emails die al in database staan
+            account_id: Account ID to set on fetched emails
             
         Returns:
             Lijst met nieuwe Email objects
@@ -118,13 +188,17 @@ class EmailService:
             
             status, message_ids = self._imap.search(None, search_criteria)
             if status != "OK":
+                logger.error(f"IMAP search failed for {folder}")
                 return []
             
             ids = message_ids[0].split()
+            logger.info(f"Found {len(ids)} total messages in {folder} (search: {search_criteria})")
+            
             ids = ids[-limit:]  # Laatste X emails
             ids.reverse()  # Nieuwste eerst
             
             new_emails = []
+            skipped = 0
             db = get_db()
             
             for msg_id in ids:
@@ -137,7 +211,14 @@ class EmailService:
                                 message_id=email_obj.message_id
                             ).first()
                             
+                            if existing and skip_existing:
+                                skipped += 1
+                                continue
+                            
                             if not existing:
+                                # Set account_id if provided
+                                if account_id:
+                                    email_obj.account_id = account_id
                                 session.add(email_obj)
                                 session.commit()
                                 new_emails.append(email_obj)
@@ -147,7 +228,7 @@ class EmailService:
                     logger.error(f"Error fetching email {msg_id}: {e}")
                     continue
             
-            logger.info(f"Fetched {len(new_emails)} new emails from {folder}")
+            logger.info(f"Fetched {len(new_emails)} new emails from {folder} (skipped {skipped} existing)")
             return new_emails
             
         except Exception as e:

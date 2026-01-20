@@ -138,7 +138,7 @@ export async function GET(request: NextRequest) {
     const fileName = searchParams.get('file');
     
     let leads: Lead[] = [];
-    let selectedFile = fileName || files[0];
+    const selectedFile = fileName || files[0];
     
     if (selectedFile) {
       try {

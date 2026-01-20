@@ -3,6 +3,16 @@
 import { NicheExample } from "@/data/niche-examples";
 import { Project } from "@/data/portfolio";
 
+interface ColorScheme {
+  primary: string;
+  secondary: string;
+  accent: string;
+}
+
+interface LayoutProps {
+  colors: ColorScheme;
+}
+
 interface NichePreviewProps {
   example?: NicheExample;
   project?: Project;
@@ -12,7 +22,7 @@ interface NichePreviewProps {
 /**
  * Renders a realistic visual preview based on niche/industry type
  */
-export default function NichePreview({ example, project, size = "medium" }: NichePreviewProps) {
+export default function NichePreview({ example, project }: NichePreviewProps) {
   const industry = example?.industry || project?.client || "";
   const category = example?.category || project?.category;
   const colors = example?.colorScheme || {
@@ -24,35 +34,35 @@ export default function NichePreview({ example, project, size = "medium" }: Nich
   // Determine layout based on industry/category
   const getLayout = () => {
     if (category === "webshop") {
-      return <WebshopLayout industry={industry} colors={colors} size={size} />;
+      return <WebshopLayout colors={colors} />;
     }
     
     if (industry.toLowerCase().includes("restaurant") || industry.toLowerCase().includes("horeca")) {
-      return <RestaurantLayout colors={colors} size={size} />;
+      return <RestaurantLayout colors={colors} />;
     }
     
     if (industry.toLowerCase().includes("tandarts") || industry.toLowerCase().includes("fysio") || industry.toLowerCase().includes("zorg")) {
-      return <HealthcareLayout colors={colors} size={size} />;
+      return <HealthcareLayout colors={colors} />;
     }
     
     if (industry.toLowerCase().includes("advocaat") || industry.toLowerCase().includes("accountant") || industry.toLowerCase().includes("professional")) {
-      return <ProfessionalServicesLayout colors={colors} size={size} />;
+      return <ProfessionalServicesLayout colors={colors} />;
     }
     
     if (industry.toLowerCase().includes("fitness") || industry.toLowerCase().includes("sportschool")) {
-      return <FitnessLayout colors={colors} size={size} />;
+      return <FitnessLayout colors={colors} />;
     }
     
     if (industry.toLowerCase().includes("makelaar") || industry.toLowerCase().includes("real estate")) {
-      return <RealEstateLayout colors={colors} size={size} />;
+      return <RealEstateLayout colors={colors} />;
     }
     
     if (category === "webapp") {
-      return <WebAppLayout colors={colors} size={size} />;
+      return <WebAppLayout colors={colors} />;
     }
     
     // Default business website
-    return <BusinessWebsiteLayout colors={colors} size={size} />;
+    return <BusinessWebsiteLayout colors={colors} />;
   };
 
   return (
@@ -63,7 +73,7 @@ export default function NichePreview({ example, project, size = "medium" }: Nich
 }
 
 // Restaurant Layout
-function RestaurantLayout({ colors, size }: { colors: any; size: string }) {
+function RestaurantLayout({ colors }: LayoutProps) {
   return (
     <div className="h-full bg-gradient-to-br from-amber-50 to-orange-50">
       {/* Header */}
@@ -107,7 +117,7 @@ function RestaurantLayout({ colors, size }: { colors: any; size: string }) {
 }
 
 // Healthcare Layout (Tandarts, Fysio)
-function HealthcareLayout({ colors, size }: { colors: any; size: string }) {
+function HealthcareLayout({ colors }: LayoutProps) {
   return (
     <div className="h-full bg-white">
       {/* Header */}
@@ -154,7 +164,7 @@ function HealthcareLayout({ colors, size }: { colors: any; size: string }) {
 }
 
 // Professional Services Layout (Advocaat, Accountant)
-function ProfessionalServicesLayout({ colors, size }: { colors: any; size: string }) {
+function ProfessionalServicesLayout({ colors }: LayoutProps) {
   return (
     <div className="h-full bg-slate-50">
       {/* Header */}
@@ -204,7 +214,7 @@ function ProfessionalServicesLayout({ colors, size }: { colors: any; size: strin
 }
 
 // Fitness Layout
-function FitnessLayout({ colors, size }: { colors: any; size: string }) {
+function FitnessLayout({ colors }: LayoutProps) {
   return (
     <div className="h-full bg-slate-900">
       {/* Header */}
@@ -247,7 +257,7 @@ function FitnessLayout({ colors, size }: { colors: any; size: string }) {
 }
 
 // Real Estate Layout
-function RealEstateLayout({ colors, size }: { colors: any; size: string }) {
+function RealEstateLayout({ colors }: LayoutProps) {
   return (
     <div className="h-full bg-white">
       {/* Header */}
@@ -286,7 +296,7 @@ function RealEstateLayout({ colors, size }: { colors: any; size: string }) {
 }
 
 // Webshop Layout
-function WebshopLayout({ industry, colors, size }: { industry: string; colors: any; size: string }) {
+function WebshopLayout({ colors }: LayoutProps) {
   return (
     <div className="h-full bg-white">
       {/* Header */}
@@ -330,7 +340,7 @@ function WebshopLayout({ industry, colors, size }: { industry: string; colors: a
 }
 
 // Web App Layout
-function WebAppLayout({ colors, size }: { colors: any; size: string }) {
+function WebAppLayout({ colors }: LayoutProps) {
   return (
     <div className="h-full bg-slate-50">
       {/* Sidebar */}
@@ -372,7 +382,7 @@ function WebAppLayout({ colors, size }: { colors: any; size: string }) {
 }
 
 // Default Business Website Layout
-function BusinessWebsiteLayout({ colors, size }: { colors: any; size: string }) {
+function BusinessWebsiteLayout({ colors }: LayoutProps) {
   return (
     <div className="h-full bg-white">
       {/* Header */}

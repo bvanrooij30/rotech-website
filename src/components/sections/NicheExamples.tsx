@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight, CheckCircle2, Eye, TrendingUp, Users, Clock } from "lucide-react";
 import { nicheExamples } from "@/data/niche-examples";
 import NichePreview from "@/components/ui/NichePreview";

@@ -17,7 +17,7 @@ from ..database import get_db
 from ..database.models import Invoice, InvoiceStatus, InvoiceType, Client
 from ..utils.config import Config, logger
 from ..utils.helpers import format_datetime, truncate_text
-from ..services.payment_sync_service import get_payment_sync_service
+from ..services.payment_sync_service import get_payment_sync_service, get_payment_sync_scheduler
 
 
 # Create invoices directory
@@ -666,11 +666,20 @@ class InvoicesView(ctk.CTkFrame):
         actions_frame = ctk.CTkFrame(header_frame, fg_color="transparent")
         actions_frame.grid(row=0, column=1, sticky="e")
         
+        # Auto-sync status indicator
+        self.sync_status_label = ctk.CTkLabel(
+            actions_frame,
+            text="",
+            font=ctk.CTkFont(size=11),
+            text_color="gray50"
+        )
+        self.sync_status_label.pack(side="left", padx=(0, 10))
+        
         # Sync from website button
         self.sync_btn = ctk.CTkButton(
             actions_frame,
-            text="🔄 Sync Website",
-            width=130,
+            text="🔄 Sync Nu",
+            width=100,
             fg_color="#1a73e8",
             hover_color="#1557b0",
             command=self._sync_from_website
@@ -764,6 +773,9 @@ class InvoicesView(ctk.CTkFrame):
         """Refresh invoices list."""
         if self._showing_detail:
             return
+        
+        # Update sync status
+        self._update_sync_status()
         
         # Clear list
         for widget in self.list_frame.winfo_children():
@@ -866,6 +878,29 @@ class InvoicesView(ctk.CTkFrame):
         self.detail_view.grid_forget()
         self.list_frame.grid(row=0, column=0, sticky="nsew")
         self.refresh()
+    
+    def _update_sync_status(self):
+        """Update the auto-sync status indicator."""
+        try:
+            scheduler = get_payment_sync_scheduler()
+            if scheduler.is_running:
+                last_sync = scheduler.last_sync
+                if last_sync:
+                    time_ago = datetime.now() - last_sync
+                    if time_ago.seconds < 60:
+                        status = f"✓ Auto-sync actief (zojuist)"
+                    elif time_ago.seconds < 3600:
+                        mins = time_ago.seconds // 60
+                        status = f"✓ Auto-sync actief ({mins}m geleden)"
+                    else:
+                        status = f"✓ Auto-sync actief ({last_sync.strftime('%H:%M')})"
+                else:
+                    status = "✓ Auto-sync actief"
+                self.sync_status_label.configure(text=status, text_color="#34a853")
+            else:
+                self.sync_status_label.configure(text="Auto-sync uit", text_color="gray50")
+        except Exception:
+            self.sync_status_label.configure(text="", text_color="gray50")
     
     def _on_add(self):
         """Add new invoice."""

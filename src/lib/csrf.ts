@@ -17,7 +17,6 @@ export function validateCSRF(request: NextRequest): { valid: boolean; reason?: s
   
   // Get expected origin from environment
   const expectedOrigin = process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.dev";
-  const expectedHost = new URL(expectedOrigin).host;
   
   // For same-origin requests, origin might be null (browser behavior)
   // In that case, check referer
@@ -47,7 +46,7 @@ export function validateCSRF(request: NextRequest): { valid: boolean; reason?: s
           reason: `Origin mismatch: ${originUrl.host} !== ${expectedUrl.host}`,
         };
       }
-    } catch (error) {
+    } catch {
       return {
         valid: false,
         reason: "Invalid Origin header format",
@@ -67,7 +66,7 @@ export function validateCSRF(request: NextRequest): { valid: boolean; reason?: s
           reason: `Referer mismatch: ${refererUrl.host} !== ${expectedUrl.host}`,
         };
       }
-    } catch (error) {
+    } catch {
       return {
         valid: false,
         reason: "Invalid Referer header format",

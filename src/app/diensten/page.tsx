@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { services } from "@/data/services";
-import { StructuredData, BreadcrumbSchema } from "@/components/seo/StructuredData";
+import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
 export const metadata: Metadata = {
   title: "Diensten | Website, Webshop & Web App Ontwikkeling",

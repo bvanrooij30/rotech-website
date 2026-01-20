@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -181,9 +182,9 @@ export default function OfferteWizard() {
         <p className="text-lg text-slate-600 mb-6 max-w-md mx-auto">
           Wij hebben uw offerte-aanvraag ontvangen en nemen binnen 24 uur contact met u op.
         </p>
-        <a href="/" className="btn-primary">
+        <Link href="/" className="btn-primary">
           Terug naar Home
-        </a>
+        </Link>
       </div>
     );
   }

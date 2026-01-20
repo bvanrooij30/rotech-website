@@ -548,7 +548,7 @@ Alle rechten voorbehouden."""
             self._load_accounts()
     
     def _on_test_account(self, account: EmailAccount):
-        """Test email account connection."""
+        """Test email account connection and show folder info."""
         try:
             import imaplib
             import ssl
@@ -560,15 +560,51 @@ Alle rechten voorbehouden."""
             
             with imaplib.IMAP4_SSL(account.imap_host, account.imap_port, ssl_context=context) as imap:
                 imap.login(account.username, password)
+                
+                # Get INBOX count
                 imap.select("INBOX")
                 status, messages = imap.search(None, "ALL")
-                num_messages = len(messages[0].split()) if messages[0] else 0
+                inbox_count = len(messages[0].split()) if messages[0] else 0
+                
+                # Get all folders and their counts
+                status, folder_list = imap.list()
+                folder_info = []
+                total_messages = 0
+                
+                if status == "OK" and folder_list:
+                    for folder_data in folder_list:
+                        if folder_data:
+                            try:
+                                # Parse folder name
+                                decoded = folder_data.decode() if isinstance(folder_data, bytes) else str(folder_data)
+                                parts = decoded.split(' "/" ')
+                                if len(parts) >= 2:
+                                    folder_name = parts[-1].strip('"')
+                                    
+                                    # Get message count
+                                    try:
+                                        status, data = imap.select(folder_name, readonly=True)
+                                        if status == "OK":
+                                            count = int(data[0])
+                                            if count > 0:
+                                                folder_info.append(f"  • {folder_name}: {count}")
+                                            total_messages += count
+                                    except:
+                                        pass
+                            except:
+                                pass
+            
+            # Build message
+            folder_text = "\n".join(folder_info) if folder_info else "  (geen emails in folders)"
             
             messagebox.showinfo(
                 "Verbinding Succesvol",
-                f"✅ Verbonden met {account.email}\n\n📬 {num_messages} emails in inbox"
+                f"✅ Verbonden met {account.email}\n\n"
+                f"📬 INBOX: {inbox_count} emails\n"
+                f"📁 Totaal: {total_messages} emails\n\n"
+                f"Folders met emails:\n{folder_text}"
             )
-            logger.info(f"Email test successful: {account.email}")
+            logger.info(f"Email test successful: {account.email} - {total_messages} total emails")
             
         except Exception as e:
             messagebox.showerror(
