@@ -124,7 +124,7 @@ export default function RegisterPage() {
       <div className="text-center mb-8">
         <h1 className="text-2xl font-bold text-slate-900 mb-2">Account aanmaken</h1>
         <p className="text-slate-600">
-          Maak een account aan voor het Ro-Tech klantenportaal
+          Maak een account aan voor het RoTech klantenportaal
         </p>
       </div>
 

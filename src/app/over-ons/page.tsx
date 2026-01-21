@@ -4,8 +4,8 @@ import { ArrowRight, Code2, Rocket, Heart, Users, Zap, Target } from "lucide-rea
 import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
 export const metadata: Metadata = {
-  title: "Over Ons | Wie is Ro-Tech Development?",
-  description: "Leer Ro-Tech Development kennen. Persoonlijk, snelle en goede communicatie. Ontdek onze werkwijze en waarom wij de juiste partner zijn.",
+  title: "Over Ons | Wie is RoTech Development?",
+  description: "Leer RoTech Development kennen. Persoonlijk, snelle en goede communicatie. Ontdek onze werkwijze en waarom wij de juiste partner zijn.",
   alternates: {
     canonical: "/over-ons",
   },
@@ -78,13 +78,13 @@ export default function OverOnsPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <span className="inline-block px-4 py-1.5 bg-indigo-600/20 text-indigo-300 rounded-full text-sm font-medium mb-6">
-                Over Ro-Tech
+                Over RoTech
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
                 Uw partner in digitale groei
               </h1>
               <p className="text-xl text-slate-300 mb-8">
-                Ro-Tech Development helpt bedrijven groeien met professionele websites, 
+                RoTech Development helpt bedrijven groeien met professionele websites, 
                 webshops en web applicaties. Persoonlijk, snelle communicatie en resultaatgericht.
               </p>
               <Link href="/contact" className="btn-primary inline-flex items-center gap-2">
@@ -107,14 +107,14 @@ export default function OverOnsPage() {
         <div className="container-custom">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
-              Het verhaal van Ro-Tech
+              Het verhaal van RoTech
             </h2>
             <div className="prose prose-lg text-slate-600">
               <p>
-                Ro-Tech Development is opgericht door Bart van Rooij vanuit een passie voor technologie 
+                RoTech Development is opgericht door Bart van Rooij vanuit een passie voor technologie 
                 en het helpen van bedrijven om online te groeien. Met een sterke technische achtergrond 
                 en continue focus op de nieuwste technologieën, bouw ik digitale oplossingen die écht werken. 
-                Bij Ro-Tech staat persoonlijk contact centraal - u werkt altijd direct met mij.
+                Bij RoTech staat persoonlijk contact centraal - u werkt altijd direct met mij.
               </p>
               <p>
                 Wij geloven dat elk bedrijf, groot of klein, toegang verdient tot professionele 

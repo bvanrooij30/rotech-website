@@ -133,7 +133,7 @@ async function handleSuccessfulPayment(session: Stripe.Checkout.Session) {
     );
   }
 
-  // Send notification to Ro-Tech
+  // Send notification to RoTech
   await sendPaymentNotification(
     metadata.customerName || "Onbekend",
     customerEmail || "Geen email",
@@ -158,7 +158,7 @@ async function sendPaymentConfirmation(
     await resend.emails.send({
       from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
       to: email,
-      subject: `Betaling ontvangen - Ro-Tech Development`,
+      subject: `Betaling ontvangen - RoTech Development`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -192,13 +192,13 @@ async function sendPaymentConfirmation(
             
             <p style="margin-top: 30px;">
               Met vriendelijke groet,<br>
-              <strong>Het Ro-Tech Development Team</strong>
+              <strong>Het RoTech Development Team</strong>
             </p>
             
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
             
             <p style="font-size: 12px; color: #64748b; text-align: center;">
-              Ro-Tech Development (BVR Services)<br>
+              RoTech Development (BVR Services)<br>
               +31 6 57 23 55 74 | contact@ro-techdevelopment.dev
             </p>
           </div>
@@ -247,12 +247,12 @@ async function sendPaymentFailedEmail(
     await resend.emails.send({
       from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
       to: email,
-      subject: `Betaling niet gelukt - Ro-Tech Development`,
+      subject: `Betaling niet gelukt - RoTech Development`,
       html: `
         <p>Beste ${name},</p>
         <p>Helaas is uw betaling niet gelukt (status: ${status}).</p>
         <p>U kunt het opnieuw proberen via de link in uw offerte, of neem contact met ons op als u hulp nodig heeft.</p>
-        <p>Met vriendelijke groet,<br>Het Ro-Tech Development Team</p>
+        <p>Met vriendelijke groet,<br>Het RoTech Development Team</p>
       `,
     });
   } catch (error) {

@@ -10,7 +10,7 @@ import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Lead Dashboard | Ro-Tech Internal',
+  title: 'Lead Dashboard | RoTech Internal',
   description: 'Interne lead management dashboard',
   robots: {
     index: false,

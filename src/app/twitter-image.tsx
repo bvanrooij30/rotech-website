@@ -4,7 +4,7 @@ import { ImageResponse } from 'next/og';
 export const runtime = 'edge';
 
 // Image metadata
-export const alt = 'Ro-Tech Development - Professionele Websites & Applicaties op Maat';
+export const alt = 'RoTech Development - Professionele Websites & Applicaties op Maat';
 export const size = {
   width: 1200,
   height: 630,
@@ -114,7 +114,7 @@ export default async function Image() {
             textAlign: 'center',
           }}
         >
-          Ro-Tech Development
+          RoTech Development
         </h1>
 
         {/* Accent line */}

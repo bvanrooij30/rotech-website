@@ -4,7 +4,7 @@ import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
 export const metadata: Metadata = {
   title: "Herroepingsrecht",
-  description: "Informatie over uw herroepingsrecht (bedenktijd van 14 dagen) bij Ro-Tech Development conform de Wet Koop op Afstand.",
+  description: "Informatie over uw herroepingsrecht (bedenktijd van 14 dagen) bij RoTech Development conform de Wet Koop op Afstand.",
   alternates: {
     canonical: "/herroepingsrecht",
   },
@@ -120,7 +120,7 @@ export default function HerroepingsrechtPage() {
                 <div className="bg-white p-4 rounded border border-slate-200">
                   <p>
                     <strong>Aan:</strong><br />
-                    BVR Services (Ro-Tech Development)<br />
+                    BVR Services (RoTech Development)<br />
                     Kruisstraat 64<br />
                     5502 JG Veldhoven<br />
                     E-mail: contact@ro-techdevelopment.dev
@@ -183,7 +183,7 @@ export default function HerroepingsrechtPage() {
               <div className="bg-slate-50 p-6 rounded-xl mt-8">
                 <h3 className="text-lg font-semibold text-slate-900 mb-2">Contactgegevens</h3>
                 <p className="mb-0">
-                  BVR Services (Ro-Tech Development)<br />
+                  BVR Services (RoTech Development)<br />
                   Kruisstraat 64, 5502 JG Veldhoven<br />
                   E-mail: contact@ro-techdevelopment.dev<br />
                   Telefoon: +31 6 57 23 55 74<br />

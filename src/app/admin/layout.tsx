@@ -2,7 +2,7 @@ import { requireAdmin } from "@/lib/admin";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
 export const metadata = {
-  title: "Admin Dashboard | Ro-Tech Development",
+  title: "Admin Dashboard | RoTech Development",
   robots: "noindex, nofollow",
 };
 

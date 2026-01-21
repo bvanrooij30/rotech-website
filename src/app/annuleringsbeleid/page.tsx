@@ -4,7 +4,7 @@ import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
 export const metadata: Metadata = {
   title: "Annuleringsbeleid",
-  description: "Lees ons annuleringsbeleid. Duidelijke informatie over de kosten bij annulering van uw project bij Ro-Tech Development.",
+  description: "Lees ons annuleringsbeleid. Duidelijke informatie over de kosten bij annulering van uw project bij RoTech Development.",
   alternates: {
     canonical: "/annuleringsbeleid",
   },
@@ -30,7 +30,7 @@ export default function AnnuleringsbeleidPage() {
               
               <p className="text-lg">
                 Wij begrijpen dat omstandigheden kunnen veranderen. Op deze pagina vindt u duidelijke 
-                informatie over de kosten die van toepassing zijn wanneer u een project bij Ro-Tech 
+                informatie over de kosten die van toepassing zijn wanneer u een project bij RoTech 
                 Development wilt annuleren.
               </p>
 
@@ -271,7 +271,7 @@ export default function AnnuleringsbeleidPage() {
               <div className="bg-slate-50 p-6 rounded-xl mt-8">
                 <h3 className="text-lg font-semibold text-slate-900 mb-2">Contactgegevens</h3>
                 <p className="mb-0">
-                  BVR Services (Ro-Tech Development)<br />
+                  BVR Services (RoTech Development)<br />
                   Kruisstraat 64, 5502 JG Veldhoven<br />
                   E-mail: contact@ro-techdevelopment.dev<br />
                   Telefoon: +31 6 57 23 55 74<br />

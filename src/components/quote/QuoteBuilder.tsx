@@ -785,7 +785,7 @@ export default function QuoteBuilder() {
                       <span className="text-red-500"> *</span>
                     </p>
                     <p className="text-sm text-slate-500">
-                      Door akkoord te gaan geeft u Ro-Tech Development opdracht om het project te starten.
+                      Door akkoord te gaan geeft u RoTech Development opdracht om het project te starten.
                     </p>
                   </div>
                 </label>

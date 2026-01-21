@@ -81,7 +81,7 @@ export default function AdminSidebar({ admin }: AdminSidebarProps) {
                 <Shield className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-white font-bold">Ro-Tech Admin</h1>
+                <h1 className="text-white font-bold">RoTech Admin</h1>
                 <p className="text-xs text-slate-400">
                   {isSuperAdmin ? "Super Admin" : "Admin"}
                 </p>

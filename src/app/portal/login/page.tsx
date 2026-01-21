@@ -1,23 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle, Mail } from "lucide-react";
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/portal";
   const error = searchParams.get("error");
+  const verified = searchParams.get("verified");
+  const expiredToken = searchParams.get("error") === "expired_token";
+  const invalidToken = searchParams.get("error") === "invalid_token";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(
-    error === "CredentialsSignin" ? "Onjuiste inloggegevens" : ""
+    error === "CredentialsSignin" 
+      ? "Onjuiste inloggegevens" 
+      : expiredToken 
+        ? "Verificatie link verlopen. Vraag een nieuwe aan." 
+        : invalidToken 
+          ? "Ongeldige verificatie link." 
+          : ""
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,15 +59,39 @@ export default function LoginPage() {
       <div className="text-center mb-8">
         <h1 className="text-2xl font-bold text-slate-900 mb-2">Inloggen</h1>
         <p className="text-slate-600">
-          Welkom terug bij het Ro-Tech klantenportaal
+          Welkom terug bij het RoTech klantenportaal
         </p>
       </div>
 
       <div className="bg-white rounded-xl border border-slate-200 p-6">
+        {/* Success message for verified email */}
+        {verified && (
+          <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg flex items-start gap-3">
+            <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+            <p className="text-sm text-emerald-700">
+              Je e-mailadres is geverifieerd! Je kunt nu inloggen.
+            </p>
+          </div>
+        )}
+
         {errorMessage && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-            <p className="text-sm text-red-700">{errorMessage}</p>
+            <div className="flex-1">
+              <p className="text-sm text-red-700">{errorMessage}</p>
+              {(expiredToken || invalidToken) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    // Would trigger resend verification email
+                  }}
+                  className="mt-2 text-sm text-indigo-600 hover:underline flex items-center gap-1"
+                >
+                  <Mail className="w-4 h-4" />
+                  Nieuwe verificatie e-mail versturen
+                </button>
+              )}
+            </div>
           </div>
         )}
 
@@ -150,5 +183,19 @@ export default function LoginPage() {
         </Link>
       </p>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="py-8">
+        <div className="flex items-center justify-center">
+          <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+        </div>
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }

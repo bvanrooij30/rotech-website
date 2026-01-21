@@ -6,10 +6,10 @@ import PortalNavigation from "@/components/portal/PortalNavigation";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Klantenportaal - Ro-Tech Development",
-    default: "Klantenportaal - Ro-Tech Development",
+    template: "%s | Klantenportaal - RoTech Development",
+    default: "Klantenportaal - RoTech Development",
   },
-  description: "Beheer je projecten, abonnementen en support tickets in het Ro-Tech klantenportaal.",
+  description: "Beheer je projecten, abonnementen en support tickets in het RoTech klantenportaal.",
   robots: {
     index: false,
     follow: false,
@@ -33,7 +33,7 @@ export default async function PortalLayout({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-2">
-              <span className="text-xl font-bold text-indigo-600">Ro-Tech</span>
+              <span className="text-xl font-bold text-indigo-600">RoTech</span>
               <span className="text-sm text-slate-500">Klantenportaal</span>
             </Link>
             

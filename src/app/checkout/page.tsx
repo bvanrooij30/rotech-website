@@ -4,7 +4,7 @@ import CheckoutWizard from "@/components/checkout/CheckoutWizard";
 import { Loader2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Checkout | Ro-Tech Development",
+  title: "Checkout | RoTech Development",
   description: "Voltooi uw bestelling en betaal veilig via iDEAL of creditcard.",
   robots: "noindex, nofollow",
 };

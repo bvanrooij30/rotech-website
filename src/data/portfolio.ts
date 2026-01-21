@@ -49,7 +49,7 @@ export const projects: Project[] = [
     ],
     url: "https://actionvloeren.nl",
     testimonial: {
-      quote: "Ro-Tech heeft ons hele orderproces getransformeerd. Wat voorheen uren kostte, gaat nu automatisch. De kwaliteit en snelheid waarmee ze werken is indrukwekkend.",
+      quote: "RoTech heeft ons hele orderproces getransformeerd. Wat voorheen uren kostte, gaat nu automatisch. De kwaliteit en snelheid waarmee ze werken is indrukwekkend.",
       author: "Erik Foolen",
       role: "Eigenaar, Action Vloeren",
     },
@@ -106,7 +106,7 @@ export const projects: Project[] = [
     ],
     url: "https://retrorevival.nl",
     testimonial: {
-      quote: "De webshop die Ro-Tech voor ons heeft gebouwd overtrof al onze verwachtingen. Het design past perfect bij ons merk en de verkopen zijn door het dak gegaan!",
+      quote: "De webshop die RoTech voor ons heeft gebouwd overtrof al onze verwachtingen. Het design past perfect bij ons merk en de verkopen zijn door het dak gegaan!",
       author: "Lisa Jansen",
       role: "Eigenaar, Retro Revival",
     },

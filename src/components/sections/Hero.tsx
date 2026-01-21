@@ -60,7 +60,7 @@ export default function Hero() {
             <div className="relative inline-block mb-6">
               <Image
                 src="/images/rotech/rotech-logo.svg"
-                alt="Ro-Tech Development Logo"
+                alt="RoTech Development Logo"
                 width={200}
                 height={200}
                 className="w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 mx-auto"
@@ -72,7 +72,8 @@ export default function Hero() {
             
             {/* Brand Name */}
             <h2 className="text-2xl sm:text-3xl font-bold mb-2">
-              <span className="gradient-text">Ro-Tech</span>
+              <span className="text-slate-900">Ro</span>
+              <span className="gradient-text">Tech</span>
               <span className="text-slate-800"> Development</span>
             </h2>
             

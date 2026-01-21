@@ -1,24 +1,65 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { auth } from "@/lib/auth";
+
+// Routes that require authentication
+const protectedRoutes = [
+  "/portal",
+  "/admin",
+  "/dashboard",
+];
+
+// Routes that should redirect to portal if already authenticated
+const authRoutes = [
+  "/portal/login",
+  "/portal/registreren",
+  "/portal/wachtwoord-vergeten",
+  "/portal/wachtwoord-resetten",
+];
 
 /**
- * Middleware for security and request handling
+ * Middleware for security, authentication, and request handling
  * Runs on every request before the page/API route is processed
  */
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  
+  // Check if route is protected
+  const isProtectedRoute = protectedRoutes.some(
+    (route) => pathname.startsWith(route) && !authRoutes.some((authRoute) => pathname.startsWith(authRoute))
+  );
+  
+  // Check if route is an auth route (login, register, etc.)
+  const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
+  
+  // Get session
+  const session = await auth();
+  
+  // Redirect unauthenticated users trying to access protected routes
+  if (isProtectedRoute && !session) {
+    const loginUrl = new URL("/portal/login", request.url);
+    loginUrl.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+  
+  // Redirect authenticated users away from auth routes
+  if (isAuthRoute && session) {
+    return NextResponse.redirect(new URL("/portal", request.url));
+  }
+  
+  // Check admin routes
+  if (pathname.startsWith("/admin") && session?.user?.role !== "admin" && session?.user?.role !== "super_admin") {
+    return NextResponse.redirect(new URL("/portal", request.url));
+  }
+  
   const response = NextResponse.next();
   
-  // Security headers are handled in next.config.ts
-  // But we can add additional headers here if needed
-  
   // Add security headers for API routes
-  if (request.nextUrl.pathname.startsWith("/api/")) {
-    // Additional API-specific headers
+  if (pathname.startsWith("/api/")) {
     response.headers.set("X-Content-Type-Options", "nosniff");
     response.headers.set("X-Frame-Options", "DENY");
     
-    // CORS headers (if needed for external access)
-    // For now, we only allow same-origin requests
+    // CORS headers
     const origin = request.headers.get("origin");
     const expectedOrigin = process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.dev";
     
@@ -42,7 +83,8 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public folder files
+     * - api/auth (NextAuth routes)
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api/auth|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

@@ -75,7 +75,7 @@ Een professionele website is een investering die zich terugverdient. Vraag altij
     category: "Prijzen",
 author: {
     name: "Bart van Rooij",
-    role: "Ro-Tech Development",
+    role: "RoTech Development",
   },
     publishedAt: "2026-01-10",
     readTime: "5 min",
@@ -123,7 +123,7 @@ Als u waarde hecht aan snelheid, SEO en een moderne tech stack, dan is Next.js e
     category: "Technologie",
 author: {
     name: "Bart van Rooij",
-    role: "Ro-Tech Development",
+    role: "RoTech Development",
   },
     publishedAt: "2026-01-05",
     readTime: "4 min",
@@ -173,7 +173,7 @@ Regelmatige updates laten Google zien dat uw site actief is.
     category: "SEO",
 author: {
     name: "Bart van Rooij",
-    role: "Ro-Tech Development",
+    role: "RoTech Development",
   },
     publishedAt: "2025-12-20",
     readTime: "6 min",
@@ -209,7 +209,7 @@ Problemen? Korte lijnen betekent snelle oplossingen.
 - **Transparante prijzen**: Geen verborgen kosten
 - **Communicatie**: Zijn ze goed bereikbaar?
 
-### Ro-Tech Development uit Veldhoven
+### RoTech Development uit Veldhoven
 
 Wij zijn gevestigd in Veldhoven en helpen bedrijven in heel Brabant en Nederland. Van websites tot complete B2B platforms - altijd met persoonlijke aandacht.
 
@@ -218,7 +218,7 @@ Wij zijn gevestigd in Veldhoven en helpen bedrijven in heel Brabant en Nederland
     category: "Lokaal",
     author: {
       name: "Bart van Rooij",
-      role: "Ro-Tech Development",
+      role: "RoTech Development",
     },
     publishedAt: "2026-01-12",
     readTime: "4 min",
@@ -272,7 +272,7 @@ Een professionele webshop begint vanaf €3.500. Dit is inclusief design, iDEAL 
     category: "E-commerce",
     author: {
       name: "Bart van Rooij",
-      role: "Ro-Tech Development",
+      role: "RoTech Development",
     },
     publishedAt: "2026-01-08",
     readTime: "7 min",
@@ -337,7 +337,7 @@ WordPress is prima voor eenvoudige blogs of als budget echt beperkt is, maar wee
     category: "Technologie",
     author: {
       name: "Bart van Rooij",
-      role: "Ro-Tech Development",
+      role: "RoTech Development",
     },
     publishedAt: "2025-12-15",
     readTime: "5 min",
@@ -387,12 +387,12 @@ Publiceer thought leadership content die uw expertise bewijst.
 
 Over 5 jaar zal een significant deel van het zoekverkeer via AI gaan. Bereid u nu voor.
 
-Bij Ro-Tech Development bouwen wij websites die geoptimaliseerd zijn voor zowel Google als AI assistenten.
+Bij RoTech Development bouwen wij websites die geoptimaliseerd zijn voor zowel Google als AI assistenten.
     `,
     category: "SEO",
     author: {
       name: "Bart van Rooij",
-      role: "Ro-Tech Development",
+      role: "RoTech Development",
     },
     publishedAt: "2026-01-03",
     readTime: "6 min",
@@ -444,12 +444,12 @@ Een automatisering kost vanaf €1.500 eenmalig. Als u 5 uur per week bespaart t
 
 ### Hulp nodig?
 
-Ro-Tech Development helpt u met Digital Process Automation. Van advies tot implementatie.
+RoTech Development helpt u met Digital Process Automation. Van advies tot implementatie.
     `,
     category: "Automatisering",
     author: {
       name: "Bart van Rooij",
-      role: "Ro-Tech Development",
+      role: "RoTech Development",
     },
     publishedAt: "2025-12-10",
     readTime: "5 min",

@@ -29,7 +29,7 @@ export default function PrivacyPage() {
             <div className="prose prose-slate max-w-none prose-headings:text-slate-900 prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-p:text-slate-600 prose-li:text-slate-600">
               
               <p className="text-lg">
-                BVR Services, handelend onder de naam Ro-Tech Development (&ldquo;wij&rdquo;, &ldquo;ons&rdquo;, &ldquo;onze&rdquo;), 
+                BVR Services, handelend onder de naam RoTech Development (&ldquo;wij&rdquo;, &ldquo;ons&rdquo;, &ldquo;onze&rdquo;), 
                 hecht grote waarde aan de bescherming van uw persoonsgegevens. In deze privacyverklaring 
                 leggen wij uit welke gegevens wij verzamelen, op welke grondslag, waarom, en hoe wij deze beschermen, 
                 conform de Algemene Verordening Gegevensbescherming (AVG/GDPR).
@@ -41,7 +41,7 @@ export default function PrivacyPage() {
               </p>
               <p>
                 <strong>BVR Services</strong><br />
-                Handelend onder: Ro-Tech Development<br />
+                Handelend onder: RoTech Development<br />
                 Adres: Kruisstraat 64, 5502 JG Veldhoven, Nederland<br />
                 KvK-nummer: 86858173<br />
                 E-mail: contact@ro-techdevelopment.dev<br />
@@ -380,7 +380,7 @@ export default function PrivacyPage() {
               <div className="bg-slate-50 p-6 rounded-xl mt-8">
                 <h3 className="text-lg font-semibold text-slate-900 mb-2">Contact voor privacy vragen</h3>
                 <p className="mb-0">
-                  BVR Services (Ro-Tech Development)<br />
+                  BVR Services (RoTech Development)<br />
                   Kruisstraat 64, 5502 JG Veldhoven<br />
                   E-mail: contact@ro-techdevelopment.dev<br />
                   Telefoon: +31 6 57 23 55 74<br />

@@ -9,14 +9,14 @@ export const faqItems: FAQItem[] = [
   // Algemeen
   {
     id: "1",
-    question: "Wat voor soort projecten neemt Ro-Tech aan?",
+    question: "Wat voor soort projecten neemt RoTech aan?",
     answer: "Wij ontwikkelen websites, webshops, web applicaties en mobile apps. Van eenvoudige bedrijfswebsites tot complexe B2B platforms en maatwerk software. Elk project is uniek en krijgt onze volledige aandacht.",
     category: "algemeen",
   },
   {
     id: "2",
-    question: "Waar is Ro-Tech Development gevestigd?",
-    answer: "Ro-Tech Development is gevestigd in Veldhoven, op 5 minuten van Eindhoven. Wij bedienen klanten in heel Noord-Brabant en daarbuiten. Persoonlijk overleg is mogelijk op locatie in Veldhoven of bij u op kantoor in de regio Eindhoven.",
+    question: "Waar is RoTech Development gevestigd?",
+    answer: "RoTech Development is gevestigd in Veldhoven, op 5 minuten van Eindhoven. Wij bedienen klanten in heel Noord-Brabant en daarbuiten. Persoonlijk overleg is mogelijk op locatie in Veldhoven of bij u op kantoor in de regio Eindhoven.",
     category: "algemeen",
   },
   {
@@ -28,13 +28,13 @@ export const faqItems: FAQItem[] = [
   {
     id: "4",
     question: "Kan ik een website laten maken in Veldhoven?",
-    answer: "Ja, Ro-Tech Development is uw lokale webdesigner in Veldhoven. Wij bouwen professionele websites, webshops en web applicaties voor ondernemers in Veldhoven, Eindhoven en omgeving. Persoonlijk contact en overleg op locatie is mogelijk.",
+    answer: "Ja, RoTech Development is uw lokale webdesigner in Veldhoven. Wij bouwen professionele websites, webshops en web applicaties voor ondernemers in Veldhoven, Eindhoven en omgeving. Persoonlijk contact en overleg op locatie is mogelijk.",
     category: "algemeen",
   },
   {
     id: "5",
-    question: "Hoe lang bestaat Ro-Tech Development?",
-    answer: "Ro-Tech Development (BVR Services) is opgericht door Bart van Rooij, een developer met jarenlange ervaring in web development en software engineering. Onze focus ligt op kwaliteit en persoonlijke aandacht voor elke klant.",
+    question: "Hoe lang bestaat RoTech Development?",
+    answer: "RoTech Development (BVR Services) is opgericht door Bart van Rooij, een developer met jarenlange ervaring in web development en software engineering. Onze focus ligt op kwaliteit en persoonlijke aandacht voor elke klant.",
     category: "algemeen",
   },
 
@@ -42,7 +42,7 @@ export const faqItems: FAQItem[] = [
   {
     id: "6",
     question: "Wat kost een website laten maken in Veldhoven?",
-    answer: "Bij Ro-Tech Development in Veldhoven start een eenvoudige website vanaf €500. Een professionele bedrijfswebsite kost €1.500 - €5.000, afhankelijk van de gewenste functies. Een webshop begint vanaf €3.500. U bepaalt zelf welke functies u nodig heeft en ziet direct de prijs.",
+    answer: "Bij RoTech Development in Veldhoven start een eenvoudige website vanaf €500. Een professionele bedrijfswebsite kost €1.500 - €5.000, afhankelijk van de gewenste functies. Een webshop begint vanaf €3.500. U bepaalt zelf welke functies u nodig heeft en ziet direct de prijs.",
     category: "prijzen",
   },
   {

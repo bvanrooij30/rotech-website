@@ -123,13 +123,13 @@ async function sendSubscriptionActiveEmail(subscription: Stripe.Subscription) {
     await resend.emails.send({
       from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
       to: customer.email,
-      subject: `Abonnement geactiveerd - Ro-Tech Development`,
+      subject: `Abonnement geactiveerd - RoTech Development`,
       html: `
         <p>Beste ${customer.name || "Klant"},</p>
         <p>Uw onderhoudsabonnement (${planName}) is nu actief.</p>
         <p>U ontvangt maandelijks een factuur voor dit abonnement.</p>
         <p>Heeft u vragen? Neem gerust contact met ons op.</p>
-        <p>Met vriendelijke groet,<br>Het Ro-Tech Development Team</p>
+        <p>Met vriendelijke groet,<br>Het RoTech Development Team</p>
       `,
     });
   } catch (error) {
@@ -149,12 +149,12 @@ async function sendSubscriptionCancelledEmail(subscription: Stripe.Subscription)
     await resend.emails.send({
       from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
       to: customer.email,
-      subject: `Abonnement beëindigd - Ro-Tech Development`,
+      subject: `Abonnement beëindigd - RoTech Development`,
       html: `
         <p>Beste ${customer.name || "Klant"},</p>
         <p>Uw onderhoudsabonnement (${planName}) is beëindigd.</p>
         <p>Wilt u het abonnement opnieuw activeren? Neem contact met ons op.</p>
-        <p>Met vriendelijke groet,<br>Het Ro-Tech Development Team</p>
+        <p>Met vriendelijke groet,<br>Het RoTech Development Team</p>
       `,
     });
   } catch (error) {
@@ -175,13 +175,13 @@ async function sendTrialEndingEmail(subscription: Stripe.Subscription) {
     await resend.emails.send({
       from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
       to: customer.email,
-      subject: `Gratis supportperiode eindigt binnenkort - Ro-Tech Development`,
+      subject: `Gratis supportperiode eindigt binnenkort - RoTech Development`,
       html: `
         <p>Beste ${customer.name || "Klant"},</p>
         <p>Uw gratis supportperiode eindigt op ${trialEnd}.</p>
         <p>Daarna start automatisch uw onderhoudsabonnement (${planName}).</p>
         <p>Wilt u wijzigingen aanbrengen? Neem contact met ons op voor ${trialEnd}.</p>
-        <p>Met vriendelijke groet,<br>Het Ro-Tech Development Team</p>
+        <p>Met vriendelijke groet,<br>Het RoTech Development Team</p>
       `,
     });
   } catch (error) {
@@ -199,17 +199,17 @@ async function sendPaymentFailedNotification(subscription: Stripe.Subscription) 
     await resend.emails.send({
       from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
       to: customer.email,
-      subject: `Betaling mislukt - Ro-Tech Development`,
+      subject: `Betaling mislukt - RoTech Development`,
       html: `
         <p>Beste ${customer.name || "Klant"},</p>
         <p>De betaling voor uw onderhoudsabonnement is helaas niet gelukt.</p>
         <p>Controleer uw betaalgegevens en probeer het opnieuw.</p>
         <p>Neem bij vragen contact met ons op.</p>
-        <p>Met vriendelijke groet,<br>Het Ro-Tech Development Team</p>
+        <p>Met vriendelijke groet,<br>Het RoTech Development Team</p>
       `,
     });
     
-    // Also notify Ro-Tech
+    // Also notify RoTech
     await resend.emails.send({
       from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
       to: process.env.CONTACT_EMAIL || "contact@ro-techdevelopment.dev",

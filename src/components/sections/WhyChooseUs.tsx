@@ -82,7 +82,7 @@ export default function WhyChooseUs() {
             viewport={{ once: true }}
             className="inline-block px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium mb-4"
           >
-            Waarom Ro-Tech?
+            Waarom RoTech?
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -100,7 +100,7 @@ export default function WhyChooseUs() {
             transition={{ delay: 0.2 }}
             className="text-lg text-slate-600"
           >
-            Bij Ro-Tech krijgt u niet zomaar een website. U krijgt een partner 
+            Bij RoTech krijgt u niet zomaar een website. U krijgt een partner 
             die meedenkt over uw digitale groei.
           </motion.p>
         </div>

@@ -1,7 +1,7 @@
 /**
  * Webhook Receive Endpoint
  * 
- * Receives webhooks FROM the Ro-Tech Portal to the website.
+ * Receives webhooks FROM the RoTech Portal to the website.
  * Used for:
  * - Ticket status updates from portal
  * - Subscription changes

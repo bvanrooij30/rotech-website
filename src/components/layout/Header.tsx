@@ -77,7 +77,7 @@ export default function Header() {
             <Link href="/" className="flex items-center">
               <Image
                 src="/images/rotech/rotech-logo.svg"
-                alt="Ro-Tech Development"
+                alt="RoTech Development"
                 width={180}
                 height={45}
                 priority

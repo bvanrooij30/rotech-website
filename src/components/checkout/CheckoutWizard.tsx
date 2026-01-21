@@ -77,7 +77,7 @@ export default function CheckoutWizard() {
           customerPhone: customerInfo.phone,
           companyName: customerInfo.company || undefined,
           amount: depositAmount,
-          description: `Aanbetaling ${selectedPackage.name} - Ro-Tech Development`,
+          description: `Aanbetaling ${selectedPackage.name} - RoTech Development`,
           paymentType: "deposit",
           packageId: selectedPackage.id,
           maintenancePlanId: selectedPlan?.id,

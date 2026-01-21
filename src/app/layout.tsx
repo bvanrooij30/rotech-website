@@ -26,10 +26,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.dev"),
   title: {
-    default: "Ro-Tech Development | Professionele Websites & Applicaties op Maat",
-    template: "%s | Ro-Tech Development",
+    default: "RoTech Development | Professionele Websites & Applicaties op Maat",
+    template: "%s | RoTech Development",
   },
-  description: "Ro-Tech Development bouwt professionele websites, webshops en web applicaties op maat. ✓ Modern design ✓ SEO geoptimaliseerd ✓ Snelle oplevering. Vraag nu een vrijblijvende offerte aan!",
+  description: "RoTech Development bouwt professionele websites, webshops en web applicaties op maat. ✓ Modern design ✓ SEO geoptimaliseerd ✓ Snelle oplevering. Vraag nu een vrijblijvende offerte aan!",
   keywords: [
     "website laten maken",
     "website laten maken veldhoven",
@@ -54,9 +54,9 @@ export const metadata: Metadata = {
     },
   },
   category: "technology",
-  authors: [{ name: "Ro-Tech Development" }],
-  creator: "Ro-Tech Development",
-  publisher: "Ro-Tech Development",
+  authors: [{ name: "RoTech Development" }],
+  creator: "RoTech Development",
+  publisher: "RoTech Development",
   formatDetection: {
     email: false,
     telephone: false,
@@ -65,15 +65,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "nl_NL",
     url: "https://ro-techdevelopment.dev",
-    siteName: "Ro-Tech Development",
-    title: "Ro-Tech Development | Professionele Websites & Applicaties op Maat",
-    description: "Ro-Tech Development bouwt professionele websites, webshops en web applicaties op maat. Vraag nu een vrijblijvende offerte aan!",
+    siteName: "RoTech Development",
+    title: "RoTech Development | Professionele Websites & Applicaties op Maat",
+    description: "RoTech Development bouwt professionele websites, webshops en web applicaties op maat. Vraag nu een vrijblijvende offerte aan!",
     // OG image wordt automatisch gegenereerd door opengraph-image.tsx
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ro-Tech Development | Professionele Websites & Applicaties op Maat",
-    description: "Ro-Tech Development bouwt professionele websites, webshops en web applicaties op maat.",
+    title: "RoTech Development | Professionele Websites & Applicaties op Maat",
+    description: "RoTech Development bouwt professionele websites, webshops en web applicaties op maat.",
     // Twitter image wordt automatisch gegenereerd door twitter-image.tsx
   },
   robots: {

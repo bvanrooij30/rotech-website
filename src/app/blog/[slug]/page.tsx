@@ -76,7 +76,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
             },
             publisher: {
               "@type": "Organization",
-              name: "Ro-Tech Development",
+              name: "RoTech Development",
               logo: {
                 "@type": "ImageObject",
                 url: "https://ro-techdevelopment.dev/images/rotech/rotech-logo.svg",

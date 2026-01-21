@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
     const formatPrice = (amount: number) => 
       new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR" }).format(amount);
     
-    // Send email to Ro-Tech
+    // Send email to RoTech
     try {
       await resend.emails.send({
         from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
@@ -209,7 +209,7 @@ export async function POST(request: NextRequest) {
       await resend.emails.send({
         from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
         to: validated.customer.email,
-        subject: `Opdracht bevestiging - ${quoteNumber} - Ro-Tech Development`,
+        subject: `Opdracht bevestiging - ${quoteNumber} - RoTech Development`,
         html: `
           <!DOCTYPE html>
           <html>
@@ -250,13 +250,13 @@ export async function POST(request: NextRequest) {
               
               <p style="margin-top: 30px;">
                 Met vriendelijke groet,<br>
-                <strong>Het Ro-Tech Development Team</strong>
+                <strong>Het RoTech Development Team</strong>
               </p>
               
               <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
               
               <p style="font-size: 12px; color: #64748b; text-align: center;">
-                Ro-Tech Development (BVR Services)<br>
+                RoTech Development (BVR Services)<br>
                 +31 6 57 23 55 74 | contact@ro-techdevelopment.dev
               </p>
             </div>

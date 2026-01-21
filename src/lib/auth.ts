@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { compare, hash } from "bcryptjs";
 import prisma from "./prisma";
+import { isRateLimited, recordAttempt, resetRateLimit } from "./rate-limiter";
 
 // Password hashing utilities
 export async function hashPassword(password: string): Promise<string> {
@@ -50,15 +51,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           throw new Error("Vul je e-mailadres en wachtwoord in");
         }
 
-        const email = credentials.email as string;
+        const email = (credentials.email as string).toLowerCase();
         const password = credentials.password as string;
+
+        // Check rate limit by email
+        const rateCheck = isRateLimited(email, "login");
+        if (rateCheck.limited) {
+          const minutes = Math.ceil((rateCheck.retryAfter || 900) / 60);
+          throw new Error(`Te veel inlogpogingen. Probeer het over ${minutes} minuten opnieuw.`);
+        }
 
         const user = await prisma.user.findUnique({
           where: { email },
         });
 
         if (!user) {
-          throw new Error("Geen account gevonden met dit e-mailadres");
+          // Record failed attempt even for non-existent users
+          recordAttempt(email, "login");
+          throw new Error("Onjuiste inloggegevens");
         }
 
         if (!user.isActive) {
@@ -68,8 +78,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const isValidPassword = await verifyPassword(password, user.password);
 
         if (!isValidPassword) {
-          throw new Error("Onjuist wachtwoord");
+          // Record failed attempt
+          recordAttempt(email, "login");
+          throw new Error("Onjuiste inloggegevens");
         }
+
+        // Reset rate limit on successful login
+        resetRateLimit(email, "login");
 
         // Update last login
         await prisma.user.update({

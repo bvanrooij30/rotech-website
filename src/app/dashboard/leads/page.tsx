@@ -307,7 +307,7 @@ export default function LeadDashboard() {
               </div>
               <div>
                 <h1 className="text-xl font-bold">Lead Dashboard</h1>
-                <p className="text-slate-400 text-sm">Ro-Tech Development</p>
+                <p className="text-slate-400 text-sm">RoTech Development</p>
               </div>
             </div>
             
@@ -750,7 +750,7 @@ export default function LeadDashboard() {
             Laatst bijgewerkt: {new Date(data.lastUpdated).toLocaleString('nl-NL')}
           </div>
           <div>
-            Ro-Tech Development • Interne Tool
+            RoTech Development • Interne Tool
           </div>
         </div>
       </footer>

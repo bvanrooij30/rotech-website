@@ -8,11 +8,11 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "Ro-Tech Development",
+  name: "RoTech Development",
   alternateName: "BVR Services",
   url: baseUrl,
   logo: `${baseUrl}/images/rotech/rotech-logo.svg`,
-  description: "Ro-Tech Development bouwt professionele websites, webshops en web applicaties op maat.",
+  description: "RoTech Development bouwt professionele websites, webshops en web applicaties op maat.",
   email: "contact@ro-techdevelopment.dev",
   address: {
     "@type": "PostalAddress",
@@ -40,12 +40,12 @@ const organizationSchema = {
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Ro-Tech Development",
+  name: "RoTech Development",
   url: baseUrl,
   description: "Professionele websites, webshops en web applicaties op maat",
   publisher: {
     "@type": "Organization",
-    name: "Ro-Tech Development",
+    name: "RoTech Development",
   },
   potentialAction: {
     "@type": "SearchAction",
@@ -58,7 +58,7 @@ const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "@id": `${baseUrl}/#localbusiness`,
-  name: "Ro-Tech Development",
+  name: "RoTech Development",
   image: `${baseUrl}/images/rotech/rotech-logo.svg`,
   url: baseUrl,
   email: "contact@ro-techdevelopment.dev",
@@ -196,7 +196,7 @@ export function ServiceSchema({ service }: { service: { title: string; descripti
     url: `${baseUrl}/diensten/${service.slug}`,
     provider: {
       "@type": "Organization",
-      name: "Ro-Tech Development",
+      name: "RoTech Development",
       url: baseUrl,
     },
     areaServed: [
@@ -336,7 +336,7 @@ export function OfferSchema({
     url: url.startsWith("http") ? url : `${baseUrl}${url}`,
     provider: {
       "@type": "Organization",
-      name: "Ro-Tech Development",
+      name: "RoTech Development",
       url: baseUrl,
     },
     ...(priceRange && { priceRange }),

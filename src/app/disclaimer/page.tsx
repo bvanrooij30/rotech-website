@@ -29,7 +29,7 @@ export default function DisclaimerPage() {
               
               <p className="text-lg">
                 Deze disclaimer is van toepassing op de website ro-techdevelopment.dev, 
-                eigendom van BVR Services, handelend onder de naam Ro-Tech Development.
+                eigendom van BVR Services, handelend onder de naam RoTech Development.
               </p>
 
               <h2>Informatie op deze website</h2>
@@ -65,7 +65,7 @@ export default function DisclaimerPage() {
 
               <h2>Aansprakelijkheid</h2>
               <p>
-                Ro-Tech Development is niet aansprakelijk voor:
+                RoTech Development is niet aansprakelijk voor:
               </p>
               <ul>
                 <li>Schade die voortvloeit uit het gebruik van informatie op deze website</li>
@@ -84,7 +84,7 @@ export default function DisclaimerPage() {
               <h2>Intellectueel eigendom</h2>
               <p>
                 Alle rechten op de inhoud van deze website (teksten, afbeeldingen, logo&apos;s, 
-                ontwerp) berusten bij Ro-Tech Development of de rechtmatige eigenaren. 
+                ontwerp) berusten bij RoTech Development of de rechtmatige eigenaren. 
                 Het is niet toegestaan om zonder schriftelijke toestemming inhoud te kopiëren, 
                 verspreiden of anderszins te gebruiken.
               </p>
@@ -111,7 +111,7 @@ export default function DisclaimerPage() {
               <div className="bg-slate-50 p-6 rounded-xl mt-8">
                 <h3 className="text-lg font-semibold text-slate-900 mb-2">Contact</h3>
                 <p className="mb-0">
-                  BVR Services (Ro-Tech Development)<br />
+                  BVR Services (RoTech Development)<br />
                   Kruisstraat 64, 5502 JG Veldhoven<br />
                   E-mail: contact@ro-techdevelopment.dev<br />
                   Telefoon: +31 6 57 23 55 74<br />

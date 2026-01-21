@@ -4,7 +4,7 @@ import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
 export const metadata: Metadata = {
   title: "Algemene Voorwaarden",
-  description: "Lees de algemene voorwaarden van Ro-Tech Development. Duidelijke afspraken voor een prettige samenwerking.",
+  description: "Lees de algemene voorwaarden van RoTech Development. Duidelijke afspraken voor een prettige samenwerking.",
   alternates: {
     canonical: "/algemene-voorwaarden",
   },
@@ -30,13 +30,13 @@ export default function AlgemeneVoorwaardenPage() {
               
               <p className="text-lg">
                 Deze algemene voorwaarden zijn van toepassing op alle aanbiedingen, offertes en 
-                overeenkomsten van BVR Services, handelend onder de naam Ro-Tech Development.
+                overeenkomsten van BVR Services, handelend onder de naam RoTech Development.
               </p>
 
               <h2>Artikel 1 – Definities</h2>
               <p>In deze algemene voorwaarden wordt verstaan onder:</p>
               <ul>
-                <li><strong>Opdrachtnemer:</strong> BVR Services, handelend onder de naam Ro-Tech Development, gevestigd te Veldhoven, ingeschreven bij de Kamer van Koophandel onder nummer 86858173.</li>
+                <li><strong>Opdrachtnemer:</strong> BVR Services, handelend onder de naam RoTech Development, gevestigd te Veldhoven, ingeschreven bij de Kamer van Koophandel onder nummer 86858173.</li>
                 <li><strong>Opdrachtgever:</strong> De natuurlijke persoon of rechtspersoon die een opdracht verstrekt aan Opdrachtnemer, dan wel met wie Opdrachtnemer een overeenkomst aangaat.</li>
                 <li><strong>Consument:</strong> De natuurlijke persoon die niet handelt in de uitoefening van een beroep of bedrijf.</li>
                 <li><strong>Overeenkomst:</strong> Iedere afspraak tussen Opdrachtnemer en Opdrachtgever tot het leveren van diensten door Opdrachtnemer.</li>
@@ -248,7 +248,7 @@ export default function AlgemeneVoorwaardenPage() {
                 <h3 className="text-lg font-semibold text-slate-900 mb-4">Contactgegevens</h3>
                 <p className="mb-4">
                   <strong>BVR Services</strong><br />
-                  Handelend onder de naam: Ro-Tech Development<br />
+                  Handelend onder de naam: RoTech Development<br />
                   Kruisstraat 64, 5502 JG Veldhoven<br />
                   E-mail: contact@ro-techdevelopment.dev<br />
                   Telefoon: +31 6 57 23 55 74<br />

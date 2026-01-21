@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CheckCircle, ArrowRight, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Betaling Succesvol | Ro-Tech Development",
+  title: "Betaling Succesvol | RoTech Development",
   description: "Uw betaling is succesvol ontvangen. Bedankt voor uw vertrouwen!",
   robots: "noindex, nofollow",
 };

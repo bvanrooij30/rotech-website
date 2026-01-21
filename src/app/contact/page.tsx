@@ -5,7 +5,7 @@ import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
 export const metadata: Metadata = {
   title: "Contact | Neem Contact Op",
-  description: "Neem contact op met Ro-Tech Development voor uw website, webshop of web applicatie. Wij reageren binnen 24 uur op uw bericht.",
+  description: "Neem contact op met RoTech Development voor uw website, webshop of web applicatie. Wij reageren binnen 24 uur op uw bericht.",
   alternates: {
     canonical: "/contact",
   },

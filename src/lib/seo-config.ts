@@ -15,7 +15,7 @@
 // =============================================================================
 
 export const businessInfo = {
-  name: "Ro-Tech Development",
+  name: "RoTech Development",
   legalName: "BVR Services",
   owner: "Bart van Rooij",
   description: "Webdesign bureau in Veldhoven, regio Eindhoven. Wij maken professionele websites, webshops en web applicaties voor MKB en ZZP'ers in Noord-Brabant en heel Nederland.",
@@ -184,11 +184,11 @@ export const faqItems = {
   pricing: [
     {
       question: "Wat kost een website laten maken?",
-      answer: "De prijs van een website hangt af van uw wensen. Bij Ro-Tech Development bepaalt u zelf welke functies u nodig heeft. Een basis website start vanaf een paar honderd euro, terwijl uitgebreide websites met CMS, blog en SEO meer kosten. U ziet altijd vooraf de exacte prijs.",
+      answer: "De prijs van een website hangt af van uw wensen. Bij RoTech Development bepaalt u zelf welke functies u nodig heeft. Een basis website start vanaf een paar honderd euro, terwijl uitgebreide websites met CMS, blog en SEO meer kosten. U ziet altijd vooraf de exacte prijs.",
     },
     {
       question: "Zijn er verborgen kosten?",
-      answer: "Nee, bij Ro-Tech Development bent u altijd vooraf op de hoogte van alle kosten. Hosting (vanaf €10/maand) en domeinregistratie (€15-25/jaar) zijn apart, maar worden duidelijk gecommuniceerd.",
+      answer: "Nee, bij RoTech Development bent u altijd vooraf op de hoogte van alle kosten. Hosting (vanaf €10/maand) en domeinregistratie (€15-25/jaar) zijn apart, maar worden duidelijk gecommuniceerd.",
     },
     {
       question: "Kan ik in termijnen betalen?",
@@ -214,7 +214,7 @@ export const faqItems = {
   technical: [
     {
       question: "Is mijn website geschikt voor mobiel?",
-      answer: "Absoluut. Alle websites van Ro-Tech Development zijn volledig responsive en werken perfect op smartphones, tablets en desktop computers.",
+      answer: "Absoluut. Alle websites van RoTech Development zijn volledig responsive en werken perfect op smartphones, tablets en desktop computers.",
     },
     {
       question: "Is mijn website beveiligd?",
@@ -249,7 +249,7 @@ export const faqItems = {
  * TIP: Vraag Cursor om dit te updaten na wijzigingen aan je diensten.
  */
 export const llmsContent = {
-  summary: `Ro-Tech Development is een web development agency in Veldhoven, Nederland. 
+  summary: `RoTech Development is een web development agency in Veldhoven, Nederland. 
 We bouwen professionele websites, webshops en web applicaties voor MKB en ZZP'ers.
 Eigenaar: Bart van Rooij (BVR Services).`,
 
@@ -326,7 +326,7 @@ export const seoChecklist = {
 /**
  * Genereer meta title met correcte lengte
  */
-export function generateMetaTitle(title: string, suffix = "Ro-Tech Development"): string {
+export function generateMetaTitle(title: string, suffix = "RoTech Development"): string {
   const full = `${title} | ${suffix}`;
   if (full.length > 60) {
     return title.slice(0, 57) + "...";

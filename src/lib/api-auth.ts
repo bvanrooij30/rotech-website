@@ -2,7 +2,7 @@
  * API Authentication & Security
  * 
  * This module provides secure authentication for the internal API system
- * that connects the website with the Ro-Tech Admin Portal.
+ * that connects the website with the RoTech Admin Portal.
  * 
  * Security measures:
  * - API key authentication (Bearer token)

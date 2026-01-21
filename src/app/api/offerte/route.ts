@@ -181,7 +181,7 @@ export async function POST(request: NextRequest) {
 
         // Send notification to owner
         await resend.emails.send({
-          from: `Ro-Tech Website <${fromEmail}>`,
+          from: `RoTech Website <${fromEmail}>`,
           to: process.env.CONTACT_EMAIL,
           subject: `Nieuwe offerte aanvraag: ${projectTypeLabels[projectType]}`,
           html: `
@@ -216,9 +216,9 @@ export async function POST(request: NextRequest) {
 
         // Send confirmation to user
         await resend.emails.send({
-          from: `Ro-Tech Development <${fromEmail}>`,
+          from: `RoTech Development <${fromEmail}>`,
           to: email,
-          subject: "Uw offerte aanvraag is ontvangen - Ro-Tech Development",
+          subject: "Uw offerte aanvraag is ontvangen - RoTech Development",
           html: `
             <h2>Bedankt voor uw offerte aanvraag!</h2>
             <p>Beste ${safeName},</p>
@@ -239,7 +239,7 @@ export async function POST(request: NextRequest) {
             
             <br>
             <p>Met vriendelijke groet,</p>
-            <p><strong>Ro-Tech Development</strong></p>
+            <p><strong>RoTech Development</strong></p>
             <p style="color: #666; font-size: 12px;">
               Kruisstraat 64, 5502 JG Veldhoven<br>
               KvK: 86858173 | BTW: NL004321198B83

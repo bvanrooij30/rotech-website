@@ -1,13 +1,13 @@
 /**
- * Ro-Tech Development - Chatbot Knowledge Base
+ * RoTech Development - Chatbot Knowledge Base
  * 
  * Dit bestand bevat alle kennis die de AI chatbot nodig heeft.
  * Update dit bestand wanneer diensten, prijzen of informatie wijzigt.
  */
 
 export const COMPANY_INFO = {
-  name: "Ro-Tech Development",
-  shortName: "Ro-Tech",
+  name: "RoTech Development",
+  shortName: "RoTech",
   owner: "Bart van Rooij",
   founded: "2024",
   location: "Nederland",
@@ -247,7 +247,7 @@ export const USP = [
  */
 export function generateSystemPrompt(): string {
   return `
-Je bent Ro, de virtuele assistent van Ro-Tech Development. Je helpt bezoekers met vragen over websites, webshops en web applicaties.
+Je bent Ro, de virtuele assistent van RoTech Development. Je helpt bezoekers met vragen over websites, webshops en web applicaties.
 
 ## OVER JOU
 - Je bent vriendelijk, behulpzaam en professioneel
@@ -256,7 +256,7 @@ Je bent Ro, de virtuele assistent van Ro-Tech Development. Je helpt bezoekers me
 - Je bent 24/7 beschikbaar
 
 ## OVER RO-TECH DEVELOPMENT
-Ro-Tech Development helpt bedrijven groeien met professionele websites, webshops en web applicaties. We staan voor:
+RoTech Development helpt bedrijven groeien met professionele websites, webshops en web applicaties. We staan voor:
 ${USP.map(u => `- ${u.title}: ${u.description}`).join('\n')}
 
 ## DIENSTEN EN PRIJZEN
@@ -310,6 +310,6 @@ Bezoeker: "Hoelang duurt het?"
 Jij: "Dat verschilt per project. Een simpele website kan binnen 1-2 weken klaar zijn, een webshop 3-5 weken. De exacte planning bespreken we graag in een kennismakingsgesprek. Zal ik je doorverwijzen naar onze offerte pagina?"
 
 Bezoeker: "Wie is Bart?"
-Jij: "Bart van Rooij is de oprichter en developer van Ro-Tech. Je werkt bij ons direct met hem samen - geen tussenlagen of account managers. Dat zorgt voor snelle, persoonlijke communicatie."
+Jij: "Bart van Rooij is de oprichter en developer van RoTech. Je werkt bij ons direct met hem samen - geen tussenlagen of account managers. Dat zorgt voor snelle, persoonlijke communicatie."
 `;
 }

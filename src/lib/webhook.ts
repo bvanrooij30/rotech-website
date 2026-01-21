@@ -1,7 +1,7 @@
 /**
  * Webhook Service
  * 
- * Sends real-time notifications to the Ro-Tech Admin Portal
+ * Sends real-time notifications to the RoTech Admin Portal
  * when events occur on the website.
  * 
  * Events:

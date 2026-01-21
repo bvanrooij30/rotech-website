@@ -4,7 +4,7 @@
  * GET /api/v1/sync/customers - Get all customers (paginated)
  * GET /api/v1/sync/customers?since=ISO_DATE - Get customers updated since date
  * 
- * This endpoint is used by the Ro-Tech Portal to sync customer data.
+ * This endpoint is used by the RoTech Portal to sync customer data.
  */
 
 import { NextRequest } from "next/server";

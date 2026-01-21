@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       canonical: `/projecten/${slug}`,
     },
     openGraph: {
-      title: `${project.title} | Ro-Tech Development Projecten`,
+      title: `${project.title} | RoTech Development Projecten`,
       description: project.description,
       type: "article",
     },

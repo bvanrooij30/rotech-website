@@ -40,7 +40,7 @@ export default function Footer() {
             <Link href="/" className="inline-block mb-6 group relative">
               <Image
                 src="/images/rotech/rotech-logo.svg"
-                alt="Ro-Tech Development"
+                alt="RoTech Development"
                 width={160}
                 height={40}
                 className="h-10 w-auto brightness-0 invert transition-transform duration-300 group-hover:scale-105 relative z-10"
@@ -163,7 +163,7 @@ export default function Footer() {
         <div className="container-custom py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-slate-400 text-sm">
-              © {currentYear} Ro-Tech Development (BVR Services). Alle rechten voorbehouden.
+              © {currentYear} RoTech Development (BVR Services). Alle rechten voorbehouden.
             </div>
             <div className="text-slate-500 text-sm">
               BVR Services | KvK: 86858173 | BTW: NL004321198B83

@@ -13,7 +13,7 @@ interface Message {
 const WELCOME_MESSAGE: Message = {
   id: "welcome",
   role: "assistant",
-  content: "Hoi! Ik ben Ro, de virtuele assistent van Ro-Tech Development. Hoe kan ik je helpen?",
+  content: "Hoi! Ik ben Ro, de virtuele assistent van RoTech Development. Hoe kan ik je helpen?",
 };
 
 const QUICK_SUGGESTIONS = [

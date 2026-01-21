@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Sync to Ro-Tech Admin Portal (webhook call)
+    // Sync to RoTech Admin Portal (webhook call)
     try {
       const adminPortalUrl = process.env.ROTECH_ADMIN_PORTAL_URL;
       const adminApiKey = process.env.ROTECH_ADMIN_API_KEY;

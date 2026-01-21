@@ -143,7 +143,7 @@ export async function PATCH(request: NextRequest) {
         data: {
           ticketId,
           senderType: "support",
-          senderName: "Ro-Tech Support",
+          senderName: "RoTech Support",
           message,
         },
       });
