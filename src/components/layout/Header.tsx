@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, Mail, Clock } from "lucide-react";
+import { Menu, X, ChevronDown, Mail, Clock, User } from "lucide-react";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -138,8 +138,15 @@ export default function Header() {
               ))}
             </nav>
 
-            {/* CTA Button */}
-            <div className="hidden lg:flex items-center gap-4">
+            {/* CTA Buttons */}
+            <div className="hidden lg:flex items-center gap-3">
+              <Link
+                href="/portal/login"
+                className="inline-flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-indigo-600 font-medium transition-colors"
+              >
+                <User className="w-4 h-4" />
+                Inloggen
+              </Link>
               <Link
                 href="/offerte"
                 className="btn-primary inline-flex items-center gap-2"
@@ -202,7 +209,15 @@ export default function Header() {
                   ))}
                 </nav>
 
-                <div className="mt-4 pt-4 border-t border-slate-100">
+                <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
+                  <Link
+                    href="/portal/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center justify-center gap-2 w-full py-3 px-4 border border-slate-200 rounded-lg text-slate-700 font-medium hover:bg-slate-50 transition-colors"
+                  >
+                    <User className="w-4 h-4" />
+                    Klantenportaal
+                  </Link>
                   <Link
                     href="/offerte"
                     onClick={() => setIsMobileMenuOpen(false)}
