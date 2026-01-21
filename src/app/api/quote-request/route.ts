@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
     const formatPrice = (amount: number) => 
       new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR" }).format(amount);
     
-    // Send email to RoTech
+    // Send email to Ro-Tech
     try {
       await resend.emails.send({
         from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",

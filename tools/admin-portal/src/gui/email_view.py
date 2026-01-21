@@ -317,30 +317,58 @@ class EmailDetailView(ctk.CTkFrame):
         self.body_text.grid(row=2, column=0, sticky="nsew")
     
     def show_email(self, email: Email):
-        """Display email details."""
-        self.current_email = email
+        """Display email details (legacy, uses Email object)."""
+        email_data = {
+            'id': email.id,
+            'subject': email.subject,
+            'from_address': email.from_address,
+            'from_name': email.from_name,
+            'to_address': email.to_address,
+            'body_text': email.body_text,
+            'body_html': email.body_html,
+            'sent_at': email.sent_at,
+            'is_read': email.is_read,
+        }
+        self.show_email_data(email_data)
+    
+    def show_email_data(self, email_data: dict):
+        """Display email details from dictionary data."""
+        self.current_email_data = email_data
         
-        # Mark as read
-        if not email.is_read:
+        # Mark as read in database
+        if not email_data.get('is_read'):
             db = get_db()
             with db.session() as session:
-                db_email = session.query(Email).get(email.id)
-                db_email.is_read = True
-                session.commit()
+                db_email = session.query(Email).get(email_data['id'])
+                if db_email:
+                    db_email.is_read = True
+                    session.commit()
         
-        # Update UI
-        self.subject_label.configure(text=email.subject or "(geen onderwerp)")
-        self.from_label.configure(
-            text=f"{email.from_name or ''} <{email.from_address}>".strip()
-        )
-        self.to_label.configure(text=email.to_address)
-        self.date_label.configure(
-            text=email.sent_at.strftime("%d-%m-%Y %H:%M") if email.sent_at else "-"
-        )
+        # Update UI - Subject
+        subject = email_data.get('subject') or "(geen onderwerp)"
+        self.subject_label.configure(text=subject)
+        
+        # From
+        from_name = email_data.get('from_name') or ''
+        from_address = email_data.get('from_address') or ''
+        from_text = f"{from_name} <{from_address}>".strip() if from_address else "-"
+        self.from_label.configure(text=from_text)
+        
+        # To
+        to_address = email_data.get('to_address') or "-"
+        self.to_label.configure(text=to_address)
+        
+        # Date
+        sent_at = email_data.get('sent_at')
+        if sent_at:
+            date_text = sent_at.strftime("%d-%m-%Y %H:%M")
+        else:
+            date_text = "-"
+        self.date_label.configure(text=date_text)
         
         # Body
         self.body_text.delete("1.0", "end")
-        body = email.body_text or email.body_html or "(geen inhoud)"
+        body = email_data.get('body_text') or email_data.get('body_html') or "(geen inhoud)"
         self.body_text.insert("1.0", body)
     
     def _on_reply(self):
@@ -635,10 +663,38 @@ class EmailView(ctk.CTkFrame):
     
     def _on_email_click(self, email: Email):
         """Handle email item click."""
+        # Re-fetch email from database to get fresh data (avoid detached session issues)
+        db = get_db()
+        with db.session() as session:
+            fresh_email = session.query(Email).options(
+                joinedload(Email.account)
+            ).filter_by(id=email.id).first()
+            
+            if not fresh_email:
+                logger.error(f"Email {email.id} not found in database")
+                return
+            
+            # Copy attributes to avoid detached object issues
+            email_data = {
+                'id': fresh_email.id,
+                'message_id': fresh_email.message_id,
+                'subject': fresh_email.subject,
+                'from_address': fresh_email.from_address,
+                'from_name': fresh_email.from_name,
+                'to_address': fresh_email.to_address,
+                'cc': fresh_email.cc,
+                'body_text': fresh_email.body_text,
+                'body_html': fresh_email.body_html,
+                'sent_at': fresh_email.sent_at,
+                'is_read': fresh_email.is_read,
+                'is_starred': fresh_email.is_starred,
+                'folder': fresh_email.folder,
+            }
+        
         self._showing_detail = True
         self.list_frame.grid_forget()
         self.detail_view.grid(row=0, column=0, sticky="nsew")
-        self.detail_view.show_email(email)
+        self.detail_view.show_email_data(email_data)
     
     def _on_back_to_list(self):
         """Go back to email list."""

@@ -209,7 +209,7 @@ async function sendPaymentFailedNotification(subscription: Stripe.Subscription) 
       `,
     });
     
-    // Also notify RoTech
+    // Also notify Ro-Tech
     await resend.emails.send({
       from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
       to: process.env.CONTACT_EMAIL || "contact@ro-techdevelopment.dev",

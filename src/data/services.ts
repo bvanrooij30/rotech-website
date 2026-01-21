@@ -54,7 +54,7 @@ export const services: Service[] = [
     deliveryTime: "Snelle levering",
     cta: "Website Offerte Aanvragen",
     metaTitle: "Website Laten Maken | Professionele Websites op Maat",
-    metaDescription: "Laat een professionele website maken door RoTech Development. ✓ Modern design ✓ SEO geoptimaliseerd ✓ Snel & responsive. Vraag een gratis offerte aan!",
+    metaDescription: "Laat een professionele website maken door Ro-Tech Development. ✓ Modern design ✓ SEO geoptimaliseerd ✓ Snel & responsive. Vraag een gratis offerte aan!",
   },
   {
     slug: "webshop-laten-maken",
@@ -112,7 +112,7 @@ export const services: Service[] = [
     deliveryTime: "Projectafhankelijk",
     cta: "Web App Offerte Aanvragen",
     metaTitle: "Web Applicatie Ontwikkeling | Maatwerk Software",
-    metaDescription: "Maatwerk web applicaties laten ontwikkelen? RoTech bouwt schaalbare oplossingen voor uw bedrijf. ✓ Portalen ✓ Dashboards ✓ CRM. Vraag offerte aan!",
+    metaDescription: "Maatwerk web applicaties laten ontwikkelen? Ro-Tech bouwt schaalbare oplossingen voor uw bedrijf. ✓ Portalen ✓ Dashboards ✓ CRM. Vraag offerte aan!",
   },
   {
     slug: "progressive-web-app",

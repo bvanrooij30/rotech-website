@@ -1,5 +1,5 @@
 /**
- * System Prompt voor de RoTech AI Chatbot
+ * System Prompt voor de Ro-Tech AI Chatbot
  * 
  * Deze prompt definieert de persoonlijkheid, kennis en gedrag van de chatbot.
  */

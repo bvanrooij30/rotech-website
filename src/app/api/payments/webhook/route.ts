@@ -133,7 +133,7 @@ async function handleSuccessfulPayment(session: Stripe.Checkout.Session) {
     );
   }
 
-  // Send notification to RoTech
+  // Send notification to Ro-Tech
   await sendPaymentNotification(
     metadata.customerName || "Onbekend",
     customerEmail || "Geen email",

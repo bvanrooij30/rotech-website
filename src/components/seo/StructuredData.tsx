@@ -196,7 +196,7 @@ export function ServiceSchema({ service }: { service: { title: string; descripti
     url: `${baseUrl}/diensten/${service.slug}`,
     provider: {
       "@type": "Organization",
-      name: "RoTech Development",
+      name: "Ro-Tech Development",
       url: baseUrl,
     },
     areaServed: [

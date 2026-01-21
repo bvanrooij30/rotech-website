@@ -32,6 +32,8 @@ export const metadata: Metadata = {
   description: "Ro-Tech Development bouwt professionele websites, webshops en web applicaties op maat. ✓ Modern design ✓ SEO geoptimaliseerd ✓ Snelle oplevering. Vraag nu een vrijblijvende offerte aan!",
   keywords: [
     "website laten maken",
+    "website laten maken veldhoven",
+    "website laten maken eindhoven",
     "webshop laten maken",
     "web developer",
     "website bouwer",
@@ -40,7 +42,18 @@ export const metadata: Metadata = {
     "web applicatie",
     "web development",
     "SEO optimalisatie",
+    "webdesign eindhoven",
+    "webdesign veldhoven",
+    "website kosten",
+    "bedrijfswebsite laten maken",
   ],
+  alternates: {
+    canonical: "https://ro-techdevelopment.dev",
+    languages: {
+      "nl-NL": "https://ro-techdevelopment.dev",
+    },
+  },
+  category: "technology",
   authors: [{ name: "Ro-Tech Development" }],
   creator: "Ro-Tech Development",
   publisher: "Ro-Tech Development",
@@ -55,20 +68,13 @@ export const metadata: Metadata = {
     siteName: "Ro-Tech Development",
     title: "Ro-Tech Development | Professionele Websites & Applicaties op Maat",
     description: "Ro-Tech Development bouwt professionele websites, webshops en web applicaties op maat. Vraag nu een vrijblijvende offerte aan!",
-    images: [
-      {
-        url: "/images/og/og-image.svg",
-        width: 1200,
-        height: 630,
-        alt: "Ro-Tech Development - Professionele Websites & Applicaties",
-      },
-    ],
+    // OG image wordt automatisch gegenereerd door opengraph-image.tsx
   },
   twitter: {
     card: "summary_large_image",
     title: "Ro-Tech Development | Professionele Websites & Applicaties op Maat",
     description: "Ro-Tech Development bouwt professionele websites, webshops en web applicaties op maat.",
-    images: ["/images/og/og-image.svg"],
+    // Twitter image wordt automatisch gegenereerd door twitter-image.tsx
   },
   robots: {
     index: true,
@@ -107,8 +113,9 @@ export default function RootLayout({
         className={`${spaceGrotesk.variable} ${inter.variable} antialiased bg-slate-50 text-slate-900`}
       >
         <ErrorBoundary>
-          {/* TODO: Verwijder DevelopmentBanner wanneer website volledig klaar is */}
+          {/* Development Banner uitgeschakeld voor productie - behouden voor als nodig 
           <DevelopmentBanner />
+          */}
           <Header />
           <main className="min-h-screen">{children}</main>
           <Footer />

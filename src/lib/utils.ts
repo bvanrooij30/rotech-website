@@ -1,5 +1,5 @@
 /**
- * Utility functions for the RoTech website
+ * Utility functions for the Ro-Tech website
  */
 
 /**

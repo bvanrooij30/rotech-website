@@ -40,7 +40,7 @@ export default function Footer() {
             <Link href="/" className="inline-block mb-6 group relative">
               <Image
                 src="/images/rotech/rotech-logo.svg"
-                alt="RoTech Development"
+                alt="Ro-Tech Development"
                 width={160}
                 height={40}
                 className="h-10 w-auto brightness-0 invert transition-transform duration-300 group-hover:scale-105 relative z-10"

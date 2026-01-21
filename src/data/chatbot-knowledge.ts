@@ -1,5 +1,5 @@
 /**
- * RoTech Development - Chatbot Knowledge Base
+ * Ro-Tech Development - Chatbot Knowledge Base
  * 
  * Dit bestand bevat alle kennis die de AI chatbot nodig heeft.
  * Update dit bestand wanneer diensten, prijzen of informatie wijzigt.
@@ -7,7 +7,7 @@
 
 export const COMPANY_INFO = {
   name: "Ro-Tech Development",
-  shortName: "RoTech",
+  shortName: "Ro-Tech",
   owner: "Bart van Rooij",
   founded: "2024",
   location: "Nederland",
