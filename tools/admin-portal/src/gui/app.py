@@ -17,6 +17,7 @@ from .leads_view import LeadsView
 from .inbox_view import InboxView
 from .clients_view import ClientsView
 from .invoices_view import InvoicesView
+from .snelstart_view import SnelstartView
 from .monitor_view import MonitorView
 from .support_view import SupportView
 from .settings_view import SettingsView
@@ -92,6 +93,7 @@ class AdminPortalApp(ctk.CTk):
             "leads": LeadsView,
             "clients": ClientsView,
             "invoices": InvoicesView,
+            "snelstart": SnelstartView,
             "monitor": MonitorView,
             "support": SupportView,
             "api": APIView,
