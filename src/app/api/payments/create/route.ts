@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getStripeClient, toStripeAmount } from "@/lib/stripe";
 import { logger } from "@/lib/logger";
+import type Stripe from "stripe";
 
 // Zod schema for payment creation
 const PaymentSchema = z.object({
@@ -69,9 +70,9 @@ export async function POST(request: NextRequest) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.dev";
 
     // Create Stripe Checkout Session
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card", "ideal", "bancontact"],
+    const sessionParams: Stripe.Checkout.SessionCreateParams = {
       mode: "payment",
+      payment_method_types: ["card", "ideal", "bancontact"],
       customer_email: customerEmail,
       line_items: [
         {
@@ -87,11 +88,11 @@ export async function POST(request: NextRequest) {
         },
       ],
       metadata: {
-        customerName,
+        customerName: customerName || "",
         customerEmail,
         customerPhone: customerPhone || "",
         companyName: companyName || "",
-        paymentType,
+        paymentType: paymentType || "",
         quoteId: quoteId || "",
         packageId: packageId || "",
         maintenancePlanId: maintenancePlanId || "",
@@ -99,17 +100,14 @@ export async function POST(request: NextRequest) {
       success_url: successUrl || `${siteUrl}/betaling/succes?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: cancelUrl || `${siteUrl}/betaling/geannuleerd`,
       locale: "nl",
-      // Enable automatic tax calculation if configured
-      // automatic_tax: { enabled: true },
-      // Allow promotion codes
       allow_promotion_codes: true,
-      // Billing address collection
       billing_address_collection: "auto",
-      // Phone number collection
       phone_number_collection: {
         enabled: true,
       },
-    });
+    };
+
+    const session = await stripe.checkout.sessions.create(sessionParams);
 
     // Return checkout URL for redirect
     return NextResponse.json({

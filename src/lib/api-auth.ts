@@ -80,8 +80,9 @@ export function validateApiKey(request: NextRequest): ApiAuthResult {
 export function validateSignature(
   payload: string,
   signature: string,
-  secret: string = API_SECRET
+  secret: string = API_SECRET || ''
 ): boolean {
+  if (!secret) return false;
   try {
     const expectedSignature = createHmac("sha256", secret)
       .update(payload)
@@ -103,7 +104,8 @@ export function validateSignature(
 /**
  * Generate signature for outgoing webhooks
  */
-export function generateSignature(payload: string, secret: string = WEBHOOK_SECRET): string {
+export function generateSignature(payload: string, secret: string = WEBHOOK_SECRET || ''): string {
+  if (!secret) throw new Error('WEBHOOK_SECRET is required');
   return createHmac("sha256", secret)
     .update(payload)
     .digest("hex");
