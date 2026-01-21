@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { verify } from 'jsonwebtoken';
+import { logger } from '@/lib/logger';
 
 // JWT secret - MUST be set in environment variables
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
-  console.error('JWT_SECRET environment variable is not set');
+  logger.warn('JWT_SECRET environment variable is not set', 'MobileAuth');
 }
 
 interface JWTPayload {
@@ -80,7 +81,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Mobile session error:', error);
+    logger.error('Mobile session error', 'MobileAuth', error);
     return NextResponse.json(
       { error: 'Er ging iets mis' },
       { status: 500 }

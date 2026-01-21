@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
+import { logger } from "@/lib/logger";
 import { z } from "zod";
 
 const registerSchema = z.object({
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
     });
     
   } catch (error) {
-    console.error("Registration error:", error);
+    logger.error("Registration error", "Auth", error);
     return NextResponse.json(
       { error: "Er is een fout opgetreden. Probeer het later opnieuw." },
       { status: 500 }

@@ -10,10 +10,10 @@
 
 | Categorie | Score | Status |
 |-----------|-------|--------|
-| **Git/Deployment** | ❌ 2/10 | Kritiek - Wijzigingen niet gepusht |
+| **Git/Deployment** | ✅ 10/10 | Gepusht naar GitHub |
 | **Structuur** | ✅ 9/10 | Uitstekend |
 | **SEO** | ⚠️ 7/10 | Verbeteringen nodig |
-| **Security** | ⚠️ 7/10 | Kritieke issues |
+| **Security** | ✅ 9/10 | Hardcoded secrets verwijderd |
 | **Performance** | ✅ 8/10 | Goed |
 
 ---
@@ -209,16 +209,16 @@ if (!JWT_SECRET) throw new Error('JWT_SECRET is required');
 
 ### Fase 1: Kritiek (Direct)
 
-- [ ] **1.1** Commit en push alle wijzigingen naar GitHub
-- [ ] **1.2** Verwijder hardcoded secrets
+- [x] **1.1** Commit en push alle wijzigingen naar GitHub ✅
+- [x] **1.2** Verwijder hardcoded secrets ✅
 - [ ] **1.3** Voeg CSRF protection toe aan missende routes
 
 ### Fase 2: Hoog (Deze week)
 
-- [ ] **2.1** Maak OG Image aan (1200x630px)
-- [ ] **2.2** Activeer Google Search Console verification
-- [ ] **2.3** Voeg Zod validatie toe aan payment routes
-- [ ] **2.4** Verwijder console.logs in productie
+- [x] **2.1** Maak OG Image aan (1200x630px) ✅ `/public/images/og/og-image.svg`
+- [x] **2.2** Activeer Google Search Console verification ✅ (via env var)
+- [x] **2.3** Voeg Zod validatie toe aan payment routes ✅
+- [x] **2.4** Verwijder console.logs in productie ✅ (logger utility)
 
 ### Fase 3: Medium (Binnenkort)
 

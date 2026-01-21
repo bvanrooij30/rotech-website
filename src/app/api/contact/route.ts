@@ -4,6 +4,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { validateCSRF } from "@/lib/csrf";
 import { storeFormSubmission } from "@/lib/forms-store";
 import { webhooks } from "@/lib/webhook";
+import { logger } from "@/lib/logger";
 
 // HTML escape function for security
 function escapeHtml(text: string): string {
@@ -107,7 +108,7 @@ export async function POST(request: NextRequest) {
         message,
       });
     } catch (storeError) {
-      console.error("Failed to store contact form:", storeError);
+      logger.error("Failed to store contact form", "Contact", storeError);
     }
 
     // Send webhook to portal (non-blocking)
@@ -119,7 +120,7 @@ export async function POST(request: NextRequest) {
       subject,
       message,
       submittedAt: new Date().toISOString(),
-    }).catch(err => console.error("Webhook failed:", err));
+    }).catch(err => logger.error("Webhook failed", "Contact", err));
 
     // Send email using Resend (if configured)
     if (process.env.RESEND_API_KEY && process.env.CONTACT_EMAIL) {
@@ -187,32 +188,20 @@ export async function POST(request: NextRequest) {
           `,
         });
       } catch (emailError) {
-        // Log email error but don't fail the request
-        if (process.env.NODE_ENV === "development") {
-          console.error("Email sending failed:", emailError);
-        }
+        logger.error("Email sending failed", "Contact", emailError);
         // Continue - form submission is still successful
       }
     }
 
-    // Only log in development
-    if (process.env.NODE_ENV === "development") {
-      console.log("Contact form submission:", {
-        name,
-        email,
-        phone,
-        company,
-        subject,
-        message: message.substring(0, 50) + "...",
-      });
-    }
+    logger.info("Contact form submission", "Contact", {
+      name,
+      email,
+      subject,
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    // Only log errors in development
-    if (process.env.NODE_ENV === "development") {
-      console.error("Contact form error:", error);
-    }
+    logger.error("Contact form error", "Contact", error);
     return NextResponse.json(
       { error: "Er is een fout opgetreden" },
       { status: 500 }

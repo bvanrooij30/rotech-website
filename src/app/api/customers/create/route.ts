@@ -1,5 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { getStripeClient } from "@/lib/stripe";
+import { logger } from "@/lib/logger";
+
+// Zod schema for customer creation
+const CustomerSchema = z.object({
+  name: z.string().min(2, "Naam moet minimaal 2 karakters zijn").max(100),
+  email: z.string().email("Ongeldig e-mailadres"),
+  phone: z.string().optional(),
+  companyName: z.string().max(100).optional(),
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,19 +24,19 @@ export async function POST(request: NextRequest) {
     const stripe = getStripeClient();
     const body = await request.json();
     
-    const {
-      name,
-      email,
-      phone,
-      companyName,
-    } = body;
-
-    if (!name || !email) {
+    // Validate with Zod
+    const validationResult = CustomerSchema.safeParse(body);
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: "Naam en email zijn verplicht" },
+        { 
+          error: "Validatie mislukt", 
+          details: validationResult.error.flatten().fieldErrors 
+        },
         { status: 400 }
       );
     }
+
+    const { name, email, phone, companyName } = validationResult.data;
 
     // Check if customer already exists
     const existingCustomers = await stripe.customers.list({
@@ -73,7 +83,7 @@ export async function POST(request: NextRequest) {
     });
     
   } catch (error) {
-    console.error("Customer creation error:", error);
+    logger.error("Customer creation error", "Customers", error);
     return NextResponse.json(
       { error: "Er is een fout opgetreden bij het aanmaken van de klant" },
       { status: 500 }

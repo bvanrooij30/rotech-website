@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/prisma';
 import { verifyPassword } from '@/lib/auth';
+import { logger } from '@/lib/logger';
 import { sign } from 'jsonwebtoken';
 
 const LoginSchema = z.object({
@@ -12,7 +13,7 @@ const LoginSchema = z.object({
 // JWT secret - MUST be set in environment variables
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
-  console.error('JWT_SECRET environment variable is not set');
+  logger.warn('JWT_SECRET environment variable is not set', 'MobileAuth');
 }
 
 export async function POST(request: NextRequest) {
@@ -96,7 +97,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.error('Mobile login error:', error);
+    logger.error('Mobile login error', 'MobileAuth', error);
     return NextResponse.json(
       { error: 'Er ging iets mis bij het inloggen' },
       { status: 500 }

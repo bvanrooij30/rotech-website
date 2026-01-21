@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     description: "Ro-Tech Development bouwt professionele websites, webshops en web applicaties op maat. Vraag nu een vrijblijvende offerte aan!",
     images: [
       {
-        url: "/images/og/og-image.jpg",
+        url: "/images/og/og-image.svg",
         width: 1200,
         height: 630,
         alt: "Ro-Tech Development - Professionele Websites & Applicaties",
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Ro-Tech Development | Professionele Websites & Applicaties op Maat",
     description: "Ro-Tech Development bouwt professionele websites, webshops en web applicaties op maat.",
-    images: ["/images/og/og-image.jpg"],
+    images: ["/images/og/og-image.svg"],
   },
   robots: {
     index: true,
@@ -82,7 +82,9 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // google: "jouw-google-verification-code",
+    // Voeg je Google Search Console verification code toe in .env.local:
+    // NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=jouw-code
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
   },
   icons: {
     icon: [

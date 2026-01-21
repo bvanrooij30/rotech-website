@@ -1,5 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { getStripeClient, toStripeAmount } from "@/lib/stripe";
+import { logger } from "@/lib/logger";
+
+// Zod schema for payment creation
+const PaymentSchema = z.object({
+  // Customer info
+  customerName: z.string().min(2).max(100).optional(),
+  customerEmail: z.string().email("Ongeldig e-mailadres"),
+  customerPhone: z.string().optional(),
+  companyName: z.string().max(100).optional(),
+  
+  // Payment details
+  amount: z.number().positive("Bedrag moet positief zijn").max(100000, "Bedrag te hoog"),
+  description: z.string().min(3, "Beschrijving te kort").max(500),
+  paymentType: z.enum(["deposit", "final", "subscription", "one-time"]).optional(),
+  
+  // Reference IDs
+  quoteId: z.string().optional(),
+  packageId: z.string().optional(),
+  maintenancePlanId: z.string().optional(),
+  
+  // Redirect URLs
+  successUrl: z.string().url().optional(),
+  cancelUrl: z.string().url().optional(),
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,35 +39,32 @@ export async function POST(request: NextRequest) {
     const stripe = getStripeClient();
     const body = await request.json();
     
+    // Validate with Zod
+    const validationResult = PaymentSchema.safeParse(body);
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { 
+          error: "Validatie mislukt", 
+          details: validationResult.error.flatten().fieldErrors 
+        },
+        { status: 400 }
+      );
+    }
+
     const {
-      // Customer info
       customerName,
       customerEmail,
       customerPhone,
       companyName,
-      
-      // Payment details
       amount,
       description,
-      paymentType, // "deposit" | "final" | "subscription"
-      
-      // Reference IDs
+      paymentType,
       quoteId,
       packageId,
       maintenancePlanId,
-      
-      // Redirect URLs
       successUrl,
       cancelUrl,
-    } = body;
-
-    // Validate required fields
-    if (!customerEmail || !amount || !description) {
-      return NextResponse.json(
-        { error: "Missende verplichte velden" },
-        { status: 400 }
-      );
-    }
+    } = validationResult.data;
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.dev";
 
@@ -97,7 +119,7 @@ export async function POST(request: NextRequest) {
     });
     
   } catch (error) {
-    console.error("Stripe payment error:", error);
+    logger.error("Stripe payment error", "Payments", error);
     return NextResponse.json(
       { error: "Er is een fout opgetreden bij het aanmaken van de betaling" },
       { status: 500 }

@@ -3,6 +3,7 @@ import { getStripeClient, fromStripeAmount } from "@/lib/stripe";
 import { Resend } from "resend";
 import { storePayment } from "@/lib/payments-store";
 import { getPackageById, getMaintenancePlanById } from "@/data/packages";
+import { logger } from "@/lib/logger";
 import Stripe from "stripe";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -13,7 +14,7 @@ export async function POST(request: NextRequest) {
     const signature = request.headers.get("stripe-signature");
 
     if (!signature) {
-      console.error("Missing Stripe signature");
+      logger.error("Missing Stripe signature", "PaymentWebhook");
       return NextResponse.json({ error: "Missing signature" }, { status: 400 });
     }
 
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest) {
     // Verify webhook signature
     try {
       if (!process.env.STRIPE_WEBHOOK_SECRET) {
-        console.warn("STRIPE_WEBHOOK_SECRET not set - skipping signature verification");
+        logger.warn("STRIPE_WEBHOOK_SECRET not set - skipping signature verification", "PaymentWebhook");
         event = JSON.parse(body) as Stripe.Event;
       } else {
         event = stripe.webhooks.constructEvent(
@@ -33,11 +34,11 @@ export async function POST(request: NextRequest) {
         );
       }
     } catch (err) {
-      console.error("Webhook signature verification failed:", err);
+      logger.error("Webhook signature verification failed", "PaymentWebhook", err);
       return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
     }
 
-    console.log(`Received Stripe event: ${event.type}`);
+    logger.info(`Received Stripe event: ${event.type}`, "PaymentWebhook");
 
     // Handle checkout.session.completed event
     if (event.type === "checkout.session.completed") {
@@ -51,7 +52,7 @@ export async function POST(request: NextRequest) {
     // Handle payment_intent.succeeded (for recurring payments)
     if (event.type === "payment_intent.succeeded") {
       const paymentIntent = event.data.object as Stripe.PaymentIntent;
-      console.log(`PaymentIntent ${paymentIntent.id} succeeded`);
+      logger.info(`PaymentIntent ${paymentIntent.id} succeeded`, "PaymentWebhook");
     }
 
     // Handle payment_intent.payment_failed
@@ -71,14 +72,14 @@ export async function POST(request: NextRequest) {
     // Handle checkout.session.expired
     if (event.type === "checkout.session.expired") {
       const session = event.data.object as Stripe.Checkout.Session;
-      console.log(`Checkout session ${session.id} expired`);
+      logger.info(`Checkout session ${session.id} expired`, "PaymentWebhook");
     }
 
     // Always return 200 to acknowledge webhook
     return NextResponse.json({ received: true });
     
   } catch (error) {
-    console.error("Webhook error:", error);
+    logger.error("Webhook error", "PaymentWebhook", error);
     // Still return 200 to prevent retries for unrecoverable errors
     return NextResponse.json({ received: true, error: "Processing error" });
   }
@@ -88,7 +89,7 @@ async function handleSuccessfulPayment(session: Stripe.Checkout.Session) {
   const metadata = session.metadata || {};
   const paymentId = session.payment_intent as string;
   
-  console.log(`Payment ${paymentId} is paid!`);
+  logger.info(`Payment ${paymentId} is paid!`, "PaymentWebhook");
   
   // Get package and plan names for invoice description
   const packageInfo = metadata.packageId ? getPackageById(metadata.packageId) : null;
@@ -115,9 +116,9 @@ async function handleSuccessfulPayment(session: Stripe.Checkout.Session) {
       status: "paid",
       paidAt: new Date().toISOString(),
     });
-    console.log(`Payment ${paymentId} stored for Admin Portal sync`);
+    logger.info(`Payment ${paymentId} stored for Admin Portal sync`, "PaymentWebhook");
   } catch (storeError) {
-    console.error("Failed to store payment:", storeError);
+    logger.error("Failed to store payment", "PaymentWebhook", storeError);
   }
   
   // Send confirmation email to customer
@@ -206,7 +207,7 @@ async function sendPaymentConfirmation(
       `,
     });
   } catch (error) {
-    console.error("Failed to send payment confirmation email:", error);
+    logger.error("Failed to send payment confirmation email", "PaymentWebhook", error);
   }
 }
 
@@ -233,7 +234,7 @@ async function sendPaymentNotification(
       `,
     });
   } catch (error) {
-    console.error("Failed to send payment notification:", error);
+    logger.error("Failed to send payment notification", "PaymentWebhook", error);
   }
 }
 
@@ -255,6 +256,6 @@ async function sendPaymentFailedEmail(
       `,
     });
   } catch (error) {
-    console.error("Failed to send payment failed email:", error);
+    logger.error("Failed to send payment failed email", "PaymentWebhook", error);
   }
 }
