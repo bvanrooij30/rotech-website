@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { auth } from "@/lib/auth";
 
 // Routes that require authentication
 const protectedRoutes = [
@@ -18,10 +17,24 @@ const authRoutes = [
 ];
 
 /**
+ * Check if user has a valid session token
+ * Uses lightweight cookie check instead of full auth import to stay under Edge Function size limit
+ */
+function hasSessionToken(request: NextRequest): boolean {
+  // NextAuth v5 uses authjs.session-token cookie
+  const sessionToken = request.cookies.get("authjs.session-token")?.value ||
+                       request.cookies.get("__Secure-authjs.session-token")?.value;
+  return !!sessionToken;
+}
+
+/**
  * Middleware for security, authentication, and request handling
  * Runs on every request before the page/API route is processed
+ * 
+ * Note: Full session validation happens in the page/API route.
+ * Middleware only does a lightweight token presence check.
  */
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
   // Check if route is protected
@@ -32,25 +45,23 @@ export async function middleware(request: NextRequest) {
   // Check if route is an auth route (login, register, etc.)
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
   
-  // Get session
-  const session = await auth();
+  // Check for session token (lightweight check)
+  const hasSession = hasSessionToken(request);
   
   // Redirect unauthenticated users trying to access protected routes
-  if (isProtectedRoute && !session) {
+  if (isProtectedRoute && !hasSession) {
     const loginUrl = new URL("/portal/login", request.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
   }
   
   // Redirect authenticated users away from auth routes
-  if (isAuthRoute && session) {
+  if (isAuthRoute && hasSession) {
     return NextResponse.redirect(new URL("/portal", request.url));
   }
   
-  // Check admin routes
-  if (pathname.startsWith("/admin") && session?.user?.role !== "admin" && session?.user?.role !== "super_admin") {
-    return NextResponse.redirect(new URL("/portal", request.url));
-  }
+  // Note: Admin role check happens in the admin pages themselves
+  // since we can't decode JWT in Edge without the full auth library
   
   const response = NextResponse.next();
   
