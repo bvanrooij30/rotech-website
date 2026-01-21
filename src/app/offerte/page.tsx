@@ -1,22 +1,32 @@
 import { Metadata } from "next";
-import { CheckCircle } from "lucide-react";
-import OfferteWizard from "@/components/forms/OfferteWizard";
+import { Suspense } from "react";
+import { CheckCircle, Loader2 } from "lucide-react";
+import { QuoteBuilder } from "@/components/quote";
 import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
 export const metadata: Metadata = {
-  title: "Offerte Aanvragen | Gratis & Vrijblijvend",
-  description: "Vraag een gratis offerte aan voor uw website, webshop of web applicatie. Binnen 24 uur ontvangt u een voorstel op maat.",
+  title: "Offerte Aanvragen | Kies uw functies & ontvang direct een prijs",
+  description: "Stel uw ideale website samen en ontvang direct een offerte. Kies zelf welke functies u nodig heeft - u bepaalt de prijs.",
   alternates: {
     canonical: "/offerte",
   },
 };
 
 const benefits = [
-  "Gratis en vrijblijvend",
-  "Reactie binnen 24 uur",
-  "Persoonlijk advies",
-  "Transparante prijzen",
+  "Direct inzicht in de prijs",
+  "Kies zelf uw functies",
+  "Juridisch bindend akkoord",
+  "Start binnen 24 uur",
 ];
+
+function QuoteLoading() {
+  return (
+    <div className="bg-white rounded-2xl shadow-xl p-12 text-center">
+      <Loader2 className="w-12 h-12 animate-spin text-indigo-600 mx-auto mb-4" />
+      <p className="text-slate-600">Offerte wizard laden...</p>
+    </div>
+  );
+}
 
 export default function OffertePage() {
   return (
@@ -29,17 +39,18 @@ export default function OffertePage() {
       />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-16 lg:py-24">
+      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-12 lg:py-20">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
             <span className="inline-block px-4 py-1.5 bg-emerald-600/20 text-emerald-300 rounded-full text-sm font-medium mb-6">
-              100% Gratis & Vrijblijvend
+              Transparant & Direct
             </span>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Offerte Aanvragen
+              Stel uw offerte samen
             </h1>
             <p className="text-xl text-slate-300 mb-8">
-              Vul het formulier in en ontvang binnen 24 uur een voorstel op maat.
+              Kies uw pakket en functies - u ziet direct de prijs. 
+              Na akkoord gaan we aan de slag.
             </p>
             <div className="flex flex-wrap justify-center gap-6">
               {benefits.map((benefit, index) => (
@@ -53,13 +64,13 @@ export default function OffertePage() {
         </div>
       </section>
 
-      {/* Form Section */}
+      {/* Quote Builder Section */}
       <section className="section-padding bg-slate-50">
         <div className="container-custom">
-          <div className="max-w-3xl mx-auto">
-            <div className="card">
-              <OfferteWizard />
-            </div>
+          <div className="max-w-4xl mx-auto">
+            <Suspense fallback={<QuoteLoading />}>
+              <QuoteBuilder />
+            </Suspense>
           </div>
         </div>
       </section>
@@ -69,40 +80,51 @@ export default function OffertePage() {
         <div className="container-custom">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">
-              Wat kunt u verwachten?
+              Hoe werkt het?
             </h2>
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-4 gap-6">
               <div className="text-center">
-                <div className="w-16 h-16 rounded-full gradient-bg text-white text-2xl font-bold flex items-center justify-center mx-auto mb-4">
+                <div className="w-14 h-14 rounded-full gradient-bg text-white text-xl font-bold flex items-center justify-center mx-auto mb-4">
                   1
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">
-                  Ontvangst & Review
+                <h3 className="text-lg font-bold text-slate-900 mb-2">
+                  Kies pakket
                 </h3>
-                <p className="text-slate-600">
-                  Wij bekijken uw aanvraag zorgvuldig en bereiden een gepersonaliseerd voorstel voor.
+                <p className="text-sm text-slate-600">
+                  Selecteer het pakket dat past bij uw project.
                 </p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 rounded-full gradient-bg text-white text-2xl font-bold flex items-center justify-center mx-auto mb-4">
+                <div className="w-14 h-14 rounded-full gradient-bg text-white text-xl font-bold flex items-center justify-center mx-auto mb-4">
                   2
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">
-                  Offerte binnen 24 uur
+                <h3 className="text-lg font-bold text-slate-900 mb-2">
+                  Selecteer functies
                 </h3>
-                <p className="text-slate-600">
-                  U ontvangt een duidelijke offerte met prijsindicatie en specificaties.
+                <p className="text-sm text-slate-600">
+                  Kies welke functies u nodig heeft.
                 </p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 rounded-full gradient-bg text-white text-2xl font-bold flex items-center justify-center mx-auto mb-4">
+                <div className="w-14 h-14 rounded-full gradient-bg text-white text-xl font-bold flex items-center justify-center mx-auto mb-4">
                   3
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">
-                  Vrijblijvend Gesprek
+                <h3 className="text-lg font-bold text-slate-900 mb-2">
+                  Bekijk prijs & akkoord
                 </h3>
-                <p className="text-slate-600">
-                  We plannen een gesprek om uw project te bespreken en vragen te beantwoorden.
+                <p className="text-sm text-slate-600">
+                  Zie direct de prijs en geef digitaal akkoord.
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="w-14 h-14 rounded-full gradient-bg text-white text-xl font-bold flex items-center justify-center mx-auto mb-4">
+                  4
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">
+                  Wij gaan aan de slag
+                </h3>
+                <p className="text-sm text-slate-600">
+                  Na aanbetaling starten wij direct met uw project.
                 </p>
               </div>
             </div>

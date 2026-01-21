@@ -1,0 +1,783 @@
+---
+name: rotech-admin-portal
+description: Python CustomTkinter desktop applicatie voor Ro-Tech admin beheer
+globs:
+  - tools/admin-portal/**/*
+---
+
+# 🏢 RO-TECH ADMIN PORTAL
+
+Python desktop applicatie met CustomTkinter voor interne administratie.
+
+---
+
+## 📋 APP OVERZICHT
+
+### Functionaliteit
+
+| Module | Beschrijving |
+|--------|--------------|
+| **Dashboard** | Overzicht van alles, statistieken |
+| **Email** | IMAP inbox, SMTP versturen |
+| **Inbox** | Website formulier submissions |
+| **Leads** | Lead management van lead-finder |
+| **Clients** | CRM - klantenbeheer |
+| **Invoices** | Facturen overzicht |
+| **Support** | Support tickets van portal |
+| **API** | Website API monitoring |
+| **Monitor** | Project health monitoring |
+| **Settings** | App instellingen |
+
+### Tech Stack
+
+| Component | Technologie |
+|-----------|-------------|
+| GUI | CustomTkinter 5.2+ |
+| Database | SQLAlchemy 2.0+ / SQLite |
+| Email | IMAPClient / SMTP |
+| AI | OpenAI GPT-4 |
+| Scheduling | schedule library |
+| HTTP | requests library |
+
+---
+
+## 📁 BESTANDSSTRUCTUUR
+
+```
+tools/admin-portal/
+├── main.py                          # Entry point
+├── requirements.txt                 # Dependencies
+├── .env                             # Environment variables (git ignored)
+├── env_example.txt                  # Env template
+├── README.md
+├── Start-AdminPortal.bat            # Windows launcher
+├── Maak-Snelkoppeling.ps1          # Create shortcut script
+│
+├── src/
+│   ├── __init__.py
+│   │
+│   ├── gui/                         # GUI Components
+│   │   ├── __init__.py
+│   │   ├── app.py                   # Main application window
+│   │   ├── sidebar.py               # Navigation sidebar
+│   │   ├── dashboard.py             # Dashboard view
+│   │   ├── email_view.py            # Email inbox/compose
+│   │   ├── inbox_view.py            # Website forms
+│   │   ├── leads_view.py            # Leads management
+│   │   ├── clients_view.py          # Client CRM
+│   │   ├── invoices_view.py         # Invoices
+│   │   ├── support_view.py          # Support tickets
+│   │   ├── api_view.py              # API monitoring
+│   │   ├── monitor_view.py          # Project monitoring
+│   │   └── settings_view.py         # Settings panel
+│   │
+│   ├── database/                    # Database Layer
+│   │   ├── __init__.py
+│   │   ├── database.py              # DB connection & session
+│   │   └── models.py                # SQLAlchemy models
+│   │
+│   ├── services/                    # Business Logic
+│   │   ├── __init__.py
+│   │   ├── email_service.py         # IMAP/SMTP operations
+│   │   ├── lead_service.py          # Lead management
+│   │   ├── sync_service.py          # Background sync
+│   │   ├── webhook_service.py       # Website webhooks
+│   │   ├── payment_sync_service.py  # Stripe sync
+│   │   ├── website_api.py           # Website API client
+│   │   ├── support_service.py       # Support tickets
+│   │   ├── monitor_service.py       # Health monitoring
+│   │   ├── report_service.py        # Report generation
+│   │   ├── ai_troubleshooter.py     # GPT-4 troubleshooting
+│   │   ├── cursor_prompt_generator.py  # Cursor prompts
+│   │   ├── project_discovery.py     # Auto-discover projects
+│   │   └── work_order_service.py    # Work orders
+│   │
+│   └── utils/                       # Utilities
+│       ├── __init__.py
+│       ├── config.py                # Configuration
+│       └── helpers.py               # Helper functions
+│
+├── data/                            # Data folder (git ignored)
+│   ├── admin_portal.db              # SQLite database
+│   ├── attachments/                 # Email attachments
+│   └── backups/                     # Database backups
+│
+└── logs/                            # Log files
+    └── app.log
+```
+
+---
+
+## 🎨 GUI PATRONEN
+
+### Kleuren (CustomTkinter)
+
+```python
+# CustomTkinter ondersteunt dark/light mode automatisch
+# Gebruik appearance mode voor consistentie
+
+import customtkinter as ctk
+
+# Set appearance
+ctk.set_appearance_mode("dark")  # or "light", "system"
+ctk.set_default_color_theme("blue")
+
+# Custom kleuren (match website)
+COLORS = {
+    'primary': '#4F46E5',       # Indigo 600
+    'primary_hover': '#4338CA', # Indigo 700
+    'secondary': '#7C3AED',     # Violet 600
+    'success': '#10B981',       # Emerald 500
+    'warning': '#F59E0B',       # Amber 500
+    'error': '#EF4444',         # Red 500
+    'text': '#0F172A',          # Slate 900
+    'text_muted': '#64748B',    # Slate 500
+    'background': '#F8FAFC',    # Slate 50
+    'surface': '#FFFFFF',
+}
+```
+
+### Main App Window
+
+```python
+# src/gui/app.py
+import customtkinter as ctk
+from src.gui.sidebar import Sidebar
+from src.gui.dashboard import DashboardView
+from src.gui.email_view import EmailView
+# ... other imports
+
+class AdminPortalApp(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+        
+        # Window setup
+        self.title("Ro-Tech Admin Portal")
+        self.geometry("1400x900")
+        self.minsize(1200, 700)
+        
+        # Configure grid
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        
+        # Initialize components
+        self._init_sidebar()
+        self._init_content_area()
+        self._init_views()
+        
+        # Show default view
+        self.show_view("dashboard")
+    
+    def _init_sidebar(self):
+        self.sidebar = Sidebar(
+            self,
+            on_navigate=self.show_view
+        )
+        self.sidebar.grid(row=0, column=0, sticky="nsew")
+    
+    def _init_content_area(self):
+        self.content_frame = ctk.CTkFrame(self, corner_radius=0)
+        self.content_frame.grid(row=0, column=1, sticky="nsew", padx=0, pady=0)
+        self.content_frame.grid_columnconfigure(0, weight=1)
+        self.content_frame.grid_rowconfigure(0, weight=1)
+    
+    def _init_views(self):
+        self.views = {
+            "dashboard": DashboardView(self.content_frame),
+            "email": EmailView(self.content_frame),
+            # ... other views
+        }
+        
+        # Hide all views initially
+        for view in self.views.values():
+            view.grid_remove()
+    
+    def show_view(self, view_name: str):
+        # Hide current views
+        for view in self.views.values():
+            view.grid_remove()
+        
+        # Show requested view
+        if view_name in self.views:
+            self.views[view_name].grid(row=0, column=0, sticky="nsew")
+            self.views[view_name].refresh()  # Refresh data
+
+def main():
+    ctk.set_appearance_mode("dark")
+    ctk.set_default_color_theme("blue")
+    
+    app = AdminPortalApp()
+    app.mainloop()
+
+if __name__ == "__main__":
+    main()
+```
+
+### View Template
+
+```python
+# src/gui/[view_name]_view.py
+import customtkinter as ctk
+from typing import Optional
+import logging
+
+logger = logging.getLogger(__name__)
+
+class ExampleView(ctk.CTkFrame):
+    """Example view template."""
+    
+    def __init__(self, parent):
+        super().__init__(parent, corner_radius=0, fg_color="transparent")
+        
+        # Configure grid
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        
+        # Initialize UI
+        self._create_header()
+        self._create_content()
+        self._create_footer()
+    
+    def _create_header(self):
+        """Create header with title and actions."""
+        header = ctk.CTkFrame(self, fg_color="transparent")
+        header.grid(row=0, column=0, sticky="ew", padx=20, pady=(20, 10))
+        header.grid_columnconfigure(0, weight=1)
+        
+        # Title
+        title = ctk.CTkLabel(
+            header,
+            text="View Title",
+            font=ctk.CTkFont(size=24, weight="bold")
+        )
+        title.grid(row=0, column=0, sticky="w")
+        
+        # Action button
+        action_btn = ctk.CTkButton(
+            header,
+            text="Action",
+            command=self._on_action
+        )
+        action_btn.grid(row=0, column=1, sticky="e")
+    
+    def _create_content(self):
+        """Create main content area."""
+        self.content = ctk.CTkScrollableFrame(self)
+        self.content.grid(row=1, column=0, sticky="nsew", padx=20, pady=10)
+        self.content.grid_columnconfigure(0, weight=1)
+    
+    def _create_footer(self):
+        """Create footer with status/pagination."""
+        footer = ctk.CTkFrame(self, fg_color="transparent", height=40)
+        footer.grid(row=2, column=0, sticky="ew", padx=20, pady=(10, 20))
+        
+        self.status_label = ctk.CTkLabel(
+            footer,
+            text="Ready",
+            text_color="gray"
+        )
+        self.status_label.pack(side="left")
+    
+    def _on_action(self):
+        """Handle action button click."""
+        logger.info("Action button clicked")
+        # Implement action
+    
+    def refresh(self):
+        """Refresh view data. Called when view becomes visible."""
+        logger.info("Refreshing view")
+        self._load_data()
+    
+    def _load_data(self):
+        """Load data from database/API."""
+        try:
+            # Load data
+            self.status_label.configure(text="Data loaded")
+        except Exception as e:
+            logger.error(f"Failed to load data: {e}")
+            self.status_label.configure(text=f"Error: {e}")
+```
+
+### Sidebar Navigation
+
+```python
+# src/gui/sidebar.py
+import customtkinter as ctk
+from typing import Callable, Dict
+
+class Sidebar(ctk.CTkFrame):
+    """Navigation sidebar."""
+    
+    NAV_ITEMS = [
+        ("dashboard", "📊", "Dashboard"),
+        ("email", "📧", "Email"),
+        ("inbox", "📥", "Inbox"),
+        ("leads", "🔍", "Leads"),
+        ("clients", "👥", "Klanten"),
+        ("invoices", "📄", "Facturen"),
+        ("support", "🎫", "Support"),
+        ("api", "🔗", "API"),
+        ("monitor", "📡", "Monitor"),
+        ("settings", "⚙️", "Settings"),
+    ]
+    
+    def __init__(self, parent, on_navigate: Callable[[str], None]):
+        super().__init__(parent, width=200, corner_radius=0)
+        self.on_navigate = on_navigate
+        self.buttons: Dict[str, ctk.CTkButton] = {}
+        self.active_view = "dashboard"
+        
+        # Logo
+        logo = ctk.CTkLabel(
+            self,
+            text="🏢 Ro-Tech",
+            font=ctk.CTkFont(size=20, weight="bold")
+        )
+        logo.pack(pady=20)
+        
+        # Navigation buttons
+        for view_id, icon, label in self.NAV_ITEMS:
+            btn = ctk.CTkButton(
+                self,
+                text=f"{icon} {label}",
+                anchor="w",
+                command=lambda v=view_id: self._navigate(v),
+                fg_color="transparent",
+                text_color=("gray10", "gray90"),
+                hover_color=("gray70", "gray30"),
+            )
+            btn.pack(fill="x", padx=10, pady=2)
+            self.buttons[view_id] = btn
+        
+        # Set initial active state
+        self._set_active("dashboard")
+    
+    def _navigate(self, view_id: str):
+        self._set_active(view_id)
+        self.on_navigate(view_id)
+    
+    def _set_active(self, view_id: str):
+        # Reset all buttons
+        for btn in self.buttons.values():
+            btn.configure(fg_color="transparent")
+        
+        # Highlight active
+        if view_id in self.buttons:
+            self.buttons[view_id].configure(fg_color=("gray75", "gray25"))
+            self.active_view = view_id
+```
+
+---
+
+## 🗄️ DATABASE PATRONEN
+
+### SQLAlchemy Models
+
+```python
+# src/database/models.py
+from sqlalchemy import Column, Integer, String, Boolean, Float, DateTime, ForeignKey, Text
+from sqlalchemy.orm import relationship, declarative_base
+from datetime import datetime
+
+Base = declarative_base()
+
+class Email(Base):
+    __tablename__ = 'emails'
+    
+    id = Column(Integer, primary_key=True)
+    message_id = Column(String(255), unique=True, nullable=False)
+    account = Column(String(100))
+    from_address = Column(String(255))
+    from_name = Column(String(255))
+    to_address = Column(String(255))
+    subject = Column(String(500))
+    body_text = Column(Text)
+    body_html = Column(Text)
+    is_read = Column(Boolean, default=False)
+    is_starred = Column(Boolean, default=False)
+    folder = Column(String(50), default='inbox')
+    sent_at = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    attachments = relationship("Attachment", back_populates="email", cascade="all, delete-orphan")
+
+class Attachment(Base):
+    __tablename__ = 'attachments'
+    
+    id = Column(Integer, primary_key=True)
+    email_id = Column(Integer, ForeignKey('emails.id'))
+    filename = Column(String(255))
+    mime_type = Column(String(100))
+    size = Column(Integer)
+    file_path = Column(String(500))
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    email = relationship("Email", back_populates="attachments")
+
+class FormSubmission(Base):
+    __tablename__ = 'form_submissions'
+    
+    id = Column(Integer, primary_key=True)
+    form_type = Column(String(50))  # contact, offerte, quote
+    status = Column(String(50), default='new')  # new, in_progress, done, archived
+    
+    name = Column(String(255))
+    email = Column(String(255))
+    phone = Column(String(50))
+    company = Column(String(255))
+    subject = Column(String(500))
+    message = Column(Text)
+    
+    source = Column(String(50), default='website')
+    ip_address = Column(String(50))
+    submitted_at = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    client_id = Column(Integer, ForeignKey('clients.id'), nullable=True)
+    client = relationship("Client", back_populates="form_submissions")
+    notes = relationship("Note", back_populates="form_submission", cascade="all, delete-orphan")
+
+class Lead(Base):
+    __tablename__ = 'leads'
+    
+    id = Column(Integer, primary_key=True)
+    status = Column(String(50), default='new')  # new, contacted, qualified, converted, lost
+    
+    business_name = Column(String(255))
+    address = Column(String(500))
+    city = Column(String(100))
+    phone = Column(String(50))
+    email = Column(String(255))
+    website = Column(String(255))
+    
+    lead_score = Column(Float, default=0)
+    has_website = Column(Boolean, default=True)
+    website_quality = Column(String(50))  # none, poor, average, good
+    
+    import_batch = Column(String(100))
+    imported_at = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    client_id = Column(Integer, ForeignKey('clients.id'), nullable=True)
+    client = relationship("Client", back_populates="leads")
+    notes = relationship("Note", back_populates="lead", cascade="all, delete-orphan")
+
+class Client(Base):
+    __tablename__ = 'clients'
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255), nullable=False)
+    email = Column(String(255))
+    phone = Column(String(50))
+    company = Column(String(255))
+    address = Column(String(500))
+    status = Column(String(50), default='prospect')  # prospect, active, inactive
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    form_submissions = relationship("FormSubmission", back_populates="client")
+    leads = relationship("Lead", back_populates="client")
+    notes = relationship("Note", back_populates="client", cascade="all, delete-orphan")
+
+class Note(Base):
+    __tablename__ = 'notes'
+    
+    id = Column(Integer, primary_key=True)
+    content = Column(Text, nullable=False)
+    
+    form_submission_id = Column(Integer, ForeignKey('form_submissions.id'), nullable=True)
+    lead_id = Column(Integer, ForeignKey('leads.id'), nullable=True)
+    client_id = Column(Integer, ForeignKey('clients.id'), nullable=True)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    form_submission = relationship("FormSubmission", back_populates="notes")
+    lead = relationship("Lead", back_populates="notes")
+    client = relationship("Client", back_populates="notes")
+```
+
+### Database Session
+
+```python
+# src/database/database.py
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, Session
+from contextlib import contextmanager
+from pathlib import Path
+import logging
+
+from .models import Base
+
+logger = logging.getLogger(__name__)
+
+# Database path
+DATA_DIR = Path(__file__).parent.parent.parent / "data"
+DATA_DIR.mkdir(exist_ok=True)
+DB_PATH = DATA_DIR / "admin_portal.db"
+
+# Create engine
+engine = create_engine(
+    f"sqlite:///{DB_PATH}",
+    echo=False,
+    connect_args={"check_same_thread": False}
+)
+
+# Create session factory
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def init_db():
+    """Initialize database tables."""
+    Base.metadata.create_all(bind=engine)
+    logger.info(f"Database initialized at {DB_PATH}")
+
+@contextmanager
+def get_session() -> Session:
+    """Get database session with automatic cleanup."""
+    session = SessionLocal()
+    try:
+        yield session
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        logger.error(f"Database error: {e}")
+        raise
+    finally:
+        session.close()
+```
+
+---
+
+## 🔧 SERVICE PATRONEN
+
+### Service Template
+
+```python
+# src/services/[service_name]_service.py
+import logging
+from typing import List, Optional
+from src.database.database import get_session
+from src.database.models import SomeModel
+
+logger = logging.getLogger(__name__)
+
+class SomeService:
+    """Service for handling some operations."""
+    
+    def get_all(self, limit: int = 100) -> List[SomeModel]:
+        """Get all items."""
+        with get_session() as session:
+            return session.query(SomeModel).limit(limit).all()
+    
+    def get_by_id(self, item_id: int) -> Optional[SomeModel]:
+        """Get item by ID."""
+        with get_session() as session:
+            return session.query(SomeModel).filter(SomeModel.id == item_id).first()
+    
+    def create(self, **kwargs) -> SomeModel:
+        """Create new item."""
+        with get_session() as session:
+            item = SomeModel(**kwargs)
+            session.add(item)
+            session.commit()
+            session.refresh(item)
+            logger.info(f"Created item: {item.id}")
+            return item
+    
+    def update(self, item_id: int, **kwargs) -> Optional[SomeModel]:
+        """Update existing item."""
+        with get_session() as session:
+            item = session.query(SomeModel).filter(SomeModel.id == item_id).first()
+            if item:
+                for key, value in kwargs.items():
+                    setattr(item, key, value)
+                session.commit()
+                logger.info(f"Updated item: {item_id}")
+            return item
+    
+    def delete(self, item_id: int) -> bool:
+        """Delete item."""
+        with get_session() as session:
+            item = session.query(SomeModel).filter(SomeModel.id == item_id).first()
+            if item:
+                session.delete(item)
+                session.commit()
+                logger.info(f"Deleted item: {item_id}")
+                return True
+            return False
+
+# Singleton instance
+some_service = SomeService()
+```
+
+### AI Troubleshooter
+
+```python
+# src/services/ai_troubleshooter.py
+import openai
+import logging
+from typing import Optional
+from src.utils.config import config
+
+logger = logging.getLogger(__name__)
+
+class AITroubleshooter:
+    """GPT-4 powered troubleshooting assistant."""
+    
+    def __init__(self):
+        self.client = openai.OpenAI(api_key=config.OPENAI_API_KEY)
+        self.system_prompt = """Je bent een technische support specialist voor Ro-Tech Development.
+        Je helpt met het oplossen van problemen met websites, webshops en web applicaties.
+        Antwoord altijd in het Nederlands. Wees direct en to-the-point."""
+    
+    def diagnose(self, error_description: str, context: Optional[str] = None) -> str:
+        """Get AI diagnosis for an error."""
+        try:
+            messages = [
+                {"role": "system", "content": self.system_prompt},
+                {"role": "user", "content": f"Probleem: {error_description}"}
+            ]
+            
+            if context:
+                messages[1]["content"] += f"\n\nContext: {context}"
+            
+            response = self.client.chat.completions.create(
+                model="gpt-4",
+                messages=messages,
+                temperature=0.3,
+                max_tokens=1000
+            )
+            
+            return response.choices[0].message.content
+            
+        except Exception as e:
+            logger.error(f"AI troubleshooting failed: {e}")
+            return f"AI diagnose niet beschikbaar: {e}"
+
+ai_troubleshooter = AITroubleshooter()
+```
+
+---
+
+## ⚙️ CONFIGURATION
+
+### Environment Variables
+
+```env
+# .env
+
+# Email
+EMAIL_HOST=mail.ro-techdevelopment.dev
+EMAIL_PORT_IMAP=993
+EMAIL_PORT_SMTP=587
+EMAIL_USERNAME=contact@ro-techdevelopment.dev
+EMAIL_PASSWORD=your-password
+
+# Website API
+WEBSITE_API_URL=https://ro-techdevelopment.dev/api
+WEBSITE_API_KEY=your-api-key
+
+# OpenAI
+OPENAI_API_KEY=sk-...
+
+# App Settings
+APP_THEME=dark
+LOG_LEVEL=INFO
+```
+
+### Config Loader
+
+```python
+# src/utils/config.py
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load .env file
+env_path = Path(__file__).parent.parent.parent / ".env"
+load_dotenv(env_path)
+
+class Config:
+    # Email
+    EMAIL_HOST = os.getenv("EMAIL_HOST", "")
+    EMAIL_PORT_IMAP = int(os.getenv("EMAIL_PORT_IMAP", "993"))
+    EMAIL_PORT_SMTP = int(os.getenv("EMAIL_PORT_SMTP", "587"))
+    EMAIL_USERNAME = os.getenv("EMAIL_USERNAME", "")
+    EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD", "")
+    
+    # Website API
+    WEBSITE_API_URL = os.getenv("WEBSITE_API_URL", "")
+    WEBSITE_API_KEY = os.getenv("WEBSITE_API_KEY", "")
+    
+    # OpenAI
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+    
+    # App
+    APP_THEME = os.getenv("APP_THEME", "dark")
+    LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+
+config = Config()
+```
+
+---
+
+## ⚠️ ANTI-PATTERNS
+
+```python
+# ❌ NOOIT: Direct database queries in GUI
+def _on_button_click(self):
+    session = SessionLocal()
+    items = session.query(Item).all()
+
+# ✅ ALTIJD: Gebruik services
+def _on_button_click(self):
+    items = item_service.get_all()
+
+# ❌ NOOIT: Blocking calls in main thread
+def _load_data(self):
+    response = requests.get(url)  # Blocks UI!
+
+# ✅ ALTIJD: Threading voor IO operaties
+def _load_data(self):
+    threading.Thread(target=self._fetch_data, daemon=True).start()
+
+# ❌ NOOIT: Hardcoded credentials
+EMAIL_PASSWORD = "my-password"
+
+# ✅ ALTIJD: Environment variables
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+
+# ❌ NOOIT: Geen error handling
+def save_data(self):
+    session.add(item)
+    session.commit()
+
+# ✅ ALTIJD: Proper error handling
+def save_data(self):
+    try:
+        with get_session() as session:
+            session.add(item)
+    except Exception as e:
+        logger.error(f"Save failed: {e}")
+        messagebox.showerror("Fout", str(e))
+```
+
+---
+
+## 🚀 COMMANDS
+
+```bash
+cd tools/admin-portal
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run application
+python main.py
+
+# Initialize database
+python main.py --init-db
+
+# Windows: Run without console
+pythonw main.py
+```

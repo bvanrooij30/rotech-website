@@ -15,8 +15,8 @@ import {
   ShoppingCart,
   AlertCircle,
 } from "lucide-react";
-import { packages, maintenancePlans, getPackageById, getMaintenancePlanById } from "@/data/packages";
-import { formatPrice, calculateDeposit } from "@/lib/mollie";
+import { packageDefinitions, maintenancePlans, getPackageById, getMaintenancePlanById } from "@/data/packages";
+import { formatPrice, calculateDeposit } from "@/lib/stripe";
 
 interface CustomerInfo {
   name: string;
@@ -47,8 +47,9 @@ export default function CheckoutWizard() {
   const selectedPackage = selectedPackageId ? getPackageById(selectedPackageId) : null;
   const selectedPlan = selectedPlanId ? getMaintenancePlanById(selectedPlanId) : null;
 
-  // Calculate totals
-  const projectTotal = selectedPackage?.basePrice || 0;
+  // Calculate totals - for checkout, we use a base estimate
+  // In practice, this should come from an accepted quote
+  const projectTotal = 2500; // Default estimate - actual amount comes from quote
   const { depositAmount, remainingAmount, depositPercentage } = calculateDeposit(
     projectTotal,
     projectTotal > 7500
@@ -89,7 +90,7 @@ export default function CheckoutWizard() {
         throw new Error(data.error || "Betaling kon niet worden aangemaakt");
       }
 
-      // Redirect to Mollie checkout
+      // Redirect to Stripe Checkout
       if (data.checkoutUrl) {
         window.location.href = data.checkoutUrl;
       }
@@ -167,14 +168,14 @@ export default function CheckoutWizard() {
               </p>
 
               <div className="grid gap-4">
-                {packages.slice(0, 4).map((pkg) => (
+                {packageDefinitions.map((pkg) => (
                   <label
                     key={pkg.id}
                     className={`block p-4 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md ${
                       selectedPackageId === pkg.id
                         ? "border-indigo-600 bg-indigo-50"
                         : "border-slate-200 hover:border-slate-300"
-                    }`}
+                    } ${pkg.popular ? "ring-2 ring-emerald-500 ring-offset-2" : ""}`}
                   >
                     <div className="flex items-start gap-4">
                       <input
@@ -186,19 +187,22 @@ export default function CheckoutWizard() {
                         className="mt-1 w-5 h-5 text-indigo-600"
                       />
                       <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-bold text-slate-900">{pkg.name}</h3>
-                          <span className="text-lg font-bold text-indigo-600">
-                            {formatPrice(pkg.basePrice)}
-                          </span>
+                          <span className="text-sm text-indigo-600 font-medium">{pkg.subtitle}</span>
+                          {pkg.popular && (
+                            <span className="text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">
+                              Populair
+                            </span>
+                          )}
                         </div>
                         <p className="text-sm text-slate-600 mb-2">{pkg.description}</p>
                         <div className="flex flex-wrap gap-2">
                           <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">
                             {pkg.deliveryTime}
                           </span>
-                          <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded">
-                            {pkg.freeSupport} maand gratis support
+                          <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded">
+                            Prijs op basis van functies
                           </span>
                         </div>
                       </div>
@@ -229,7 +233,7 @@ export default function CheckoutWizard() {
                 Onderhoudsplan (optioneel)
               </h2>
               <p className="text-slate-600 mb-6">
-                Na uw gratis supportperiode ({selectedPackage?.freeSupport || 1} maanden) kunt u kiezen voor doorlopend onderhoud.
+                Kies een onderhoudsabonnement voor doorlopende ondersteuning na oplevering.
               </p>
 
               <div className="grid gap-4 mb-6">
@@ -409,7 +413,7 @@ export default function CheckoutWizard() {
                 {/* Package */}
                 <div className="flex justify-between items-start mb-4 pb-4 border-b border-slate-200">
                   <div>
-                    <p className="font-medium text-slate-900">{selectedPackage?.name}</p>
+                    <p className="font-medium text-slate-900">{selectedPackage?.name} - {selectedPackage?.subtitle}</p>
                     <p className="text-sm text-slate-600">{selectedPackage?.deliveryTime}</p>
                   </div>
                   <p className="font-bold text-slate-900">{formatPrice(projectTotal)}</p>
@@ -421,7 +425,7 @@ export default function CheckoutWizard() {
                     <div>
                       <p className="font-medium text-slate-900">Onderhoud {selectedPlan.name}</p>
                       <p className="text-sm text-slate-600">
-                        Start na {selectedPackage?.freeSupport || 1} maand gratis support
+                        Start na oplevering
                       </p>
                     </div>
                     <p className="font-bold text-slate-900">{formatPrice(monthlyMaintenance)}/mnd</p>
@@ -476,11 +480,11 @@ export default function CheckoutWizard() {
               <div className="flex flex-wrap justify-center gap-4 mb-6 text-sm text-slate-600">
                 <div className="flex items-center gap-2">
                   <Shield className="w-5 h-5 text-emerald-500" />
-                  <span>Veilig betalen via Mollie</span>
+                  <span>Veilig betalen via Stripe</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CreditCard className="w-5 h-5 text-emerald-500" />
-                  <span>iDEAL, Creditcard, PayPal</span>
+                  <span>iDEAL, Creditcard, Bancontact</span>
                 </div>
               </div>
 

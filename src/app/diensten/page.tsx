@@ -68,20 +68,13 @@ export default function DienstenPage() {
                   href={`/diensten/${service.slug}`}
                   className="group"
                 >
-                  <div className={`
-                    relative h-full rounded-2xl p-6 transition-all duration-300 overflow-hidden
-                    ${isTopService 
-                      ? 'bg-gradient-to-br from-indigo-50/80 via-white to-violet-50/60 border-2 border-indigo-100 hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-500/15' 
-                      : 'bg-gradient-to-br from-violet-50/70 via-white to-purple-50/50 border-2 border-violet-100 hover:border-violet-300 hover:shadow-lg hover:shadow-violet-500/15'
-                    }
-                    hover:-translate-y-1.5
-                  `}>
-                    {/* Corner accent - more visible */}
+                  <div className="relative h-full rounded-2xl p-6 transition-all duration-300 overflow-hidden bg-white border border-slate-200 shadow-sm hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-500/10 hover:-translate-y-1.5">
+                    {/* Corner accent */}
                     <div className={`
-                      absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-60
+                      absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-40 pointer-events-none
                       ${isTopService 
-                        ? 'bg-gradient-to-bl from-indigo-200/80 via-indigo-100/50 to-transparent' 
-                        : 'bg-gradient-to-bl from-violet-200/80 via-violet-100/50 to-transparent'
+                        ? 'bg-gradient-to-bl from-indigo-200 via-indigo-100/50 to-transparent' 
+                        : 'bg-gradient-to-bl from-violet-200 via-violet-100/50 to-transparent'
                       }
                     `} />
                     

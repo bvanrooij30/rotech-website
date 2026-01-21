@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { Mail, Clock } from "lucide-react";
+import { Mail, Clock, ArrowRight } from "lucide-react";
 import ContactForm from "@/components/forms/ContactForm";
 import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
@@ -66,15 +66,32 @@ export default function ContactPage() {
                 Contactgegevens
               </h2>
               
-              <div className="space-y-6 mb-8">
+              <div className="space-y-4 mb-8">
                 {contactInfo.map((item, index) => {
                   const IconComponent = item.icon;
+                  const isPrimary = index % 2 === 0;
+                  
                   const content = (
-                    <div className="flex gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-indigo-100 flex items-center justify-center shrink-0">
-                        <IconComponent className="w-6 h-6 text-indigo-600" />
+                    <div className="relative flex gap-4 p-4 rounded-2xl overflow-hidden transition-all duration-300 bg-white border border-slate-200 shadow-sm hover:border-indigo-300 hover:shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-0.5">
+                      {/* Bottom accent line */}
+                      <div className={`
+                        absolute bottom-0 left-0 right-0 h-0.5
+                        ${isPrimary
+                          ? "bg-gradient-to-r from-indigo-400 via-violet-400 to-indigo-400"
+                          : "bg-gradient-to-r from-violet-400 via-purple-400 to-violet-400"
+                        }
+                      `} />
+
+                      <div className={`
+                        w-12 h-12 rounded-xl flex items-center justify-center shrink-0
+                        ${isPrimary
+                          ? "bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/30"
+                          : "bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/30"
+                        }
+                      `}>
+                        <IconComponent className="w-6 h-6 text-white" />
                       </div>
-                      <div>
+                      <div className="relative z-10">
                         <h3 className="font-semibold text-slate-900">{item.title}</h3>
                         <p className="text-slate-700">{item.value}</p>
                         <p className="text-sm text-slate-500">{item.description}</p>
@@ -83,11 +100,7 @@ export default function ContactPage() {
                   );
 
                   return item.href ? (
-                    <a
-                      key={index}
-                      href={item.href}
-                      className="block hover:bg-slate-50 -mx-4 px-4 py-2 rounded-xl transition-colors"
-                    >
+                    <a key={index} href={item.href} className="block">
                       {content}
                     </a>
                   ) : (
@@ -97,29 +110,43 @@ export default function ContactPage() {
               </div>
 
               {/* Extra info */}
-              <div className="mt-8 p-6 bg-slate-50 rounded-xl">
-                <h3 className="font-semibold text-slate-900 mb-2">
-                  Liever een offerte?
-                </h3>
-                <p className="text-slate-600 text-sm mb-4">
-                  Voor projectaanvragen kunt u beter ons uitgebreide offerteformulier gebruiken.
-                </p>
-                <a href="/offerte" className="text-indigo-600 font-medium hover:underline">
-                  Naar offerteformulier →
-                </a>
+              <div className="relative mt-8 p-6 rounded-2xl overflow-hidden transition-all duration-300 bg-white border border-slate-200 shadow-sm hover:border-indigo-300 hover:shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-0.5">
+                {/* Bottom accent line */}
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-indigo-400 via-violet-400 to-indigo-400" />
+                
+                <div className="relative z-10">
+                  <h3 className="font-semibold text-slate-900 mb-2">
+                    Liever een offerte?
+                  </h3>
+                  <p className="text-slate-600 text-sm mb-4">
+                    Voor projectaanvragen kunt u beter ons uitgebreide offerteformulier gebruiken.
+                  </p>
+                  <a href="/offerte" className="inline-flex items-center gap-2 text-indigo-600 font-semibold hover:gap-3 transition-all">
+                    Naar offerteformulier
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                </div>
               </div>
             </div>
 
             {/* Contact Form */}
             <div className="lg:col-span-2">
-              <div className="card">
-                <h2 className="text-2xl font-bold text-slate-900 mb-2">
-                  Stuur een bericht
-                </h2>
-                <p className="text-slate-600 mb-8">
-                  Vul het formulier in en wij nemen zo snel mogelijk contact met u op.
-                </p>
-                <ContactForm />
+              <div className="relative rounded-2xl p-8 overflow-hidden transition-all duration-300 bg-white border border-slate-200 shadow-sm">
+                {/* Corner accent */}
+                <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-40 pointer-events-none bg-gradient-to-bl from-indigo-200 via-indigo-100/50 to-transparent" />
+
+                {/* Bottom accent line */}
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-400 via-violet-400 to-indigo-400" />
+
+                <div className="relative z-10">
+                  <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                    Stuur een bericht
+                  </h2>
+                  <p className="text-slate-600 mb-8">
+                    Vul het formulier in en wij nemen zo snel mogelijk contact met u op.
+                  </p>
+                  <ContactForm />
+                </div>
               </div>
             </div>
           </div>

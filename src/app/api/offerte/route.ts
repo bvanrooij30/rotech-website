@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
 import { validateCSRF } from "@/lib/csrf";
+import { storeFormSubmission } from "@/lib/forms-store";
 
 // HTML escape function for security
 function escapeHtml(text: string): string {
@@ -130,6 +131,30 @@ export async function POST(request: NextRequest) {
       howDidYouFindUs,
       additionalInfo,
     } = validationResult.data;
+
+    // Store form submission for Admin Portal sync
+    try {
+      await storeFormSubmission({
+        formType: "offerte",
+        name,
+        email,
+        phone,
+        company: company || undefined,
+        subject: `Offerte: ${projectTypeLabels[projectType]} - ${budgetRange}`,
+        message: description,
+        extraData: {
+          projectType,
+          currentWebsite,
+          features,
+          deadline,
+          budgetRange,
+          howDidYouFindUs,
+          additionalInfo,
+        },
+      });
+    } catch (storeError) {
+      console.error("Failed to store offerte form:", storeError);
+    }
 
     // Send email using Resend (if configured)
     if (process.env.RESEND_API_KEY && process.env.CONTACT_EMAIL) {

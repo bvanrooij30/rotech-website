@@ -125,7 +125,7 @@ class PaymentSyncService:
                     invoice_type=InvoiceType.OUTGOING.value,
                     status=InvoiceStatus.PAID.value,
                     invoice_number=invoice_number,
-                    reference=payment.get("molliePaymentId"),
+                    reference=payment.get("stripePaymentId"),
                     client_id=client.id if client else None,
                     company_name=company_name,
                     description=description,
@@ -138,13 +138,13 @@ class PaymentSyncService:
                     notes=f"Automatisch geïmporteerd van website\n"
                           f"Klant: {payment.get('customerName')}\n"
                           f"Email: {customer_email}\n"
-                          f"Mollie ID: {payment.get('molliePaymentId')}",
+                          f"Stripe ID: {payment.get('stripePaymentId')}",
                 )
                 
                 session.add(invoice)
                 session.commit()
                 
-                logger.info(f"Created invoice {invoice_number} from payment {payment.get('molliePaymentId')}")
+                logger.info(f"Created invoice {invoice_number} from payment {payment.get('stripePaymentId')}")
                 return invoice
                 
         except Exception as e:
@@ -174,7 +174,7 @@ class PaymentSyncService:
         
         for payment in payments:
             payment_id = payment.get("id")
-            mollie_id = payment.get("molliePaymentId")
+            stripe_id = payment.get("stripePaymentId")
             
             invoice = self.create_invoice_from_payment(payment)
             
@@ -184,7 +184,7 @@ class PaymentSyncService:
                 invoice_mapping[payment_id] = invoice.id
             else:
                 errors += 1
-                error_messages.append(f"Kon factuur niet maken voor betaling {mollie_id}")
+                error_messages.append(f"Kon factuur niet maken voor betaling {stripe_id}")
         
         # Mark payments as synced on website
         if synced_payment_ids:

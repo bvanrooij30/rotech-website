@@ -1,103 +1,77 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getMollieClient } from "@/lib/mollie";
+import { getStripeClient, fromStripeAmount } from "@/lib/stripe";
 import { Resend } from "resend";
 import { storePayment } from "@/lib/payments-store";
 import { getPackageById, getMaintenancePlanById } from "@/data/packages";
+import Stripe from "stripe";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.formData();
-    const paymentId = body.get("id") as string;
+    const body = await request.text();
+    const signature = request.headers.get("stripe-signature");
 
-    if (!paymentId) {
-      return NextResponse.json({ error: "Missing payment ID" }, { status: 400 });
+    if (!signature) {
+      console.error("Missing Stripe signature");
+      return NextResponse.json({ error: "Missing signature" }, { status: 400 });
     }
 
-    // Get payment details from Mollie
-    const mollieClient = getMollieClient();
-    const payment = await mollieClient.payments.get(paymentId);
-    const metadata = payment.metadata as {
-      customerName: string;
-      customerEmail: string;
-      customerPhone: string;
-      companyName?: string;
-      paymentType: string;
-      quoteId?: string;
-      packageId?: string;
-      maintenancePlanId?: string;
-    };
+    const stripe = getStripeClient();
+    let event: Stripe.Event;
 
-    console.log(`Payment ${paymentId} status: ${payment.status}`);
-
-    // Handle different payment statuses
-    if (payment.status === "paid") {
-      // Payment successful!
-      console.log(`Payment ${paymentId} is paid!`);
-      
-      // Get package and plan names for invoice description
-      const packageInfo = metadata.packageId ? getPackageById(metadata.packageId) : null;
-      const planInfo = metadata.maintenancePlanId ? getMaintenancePlanById(metadata.maintenancePlanId) : null;
-      
-      // Store payment for Admin Portal sync
-      try {
-        await storePayment({
-          molliePaymentId: paymentId,
-          customerName: metadata.customerName,
-          customerEmail: metadata.customerEmail,
-          customerPhone: metadata.customerPhone,
-          companyName: metadata.companyName,
-          amount: parseFloat(payment.amount.value),
-          currency: payment.amount.currency,
-          description: payment.description || `Betaling ${metadata.paymentType}`,
-          paymentType: (metadata.paymentType as "deposit" | "final" | "subscription") || "other",
-          packageId: metadata.packageId,
-          packageName: packageInfo?.name,
-          maintenancePlanId: metadata.maintenancePlanId,
-          maintenancePlanName: planInfo?.name,
-          status: "paid",
-          paidAt: new Date().toISOString(),
-        });
-        console.log(`Payment ${paymentId} stored for Admin Portal sync`);
-      } catch (storeError) {
-        console.error("Failed to store payment:", storeError);
-      }
-      
-      // Send confirmation email to customer
-      if (metadata.customerEmail) {
-        await sendPaymentConfirmation(
-          metadata.customerEmail,
-          metadata.customerName,
-          payment.amount.value,
-          metadata.paymentType,
-          paymentId
+    // Verify webhook signature
+    try {
+      if (!process.env.STRIPE_WEBHOOK_SECRET) {
+        console.warn("STRIPE_WEBHOOK_SECRET not set - skipping signature verification");
+        event = JSON.parse(body) as Stripe.Event;
+      } else {
+        event = stripe.webhooks.constructEvent(
+          body,
+          signature,
+          process.env.STRIPE_WEBHOOK_SECRET
         );
       }
+    } catch (err) {
+      console.error("Webhook signature verification failed:", err);
+      return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
+    }
 
-      // Send notification to RoTech
-      await sendPaymentNotification(
-        metadata.customerName,
-        metadata.customerEmail,
-        payment.amount.value,
-        metadata.paymentType,
-        metadata.companyName
-      );
+    console.log(`Received Stripe event: ${event.type}`);
 
-      // TODO: If this is a deposit, create the subscription for later
-      // TODO: If this is final payment, activate the subscription
-
-    } else if (payment.status === "failed" || payment.status === "canceled" || payment.status === "expired") {
-      console.log(`Payment ${paymentId} failed/canceled/expired`);
+    // Handle checkout.session.completed event
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object as Stripe.Checkout.Session;
       
-      // Optionally send failure notification
+      if (session.payment_status === "paid") {
+        await handleSuccessfulPayment(session);
+      }
+    }
+
+    // Handle payment_intent.succeeded (for recurring payments)
+    if (event.type === "payment_intent.succeeded") {
+      const paymentIntent = event.data.object as Stripe.PaymentIntent;
+      console.log(`PaymentIntent ${paymentIntent.id} succeeded`);
+    }
+
+    // Handle payment_intent.payment_failed
+    if (event.type === "payment_intent.payment_failed") {
+      const paymentIntent = event.data.object as Stripe.PaymentIntent;
+      const metadata = paymentIntent.metadata;
+      
       if (metadata.customerEmail) {
         await sendPaymentFailedEmail(
           metadata.customerEmail,
-          metadata.customerName,
-          payment.status
+          metadata.customerName || "Klant",
+          "failed"
         );
       }
+    }
+
+    // Handle checkout.session.expired
+    if (event.type === "checkout.session.expired") {
+      const session = event.data.object as Stripe.Checkout.Session;
+      console.log(`Checkout session ${session.id} expired`);
     }
 
     // Always return 200 to acknowledge webhook
@@ -108,6 +82,64 @@ export async function POST(request: NextRequest) {
     // Still return 200 to prevent retries for unrecoverable errors
     return NextResponse.json({ received: true, error: "Processing error" });
   }
+}
+
+async function handleSuccessfulPayment(session: Stripe.Checkout.Session) {
+  const metadata = session.metadata || {};
+  const paymentId = session.payment_intent as string;
+  
+  console.log(`Payment ${paymentId} is paid!`);
+  
+  // Get package and plan names for invoice description
+  const packageInfo = metadata.packageId ? getPackageById(metadata.packageId) : null;
+  const planInfo = metadata.maintenancePlanId ? getMaintenancePlanById(metadata.maintenancePlanId) : null;
+  
+  // Store payment for Admin Portal sync
+  try {
+    await storePayment({
+      stripePaymentId: paymentId,
+      stripeSessionId: session.id,
+      customerName: metadata.customerName || "",
+      customerEmail: metadata.customerEmail || session.customer_email || "",
+      customerPhone: metadata.customerPhone || session.customer_details?.phone || "",
+      companyName: metadata.companyName || undefined,
+      stripeCustomerId: session.customer as string | undefined,
+      amount: fromStripeAmount(session.amount_total || 0),
+      currency: session.currency?.toUpperCase() || "EUR",
+      description: session.line_items?.data?.[0]?.description || `Betaling ${metadata.paymentType}`,
+      paymentType: (metadata.paymentType as "deposit" | "final" | "subscription") || "other",
+      packageId: metadata.packageId || undefined,
+      packageName: packageInfo?.name,
+      maintenancePlanId: metadata.maintenancePlanId || undefined,
+      maintenancePlanName: planInfo?.name,
+      status: "paid",
+      paidAt: new Date().toISOString(),
+    });
+    console.log(`Payment ${paymentId} stored for Admin Portal sync`);
+  } catch (storeError) {
+    console.error("Failed to store payment:", storeError);
+  }
+  
+  // Send confirmation email to customer
+  const customerEmail = metadata.customerEmail || session.customer_email;
+  if (customerEmail) {
+    await sendPaymentConfirmation(
+      customerEmail,
+      metadata.customerName || "Klant",
+      fromStripeAmount(session.amount_total || 0).toFixed(2),
+      metadata.paymentType || "betaling",
+      paymentId
+    );
+  }
+
+  // Send notification to RoTech
+  await sendPaymentNotification(
+    metadata.customerName || "Onbekend",
+    customerEmail || "Geen email",
+    fromStripeAmount(session.amount_total || 0).toFixed(2),
+    metadata.paymentType || "betaling",
+    metadata.companyName || undefined
+  );
 }
 
 // Email helper functions

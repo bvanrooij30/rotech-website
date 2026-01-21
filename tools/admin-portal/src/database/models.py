@@ -407,6 +407,438 @@ class Note(Base):
 
 
 # =============================================================================
+# MONITORING & TROUBLESHOOTING
+# =============================================================================
+
+class ProjectType(str, enum.Enum):
+    WEBSITE = "website"
+    API = "api"
+    BOT = "bot"
+    AUTOMATION = "automation"
+    DATABASE = "database"
+    OTHER = "other"
+
+
+class HealthStatus(str, enum.Enum):
+    HEALTHY = "healthy"
+    DEGRADED = "degraded"
+    DOWN = "down"
+    UNKNOWN = "unknown"
+
+
+class IssueSeverity(str, enum.Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+
+class IssueStatus(str, enum.Enum):
+    OPEN = "open"
+    INVESTIGATING = "investigating"
+    FIXING = "fixing"
+    RESOLVED = "resolved"
+    WONT_FIX = "wont_fix"
+
+
+class MonitoredProject(Base):
+    """Project dat gemonitord wordt door de AI agent."""
+    __tablename__ = "monitored_projects"
+    
+    id = Column(Integer, primary_key=True)
+    
+    # Basic info
+    name = Column(String(255), nullable=False)
+    description = Column(Text, nullable=True)
+    project_type = Column(String(20), default=ProjectType.WEBSITE.value)
+    
+    # Client link (optional)
+    client_id = Column(Integer, ForeignKey("clients.id"), nullable=True)
+    client = relationship("Client")
+    
+    # Monitoring config
+    url = Column(String(500), nullable=True)  # Main URL to check
+    health_endpoint = Column(String(500), nullable=True)  # /api/health endpoint
+    
+    # Check intervals (in seconds)
+    check_interval = Column(Integer, default=300)  # Default 5 minutes
+    
+    # Alert config
+    alert_on_down = Column(Boolean, default=True)
+    alert_email = Column(String(255), nullable=True)
+    
+    # Thresholds
+    response_time_warning = Column(Integer, default=2000)  # ms
+    response_time_critical = Column(Integer, default=5000)  # ms
+    
+    # Project paths (for auto-fix capabilities)
+    local_path = Column(String(500), nullable=True)  # Path on server
+    git_repo = Column(String(500), nullable=True)  # Git repository URL
+    deploy_command = Column(String(500), nullable=True)  # Command to redeploy
+    restart_command = Column(String(500), nullable=True)  # Command to restart
+    
+    # Status
+    is_active = Column(Boolean, default=True)
+    current_status = Column(String(20), default=HealthStatus.UNKNOWN.value)
+    last_check = Column(DateTime, nullable=True)
+    last_response_time = Column(Integer, nullable=True)  # ms
+    uptime_percentage = Column(Float, default=100.0)
+    
+    # Stats
+    total_checks = Column(Integer, default=0)
+    total_downtime_minutes = Column(Integer, default=0)
+    issues_resolved_auto = Column(Integer, default=0)  # Auto-fixed issues
+    
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relations
+    health_checks = relationship("HealthCheck", back_populates="project", cascade="all, delete-orphan")
+    issues = relationship("MonitorIssue", back_populates="project", cascade="all, delete-orphan")
+    
+    def __repr__(self):
+        return f"<MonitoredProject {self.name}>"
+
+
+class HealthCheck(Base):
+    """Individuele health check resultaat."""
+    __tablename__ = "health_checks"
+    
+    id = Column(Integer, primary_key=True)
+    
+    # Project
+    project_id = Column(Integer, ForeignKey("monitored_projects.id"), nullable=False)
+    project = relationship("MonitoredProject", back_populates="health_checks")
+    
+    # Check result
+    status = Column(String(20), nullable=False)  # healthy, degraded, down
+    response_time = Column(Integer, nullable=True)  # ms
+    status_code = Column(Integer, nullable=True)  # HTTP status code
+    
+    # Details
+    check_type = Column(String(50), default="http")  # http, ssl, dns, ping, api
+    endpoint = Column(String(500), nullable=True)
+    error_message = Column(Text, nullable=True)
+    response_body = Column(Text, nullable=True)  # Truncated response
+    
+    # SSL info (if applicable)
+    ssl_valid = Column(Boolean, nullable=True)
+    ssl_expires_at = Column(DateTime, nullable=True)
+    
+    # Timestamp
+    checked_at = Column(DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f"<HealthCheck {self.project_id}: {self.status}>"
+
+
+class MonitorIssue(Base):
+    """Gedetecteerd probleem."""
+    __tablename__ = "monitor_issues"
+    
+    id = Column(Integer, primary_key=True)
+    
+    # Project
+    project_id = Column(Integer, ForeignKey("monitored_projects.id"), nullable=False)
+    project = relationship("MonitoredProject", back_populates="issues")
+    
+    # Issue details
+    title = Column(String(255), nullable=False)
+    description = Column(Text, nullable=True)
+    severity = Column(String(20), default=IssueSeverity.MEDIUM.value)
+    status = Column(String(20), default=IssueStatus.OPEN.value)
+    
+    # Error info
+    error_type = Column(String(100), nullable=True)  # timeout, 500, ssl_expired, etc.
+    error_message = Column(Text, nullable=True)
+    stack_trace = Column(Text, nullable=True)
+    
+    # AI Analysis
+    ai_analysis = Column(Text, nullable=True)  # AI's analyse van het probleem
+    ai_suggested_fix = Column(Text, nullable=True)  # AI's voorgestelde oplossing
+    ai_confidence = Column(Float, nullable=True)  # 0-1 confidence score
+    
+    # Resolution
+    resolution = Column(Text, nullable=True)
+    resolved_by = Column(String(50), nullable=True)  # "ai_auto", "manual"
+    resolved_at = Column(DateTime, nullable=True)
+    
+    # Learning
+    was_helpful = Column(Boolean, nullable=True)  # User feedback
+    
+    # Timestamps
+    detected_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relations
+    solutions = relationship("IssueSolution", back_populates="issue", cascade="all, delete-orphan")
+    
+    def __repr__(self):
+        return f"<MonitorIssue {self.title}>"
+
+
+class IssueSolution(Base):
+    """Toegepaste oplossing (voor self-learning)."""
+    __tablename__ = "issue_solutions"
+    
+    id = Column(Integer, primary_key=True)
+    
+    # Issue
+    issue_id = Column(Integer, ForeignKey("monitor_issues.id"), nullable=False)
+    issue = relationship("MonitorIssue", back_populates="solutions")
+    
+    # Solution details
+    action_type = Column(String(50), nullable=False)  # restart, redeploy, clear_cache, rollback, etc.
+    action_command = Column(Text, nullable=True)  # Actual command executed
+    action_description = Column(Text, nullable=True)
+    
+    # Result
+    was_successful = Column(Boolean, default=False)
+    error_output = Column(Text, nullable=True)
+    
+    # Learning
+    similarity_pattern = Column(Text, nullable=True)  # JSON: patterns to match similar issues
+    reuse_count = Column(Integer, default=0)  # How often this solution was reused
+    success_rate = Column(Float, default=0.0)  # Success rate when reused
+    
+    # Timestamps
+    applied_at = Column(DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f"<IssueSolution {self.action_type}>"
+
+
+class MonitorReport(Base):
+    """Dagelijks/wekelijks monitoring rapport."""
+    __tablename__ = "monitor_reports"
+    
+    id = Column(Integer, primary_key=True)
+    
+    # Report period
+    report_type = Column(String(20), default="daily")  # daily, weekly, monthly
+    period_start = Column(DateTime, nullable=False)
+    period_end = Column(DateTime, nullable=False)
+    
+    # Summary stats
+    total_projects = Column(Integer, default=0)
+    total_checks = Column(Integer, default=0)
+    total_issues = Column(Integer, default=0)
+    issues_resolved = Column(Integer, default=0)
+    issues_auto_resolved = Column(Integer, default=0)
+    
+    # Uptime
+    average_uptime = Column(Float, default=100.0)
+    
+    # Content
+    summary = Column(Text, nullable=True)  # AI-generated summary
+    details = Column(Text, nullable=True)  # JSON with full details
+    
+    # File
+    file_path = Column(String(500), nullable=True)  # Path to saved report
+    
+    # Timestamp
+    generated_at = Column(DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f"<MonitorReport {self.report_type}: {self.period_start}>"
+
+
+class AILearning(Base):
+    """AI learning data voor self-improvement."""
+    __tablename__ = "ai_learning"
+    
+    id = Column(Integer, primary_key=True)
+    
+    # Pattern matching
+    error_pattern = Column(Text, nullable=False)  # Regex of error signature
+    error_type = Column(String(100), nullable=True)
+    
+    # Solution
+    solution_type = Column(String(50), nullable=False)
+    solution_steps = Column(Text, nullable=True)  # JSON array of steps
+    
+    # Stats
+    times_matched = Column(Integer, default=0)
+    times_successful = Column(Integer, default=0)
+    success_rate = Column(Float, default=0.0)
+    
+    # Context
+    project_types = Column(String(255), nullable=True)  # Comma-separated types where this works
+    
+    # Timestamps
+    first_learned = Column(DateTime, default=datetime.utcnow)
+    last_used = Column(DateTime, nullable=True)
+    
+    def __repr__(self):
+        return f"<AILearning {self.error_type}: {self.solution_type}>"
+
+
+# =============================================================================
+# CUSTOMER SUPPORT TICKETING
+# =============================================================================
+
+class TicketPriority(str, enum.Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    URGENT = "urgent"
+
+
+class TicketStatus(str, enum.Enum):
+    OPEN = "open"
+    IN_PROGRESS = "in_progress"
+    WAITING_CUSTOMER = "waiting_customer"
+    WAITING_INTERNAL = "waiting_internal"
+    AI_PROCESSING = "ai_processing"
+    RESOLVED = "resolved"
+    CLOSED = "closed"
+
+
+class TicketCategory(str, enum.Enum):
+    BUG = "bug"
+    FEATURE_REQUEST = "feature_request"
+    QUESTION = "question"
+    PERFORMANCE = "performance"
+    SECURITY = "security"
+    BILLING = "billing"
+    OTHER = "other"
+
+
+class SupportTicket(Base):
+    """Customer support ticket."""
+    __tablename__ = "support_tickets"
+    
+    id = Column(Integer, primary_key=True)
+    
+    # Ticket identifier (human readable)
+    ticket_number = Column(String(20), unique=True, nullable=False)  # e.g., "TKT-2026-0001"
+    
+    # Customer info (from website user or manual)
+    customer_id = Column(String(100), nullable=True)  # Website user ID
+    customer_name = Column(String(255), nullable=False)
+    customer_email = Column(String(255), nullable=False)
+    customer_phone = Column(String(50), nullable=True)
+    company_name = Column(String(255), nullable=True)
+    
+    # Link to client in CRM (optional)
+    client_id = Column(Integer, ForeignKey("clients.id"), nullable=True)
+    client = relationship("Client")
+    
+    # Link to monitored project (for technical issues)
+    project_id = Column(Integer, ForeignKey("monitored_projects.id"), nullable=True)
+    project = relationship("MonitoredProject")
+    
+    # Ticket details
+    subject = Column(String(500), nullable=False)
+    description = Column(Text, nullable=False)
+    category = Column(String(30), default=TicketCategory.OTHER.value)
+    priority = Column(String(20), default=TicketPriority.MEDIUM.value)
+    status = Column(String(30), default=TicketStatus.OPEN.value)
+    
+    # Tags for filtering/categorization
+    tags = Column(String(500), nullable=True)  # Comma-separated
+    
+    # Assignment
+    assigned_to = Column(String(100), nullable=True)  # "ai", "bart", etc.
+    
+    # AI Analysis
+    ai_analyzed = Column(Boolean, default=False)
+    ai_analysis = Column(Text, nullable=True)  # AI's understanding of the issue
+    ai_suggested_solution = Column(Text, nullable=True)
+    ai_confidence = Column(Float, nullable=True)  # 0-1
+    ai_auto_resolve_attempted = Column(Boolean, default=False)
+    
+    # Linked issue (if AI created a MonitorIssue from this)
+    linked_issue_id = Column(Integer, ForeignKey("monitor_issues.id"), nullable=True)
+    linked_issue = relationship("MonitorIssue")
+    
+    # Resolution
+    resolution = Column(Text, nullable=True)
+    resolved_by = Column(String(100), nullable=True)  # "ai", "bart", "customer"
+    resolved_at = Column(DateTime, nullable=True)
+    
+    # Customer satisfaction (1-5)
+    satisfaction_rating = Column(Integer, nullable=True)
+    satisfaction_comment = Column(Text, nullable=True)
+    
+    # Source
+    source = Column(String(50), default="website")  # website, email, portal, api
+    
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    first_response_at = Column(DateTime, nullable=True)
+    
+    # SLA tracking
+    sla_deadline = Column(DateTime, nullable=True)
+    sla_breached = Column(Boolean, default=False)
+    
+    # Relations
+    messages = relationship("TicketMessage", back_populates="ticket", cascade="all, delete-orphan")
+    attachments = relationship("TicketAttachment", back_populates="ticket", cascade="all, delete-orphan")
+    
+    def __repr__(self):
+        return f"<SupportTicket {self.ticket_number}: {self.subject[:30]}>"
+
+
+class TicketMessage(Base):
+    """Message/reply in a support ticket thread."""
+    __tablename__ = "ticket_messages"
+    
+    id = Column(Integer, primary_key=True)
+    
+    # Ticket
+    ticket_id = Column(Integer, ForeignKey("support_tickets.id"), nullable=False)
+    ticket = relationship("SupportTicket", back_populates="messages")
+    
+    # Sender
+    sender_type = Column(String(20), nullable=False)  # "customer", "support", "ai", "system"
+    sender_name = Column(String(255), nullable=False)
+    sender_email = Column(String(255), nullable=True)
+    
+    # Content
+    message = Column(Text, nullable=False)
+    is_internal = Column(Boolean, default=False)  # Internal notes not visible to customer
+    
+    # AI generated
+    ai_generated = Column(Boolean, default=False)
+    
+    # Timestamp
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f"<TicketMessage {self.ticket_id} by {self.sender_type}>"
+
+
+class TicketAttachment(Base):
+    """File attachment on a support ticket."""
+    __tablename__ = "ticket_attachments"
+    
+    id = Column(Integer, primary_key=True)
+    
+    # Ticket
+    ticket_id = Column(Integer, ForeignKey("support_tickets.id"), nullable=False)
+    ticket = relationship("SupportTicket", back_populates="attachments")
+    
+    # File info
+    filename = Column(String(255), nullable=False)
+    file_path = Column(String(500), nullable=False)
+    file_size = Column(Integer, default=0)  # bytes
+    mime_type = Column(String(100), nullable=True)
+    
+    # Uploader
+    uploaded_by = Column(String(255), nullable=True)
+    
+    # Timestamp
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f"<TicketAttachment {self.filename}>"
+
+
+# =============================================================================
 # SYSTEM
 # =============================================================================
 

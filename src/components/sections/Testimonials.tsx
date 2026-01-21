@@ -159,10 +159,10 @@ export default function Testimonials() {
             <motion.div
               key={index}
               whileHover={{ scale: 1.05 }}
-              className={`text-center p-6 rounded-xl border transition-all ${
+              className={`text-center p-6 rounded-xl border shadow-sm transition-all ${
                 stat.highlight 
-                  ? "bg-gradient-to-br from-emerald-50 to-white border-emerald-200 hover:border-emerald-300 hover:shadow-emerald-100" 
-                  : "bg-gradient-to-br from-slate-50 to-white border-slate-100 hover:border-indigo-200"
+                  ? "bg-white border-emerald-200 hover:border-emerald-400 hover:shadow-emerald-100" 
+                  : "bg-white border-slate-200 hover:border-indigo-300"
               } hover:shadow-md`}
             >
               <div className={`text-3xl mb-2 ${stat.highlight ? "text-emerald-500" : ""}`}>{stat.icon}</div>

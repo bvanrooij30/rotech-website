@@ -70,83 +70,111 @@ export default function PortfolioPage() {
 
           {/* Projects */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projects.map((project, index) => (
-              <Link
-                key={project.slug}
-                href={`/projecten/${project.slug}`}
-                className={`group ${index === 0 ? "md:col-span-2" : ""}`}
-              >
-                <div className={`card p-0 overflow-hidden ${index === 0 ? "grid md:grid-cols-2" : ""}`}>
-                  {/* Image placeholder */}
-                  <div className={`relative overflow-hidden ${index === 0 ? "h-72 md:h-full" : "h-64"}`}>
-                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/90 to-violet-600/90 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
-                      <span className="text-white/90 text-xl font-medium text-center px-4">
-                        {project.title}
-                      </span>
-                    </div>
+            {projects.map((project, index) => {
+              const isPrimary = index % 2 === 0;
+              
+              return (
+                <Link
+                  key={project.slug}
+                  href={`/projecten/${project.slug}`}
+                  className={`group ${index === 0 ? "md:col-span-2" : ""}`}
+                >
+                  <div className={`relative overflow-hidden rounded-2xl transition-all duration-300 bg-white border border-slate-200 shadow-sm hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-500/10 hover:-translate-y-1.5 ${index === 0 ? "grid md:grid-cols-2" : ""}`}>
+                    {/* Corner accent */}
+                    <div className={`
+                      absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-40 pointer-events-none
+                      ${isPrimary
+                        ? "bg-gradient-to-bl from-indigo-200 via-indigo-100/50 to-transparent"
+                        : "bg-gradient-to-bl from-violet-200 via-violet-100/50 to-transparent"
+                      }
+                    `} />
 
-                    {/* Category badge */}
-                    <div className="absolute top-4 left-4">
-                      <span className="px-3 py-1 bg-white/90 backdrop-blur rounded-full text-sm font-medium text-slate-700">
-                        {project.categoryLabel}
-                      </span>
-                    </div>
+                    {/* Bottom accent line */}
+                    <div className={`
+                      absolute bottom-0 left-0 right-0 h-1
+                      ${isPrimary
+                        ? "bg-gradient-to-r from-indigo-400 via-violet-400 to-indigo-400"
+                        : "bg-gradient-to-r from-violet-400 via-purple-400 to-violet-400"
+                      }
+                    `} />
 
-                    {/* External link */}
-                    {project.url && (
-                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span className="p-2 bg-white/90 backdrop-blur rounded-full inline-flex">
-                          <ExternalLink className="w-4 h-4 text-slate-700" />
+                    {/* Image placeholder */}
+                    <div className={`relative overflow-hidden ${index === 0 ? "h-72 md:h-full" : "h-56"}`}>
+                      <div className={`
+                        absolute inset-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-500
+                        ${isPrimary
+                          ? "bg-gradient-to-br from-indigo-500/90 to-violet-600/90"
+                          : "bg-gradient-to-br from-violet-500/90 to-purple-600/90"
+                        }
+                      `}>
+                        <span className="text-white/90 text-xl font-medium text-center px-4">
+                          {project.title}
                         </span>
                       </div>
-                    )}
-                  </div>
 
-                  {/* Content */}
-                  <div className="p-6 lg:p-8">
-                    <div className="text-sm text-indigo-600 font-medium mb-2">
-                      {project.client}
-                    </div>
-                    <h2 className="text-xl lg:text-2xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">
-                      {project.title}
-                    </h2>
-                    <p className="text-slate-600 mb-4">
-                      {project.description}
-                    </p>
+                      {/* Category badge */}
+                      <div className="absolute top-4 left-4">
+                        <span className="px-3 py-1 bg-white/90 backdrop-blur rounded-full text-sm font-medium text-slate-700">
+                          {project.categoryLabel}
+                        </span>
+                      </div>
 
-                    {/* Technologies */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.technologies.slice(0, 4).map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs font-medium"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                      {project.technologies.length > 4 && (
-                        <span className="px-2 py-1 text-slate-400 text-xs">
-                          +{project.technologies.length - 4} meer
-                        </span>
+                      {/* External link */}
+                      {project.url && (
+                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="p-2 bg-white/90 backdrop-blur rounded-full inline-flex">
+                            <ExternalLink className="w-4 h-4 text-slate-700" />
+                          </span>
+                        </div>
                       )}
                     </div>
 
-                    {/* Results */}
-                    {project.results.length > 0 && (
-                      <div className="text-sm text-emerald-600 font-medium">
-                        ✓ {project.results[0]}
+                    {/* Content */}
+                    <div className="relative z-10 p-6 lg:p-8">
+                      <div className="text-sm text-indigo-600 font-medium mb-2">
+                        {project.client}
                       </div>
-                    )}
+                      <h2 className="text-xl lg:text-2xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">
+                        {project.title}
+                      </h2>
+                      <p className="text-slate-600 mb-4">
+                        {project.description}
+                      </p>
 
-                    {/* View link */}
-                    <div className="mt-4 flex items-center gap-2 text-indigo-600 font-medium group-hover:gap-3 transition-all">
-                      <span>Bekijk project</span>
-                      <ArrowRight className="w-4 h-4" />
+                      {/* Technologies */}
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {project.technologies.slice(0, 4).map((tech) => (
+                          <span
+                            key={tech}
+                            className="px-2 py-1 bg-indigo-50 text-indigo-700 rounded text-xs font-medium"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                        {project.technologies.length > 4 && (
+                          <span className="px-2 py-1 text-slate-400 text-xs">
+                            +{project.technologies.length - 4} meer
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Results */}
+                      {project.results.length > 0 && (
+                        <div className="text-sm text-emerald-600 font-medium">
+                          ✓ {project.results[0]}
+                        </div>
+                      )}
+
+                      {/* View link */}
+                      <div className="mt-4 flex items-center gap-2 text-indigo-600 font-semibold group-hover:gap-3 transition-all">
+                        <span>Bekijk project</span>
+                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

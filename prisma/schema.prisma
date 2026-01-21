@@ -1,0 +1,336 @@
+// Prisma Schema for Ro-Tech Development Customer Portal
+// Database: SQLite for development, PostgreSQL for production
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String    // Hashed with bcrypt
+  name          String
+  phone         String?
+  
+  // Company info (optional for freelancers)
+  companyName   String?
+  kvkNumber     String?
+  vatNumber     String?
+  
+  // Address
+  street        String?
+  houseNumber   String?
+  postalCode    String?
+  city          String?
+  country       String    @default("Nederland")
+  
+  // Status
+  emailVerified DateTime?
+  isActive      Boolean   @default(true)
+  role          String    @default("customer") // customer, admin, super_admin
+  
+  // Admin permissions (JSON array of permission strings)
+  permissions   String?   // ["users.read", "users.write", "subscriptions.manage", etc.]
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
+  
+  // Relations
+  subscriptions Subscription[]
+  products      Product[]
+  supportTickets SupportTicket[]
+  invoices      Invoice[]
+  sessions      Session[]
+  
+  @@index([email])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt    DateTime @default(now())
+  
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ============================================
+// SUBSCRIPTIONS (Maintenance Packages)
+// ============================================
+
+model Subscription {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Subscription details
+  planType        String   // basis, business, premium
+  planName        String   // Display name
+  monthlyPrice    Float    // Price per month
+  
+  // Stripe integration
+  stripeSubscriptionId String? @unique
+  stripeCustomerId     String?
+  stripePriceId        String?
+  
+  // Status
+  status          String   @default("active") // active, paused, cancelled, past_due
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  cancelAtPeriodEnd  Boolean @default(false)
+  
+  // Features included
+  hoursIncluded   Float    @default(0)  // Monthly hours included
+  hoursUsed       Float    @default(0)  // Hours used this period
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  cancelledAt     DateTime?
+  
+  // Relations
+  product         Product? @relation(fields: [productId], references: [id])
+  productId       String?
+  usageLogs       UsageLog[]
+  
+  @@index([userId])
+  @@index([status])
+}
+
+model UsageLog {
+  id             String   @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  
+  description    String
+  hours          Float
+  date           DateTime @default(now())
+  category       String   // update, bugfix, feature, support
+  
+  createdAt      DateTime @default(now())
+  
+  @@index([subscriptionId])
+}
+
+// ============================================
+// PRODUCTS (Websites, Apps, etc.)
+// ============================================
+
+model Product {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Product info
+  name            String   // "Bedrijfswebsite", "Webshop", etc.
+  type            String   // website, webshop, webapp, api
+  description     String?
+  
+  // Technical details
+  domain          String?  // e.g., "klant.nl"
+  hostingProvider String?
+  techStack       String?  // JSON string of technologies
+  
+  // Status
+  status          String   @default("active") // development, active, maintenance, archived
+  launchDate      DateTime?
+  
+  // Project reference
+  originalQuoteId String?  // Reference to original quote
+  projectValue    Float?   // Original project value
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  subscriptions   Subscription[]
+  supportTickets  SupportTicket[]
+  statusUpdates   StatusUpdate[]
+  
+  @@index([userId])
+  @@index([status])
+}
+
+model StatusUpdate {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  title     String
+  message   String
+  type      String   // info, update, maintenance, issue, resolved
+  isPublic  Boolean  @default(true)
+  
+  createdAt DateTime @default(now())
+  createdBy String   // admin user id or "system"
+  
+  @@index([productId])
+}
+
+// ============================================
+// SUPPORT TICKETS
+// ============================================
+
+model SupportTicket {
+  id            String   @id @default(cuid())
+  ticketNumber  String   @unique // RT-2024-001 format
+  
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  productId     String?
+  product       Product? @relation(fields: [productId], references: [id])
+  
+  // Ticket details
+  subject       String
+  description   String
+  category      String   // general, technical, billing, feature-request
+  priority      String   @default("medium") // low, medium, high, urgent
+  
+  // Status
+  status        String   @default("open") // open, in_progress, waiting_customer, resolved, closed
+  
+  // Admin portal sync
+  adminPortalId String?  // ID in Ro-Tech Admin Portal
+  syncedAt      DateTime?
+  
+  // Resolution
+  resolution    String?
+  resolvedAt    DateTime?
+  resolvedBy    String?
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  messages      TicketMessage[]
+  
+  @@index([userId])
+  @@index([status])
+  @@index([ticketNumber])
+}
+
+model TicketMessage {
+  id           String   @id @default(cuid())
+  ticketId     String
+  ticket       SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  
+  senderType   String   // customer, support, ai, system
+  senderName   String
+  senderId     String?  // User id if customer
+  
+  message      String
+  
+  // Attachments (URLs to stored files)
+  attachments  String?  // JSON array of URLs
+  
+  // Read status
+  isRead       Boolean  @default(false)
+  readAt       DateTime?
+  
+  createdAt    DateTime @default(now())
+  
+  @@index([ticketId])
+}
+
+// ============================================
+// INVOICES
+// ============================================
+
+model Invoice {
+  id              String   @id @default(cuid())
+  invoiceNumber   String   @unique // RT-INV-2024-001
+  
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Stripe reference
+  stripeInvoiceId String?  @unique
+  
+  // Invoice details
+  amount          Float    // Total amount in EUR
+  tax             Float    // VAT amount
+  status          String   // draft, open, paid, void, uncollectible
+  
+  description     String?
+  dueDate         DateTime?
+  paidAt          DateTime?
+  
+  // PDF
+  pdfUrl          String?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([status])
+}
+
+// ============================================
+// ADMIN AUDIT LOG
+// ============================================
+
+model AdminAuditLog {
+  id          String   @id @default(cuid())
+  adminId     String   // The admin who performed the action
+  adminEmail  String
+  
+  // Action details
+  action      String   // user.create, subscription.update, etc.
+  targetType  String   // user, subscription, product, ticket, invoice
+  targetId    String?  // ID of the affected record
+  
+  // Before/After snapshots (JSON)
+  before      String?  // JSON snapshot before change
+  after       String?  // JSON snapshot after change
+  
+  // Metadata
+  ipAddress   String?
+  userAgent   String?
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([adminId])
+  @@index([action])
+  @@index([targetType])
+  @@index([createdAt])
+}
+
+// ============================================
+// SYSTEM SETTINGS
+// ============================================
+
+model SystemSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   // JSON value
+  category  String   // general, email, payments, seo, security
+  
+  updatedAt DateTime @updatedAt
+  updatedBy String?  // Admin ID who last updated
+}

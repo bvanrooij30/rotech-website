@@ -1,64 +1,103 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getStripeClient } from "@/lib/stripe";
+import { Resend } from "resend";
+import Stripe from "stripe";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   try {
-    // Check if Mollie is configured
-    if (!process.env.MOLLIE_API_KEY) {
+    // Check if Stripe is configured
+    if (!process.env.STRIPE_SECRET_KEY) {
       return NextResponse.json(
-        { error: "Mollie not configured" },
+        { error: "Stripe not configured" },
         { status: 503 }
       );
     }
-    const body = await request.text();
-    const params = new URLSearchParams(body);
-    const subscriptionId = params.get("id");
 
-    if (!subscriptionId) {
-      return NextResponse.json(
-        { error: "No subscription ID provided" },
-        { status: 400 }
-      );
+    const body = await request.text();
+    const signature = request.headers.get("stripe-signature");
+
+    if (!signature) {
+      console.error("Missing Stripe signature");
+      return NextResponse.json({ error: "Missing signature" }, { status: 400 });
     }
 
-    // We need the customer ID to get subscription details
-    // In a real app, you'd look this up from your database
-    // For now, we'll just acknowledge the webhook
-    
-    console.log(`Subscription webhook received for: ${subscriptionId}`);
+    const stripe = getStripeClient();
+    let event: Stripe.Event;
 
-    // TODO: When you have a database:
-    // 1. Look up the subscription in your database
-    // 2. Get the customer ID
-    // 3. Fetch subscription status from Mollie
-    // 4. Update your database accordingly
-    
-    // Example of what the full implementation would look like:
-    /*
-    const subscription = await db.subscription.findUnique({
-      where: { mollieSubscriptionId: subscriptionId }
-    });
-    
-    if (subscription) {
-      const mollieSubscription = await mollieClient.customerSubscriptions.get(
-        subscriptionId,
-        { customerId: subscription.mollieCustomerId }
-      );
-      
-      await db.subscription.update({
-        where: { id: subscription.id },
-        data: {
-          status: mollieSubscription.status,
-          nextPaymentDate: mollieSubscription.nextPaymentDate,
-          canceledAt: mollieSubscription.canceledAt,
+    // Verify webhook signature
+    try {
+      if (!process.env.STRIPE_WEBHOOK_SECRET) {
+        console.warn("STRIPE_WEBHOOK_SECRET not set - skipping signature verification");
+        event = JSON.parse(body) as Stripe.Event;
+      } else {
+        event = stripe.webhooks.constructEvent(
+          body,
+          signature,
+          process.env.STRIPE_WEBHOOK_SECRET
+        );
+      }
+    } catch (err) {
+      console.error("Webhook signature verification failed:", err);
+      return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
+    }
+
+    console.log(`Received Stripe subscription event: ${event.type}`);
+
+    // Handle subscription events
+    switch (event.type) {
+      case "customer.subscription.created": {
+        const subscription = event.data.object as Stripe.Subscription;
+        console.log(`Subscription ${subscription.id} created`);
+        // TODO: Store subscription in database
+        break;
+      }
+
+      case "customer.subscription.updated": {
+        const subscription = event.data.object as Stripe.Subscription;
+        console.log(`Subscription ${subscription.id} updated to status: ${subscription.status}`);
+        
+        // Handle status changes
+        if (subscription.status === "active") {
+          // Subscription is now active
+          await sendSubscriptionActiveEmail(subscription);
+        } else if (subscription.status === "past_due") {
+          // Payment failed, subscription is past due
+          await sendPaymentFailedNotification(subscription);
         }
-      });
-      
-      // Send email notifications based on status
-      if (mollieSubscription.status === 'canceled') {
-        // Send cancellation confirmation email
+        break;
+      }
+
+      case "customer.subscription.deleted": {
+        const subscription = event.data.object as Stripe.Subscription;
+        console.log(`Subscription ${subscription.id} cancelled/deleted`);
+        await sendSubscriptionCancelledEmail(subscription);
+        break;
+      }
+
+      case "customer.subscription.trial_will_end": {
+        const subscription = event.data.object as Stripe.Subscription;
+        console.log(`Subscription ${subscription.id} trial ending soon`);
+        await sendTrialEndingEmail(subscription);
+        break;
+      }
+
+      case "invoice.paid": {
+        const invoice = event.data.object as Stripe.Invoice;
+        const invoiceData = invoice as unknown as { subscription?: string; id: string };
+        if (invoiceData.subscription) {
+          console.log(`Invoice paid for subscription ${invoiceData.subscription}`);
+        }
+        break;
+      }
+
+      case "invoice.payment_failed": {
+        const invoice = event.data.object as Stripe.Invoice;
+        console.log(`Invoice payment failed: ${invoice.id}`);
+        break;
       }
     }
-    */
 
     return NextResponse.json({ received: true });
     
@@ -68,5 +107,122 @@ export async function POST(request: NextRequest) {
       { error: "Webhook processing failed" },
       { status: 500 }
     );
+  }
+}
+
+// Email helper functions
+async function sendSubscriptionActiveEmail(subscription: Stripe.Subscription) {
+  try {
+    const stripe = getStripeClient();
+    const customer = await stripe.customers.retrieve(subscription.customer as string) as Stripe.Customer;
+    
+    if (!customer.email) return;
+    
+    const planName = subscription.metadata.planName || "Onderhoud";
+    
+    await resend.emails.send({
+      from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
+      to: customer.email,
+      subject: `Abonnement geactiveerd - Ro-Tech Development`,
+      html: `
+        <p>Beste ${customer.name || "Klant"},</p>
+        <p>Uw onderhoudsabonnement (${planName}) is nu actief.</p>
+        <p>U ontvangt maandelijks een factuur voor dit abonnement.</p>
+        <p>Heeft u vragen? Neem gerust contact met ons op.</p>
+        <p>Met vriendelijke groet,<br>Het Ro-Tech Development Team</p>
+      `,
+    });
+  } catch (error) {
+    console.error("Failed to send subscription active email:", error);
+  }
+}
+
+async function sendSubscriptionCancelledEmail(subscription: Stripe.Subscription) {
+  try {
+    const stripe = getStripeClient();
+    const customer = await stripe.customers.retrieve(subscription.customer as string) as Stripe.Customer;
+    
+    if (!customer.email) return;
+    
+    const planName = subscription.metadata.planName || "Onderhoud";
+    
+    await resend.emails.send({
+      from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
+      to: customer.email,
+      subject: `Abonnement beëindigd - Ro-Tech Development`,
+      html: `
+        <p>Beste ${customer.name || "Klant"},</p>
+        <p>Uw onderhoudsabonnement (${planName}) is beëindigd.</p>
+        <p>Wilt u het abonnement opnieuw activeren? Neem contact met ons op.</p>
+        <p>Met vriendelijke groet,<br>Het Ro-Tech Development Team</p>
+      `,
+    });
+  } catch (error) {
+    console.error("Failed to send subscription cancelled email:", error);
+  }
+}
+
+async function sendTrialEndingEmail(subscription: Stripe.Subscription) {
+  try {
+    const stripe = getStripeClient();
+    const customer = await stripe.customers.retrieve(subscription.customer as string) as Stripe.Customer;
+    
+    if (!customer.email) return;
+    
+    const planName = subscription.metadata.planName || "Onderhoud";
+    const trialEnd = subscription.trial_end ? new Date(subscription.trial_end * 1000).toLocaleDateString("nl-NL") : "binnenkort";
+    
+    await resend.emails.send({
+      from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
+      to: customer.email,
+      subject: `Gratis supportperiode eindigt binnenkort - Ro-Tech Development`,
+      html: `
+        <p>Beste ${customer.name || "Klant"},</p>
+        <p>Uw gratis supportperiode eindigt op ${trialEnd}.</p>
+        <p>Daarna start automatisch uw onderhoudsabonnement (${planName}).</p>
+        <p>Wilt u wijzigingen aanbrengen? Neem contact met ons op voor ${trialEnd}.</p>
+        <p>Met vriendelijke groet,<br>Het Ro-Tech Development Team</p>
+      `,
+    });
+  } catch (error) {
+    console.error("Failed to send trial ending email:", error);
+  }
+}
+
+async function sendPaymentFailedNotification(subscription: Stripe.Subscription) {
+  try {
+    const stripe = getStripeClient();
+    const customer = await stripe.customers.retrieve(subscription.customer as string) as Stripe.Customer;
+    
+    if (!customer.email) return;
+    
+    await resend.emails.send({
+      from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
+      to: customer.email,
+      subject: `Betaling mislukt - Ro-Tech Development`,
+      html: `
+        <p>Beste ${customer.name || "Klant"},</p>
+        <p>De betaling voor uw onderhoudsabonnement is helaas niet gelukt.</p>
+        <p>Controleer uw betaalgegevens en probeer het opnieuw.</p>
+        <p>Neem bij vragen contact met ons op.</p>
+        <p>Met vriendelijke groet,<br>Het Ro-Tech Development Team</p>
+      `,
+    });
+    
+    // Also notify RoTech
+    await resend.emails.send({
+      from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
+      to: process.env.CONTACT_EMAIL || "contact@ro-techdevelopment.dev",
+      subject: `⚠️ Abonnementsbetaling mislukt - ${customer.name || customer.email}`,
+      html: `
+        <h2>Betaling mislukt</h2>
+        <p><strong>Klant:</strong> ${customer.name || "Onbekend"}</p>
+        <p><strong>Email:</strong> ${customer.email}</p>
+        <p><strong>Subscription ID:</strong> ${subscription.id}</p>
+        <p><strong>Status:</strong> ${subscription.status}</p>
+      `,
+    });
+  } catch (error) {
+    console.error("Failed to send payment failed notification:", error);
   }
 }

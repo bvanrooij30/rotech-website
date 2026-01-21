@@ -1,0 +1,526 @@
+---
+name: seo-optimization
+description: SEO, AI vindbaarheid en content optimalisatie voor Ro-Tech Development
+globs:
+  - src/lib/seo-config.ts
+  - src/app/sitemap.ts
+  - src/app/robots.ts
+  - src/components/seo/**/*
+  - src/data/faq.ts
+  - public/llms.txt
+  - public/llms-full.txt
+  - public/.well-known/**/*
+---
+
+# 🔍 SEO & AI VINDBAARHEID
+
+Complete SEO en AI optimalisatie gids voor de Ro-Tech Development website.
+
+---
+
+## 📋 OVERZICHT
+
+### Belangrijke Bestanden
+
+| Bestand | Functie |
+|---------|---------|
+| `src/lib/seo-config.ts` | Centrale SEO configuratie |
+| `src/app/sitemap.ts` | Dynamische sitemap generatie |
+| `src/app/robots.ts` | Robots.txt configuratie |
+| `src/components/seo/StructuredData.tsx` | Schema.org JSON-LD |
+| `src/data/faq.ts` | FAQ content (voor rich snippets) |
+| `public/llms.txt` | AI assistant informatie |
+| `public/llms-full.txt` | Uitgebreide AI informatie |
+| `public/.well-known/ai-plugin.json` | AI plugin manifest |
+
+---
+
+## 🎯 PRIMAIRE KEYWORDS
+
+### Per Pagina
+
+| Pagina | Focus Keywords |
+|--------|----------------|
+| **Homepage** | website laten maken veldhoven, webdesign eindhoven |
+| **Diensten** | web development brabant, website op maat |
+| **Webshop** | webshop laten maken, e-commerce eindhoven |
+| **Prijzen** | wat kost een website, website prijzen |
+| **Contact** | webdesigner veldhoven, contact opnemen |
+
+### Lokale Keywords (altijd combineren)
+
+```
+veldhoven, eindhoven, noord-brabant, brabant, regio eindhoven
+waalre, valkenswaard, best, son en breugel, oirschot
+```
+
+---
+
+## 📝 META TAGS TEMPLATE
+
+### Page Metadata (Next.js)
+
+```tsx
+// src/app/[pagina]/page.tsx
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Primair Keyword - Secundair | Ro-Tech Development',
+  description: 'Overtuigende beschrijving met keyword, max 155 karakters. Call-to-action!',
+  
+  keywords: ['keyword1', 'keyword2', 'lokaal keyword'],
+  
+  openGraph: {
+    title: 'Dezelfde of sociale variant van title',
+    description: 'Beschrijving voor social shares',
+    url: 'https://ro-techdevelopment.dev/pagina',
+    siteName: 'Ro-Tech Development',
+    locale: 'nl_NL',
+    type: 'website',
+    images: [
+      {
+        url: '/images/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Ro-Tech Development',
+      },
+    ],
+  },
+  
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Title voor Twitter',
+    description: 'Beschrijving voor Twitter',
+  },
+  
+  alternates: {
+    canonical: 'https://ro-techdevelopment.dev/pagina',
+  },
+  
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+```
+
+### Meta Tags Checklist
+
+- [ ] Title: max 60 karakters, bevat primair keyword vooraan
+- [ ] Description: max 155 karakters, overtuigend, bevat keyword
+- [ ] Canonical URL correct ingesteld
+- [ ] Open Graph tags compleet
+- [ ] Twitter card tags aanwezig
+
+---
+
+## 🏗️ STRUCTURED DATA
+
+### Organization Schema
+
+```tsx
+// src/components/seo/StructuredData.tsx
+export function OrganizationSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://ro-techdevelopment.dev/#organization",
+    "name": "Ro-Tech Development",
+    "alternateName": "BVR Services",
+    "description": "Webdesign bureau in Veldhoven, regio Eindhoven",
+    "url": "https://ro-techdevelopment.dev",
+    "logo": "https://ro-techdevelopment.dev/images/logo.png",
+    "image": "https://ro-techdevelopment.dev/images/office.jpg",
+    "telephone": "+31657235574",
+    "email": "contact@ro-techdevelopment.dev",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Kruisstraat 64",
+      "addressLocality": "Veldhoven",
+      "postalCode": "5502 JG",
+      "addressRegion": "Noord-Brabant",
+      "addressCountry": "NL"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 51.4206,
+      "longitude": 5.4039
+    },
+    "areaServed": [
+      { "@type": "City", "name": "Veldhoven" },
+      { "@type": "City", "name": "Eindhoven" },
+      { "@type": "State", "name": "Noord-Brabant" }
+    ],
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    "priceRange": "€€",
+    "sameAs": [
+      // Social media URLs hier
+    ]
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+```
+
+### Service Schema
+
+```tsx
+export function ServiceSchema({ service }: { service: Service }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": service.title,
+    "description": service.description,
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "Ro-Tech Development",
+      "@id": "https://ro-techdevelopment.dev/#organization"
+    },
+    "areaServed": {
+      "@type": "State",
+      "name": "Noord-Brabant"
+    },
+    "serviceType": service.type,
+    "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+        "@type": "PriceSpecification",
+        "price": service.startingPrice,
+        "priceCurrency": "EUR"
+      }
+    }
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+```
+
+### FAQ Schema
+
+```tsx
+export function FAQSchema({ faqs }: { faqs: FAQ[] }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+```
+
+### Breadcrumb Schema
+
+```tsx
+export function BreadcrumbSchema({ items }: { items: { name: string; url: string }[] }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": items.map((item, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "name": item.name,
+      "item": item.url
+    }))
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+```
+
+---
+
+## 🤖 AI VINDBAARHEID
+
+### llms.txt Format
+
+```txt
+# Ro-Tech Development
+
+> Webdesign bureau in Veldhoven, regio Eindhoven. Wij maken professionele websites, webshops en web applicaties.
+
+## Contact
+- Website: https://ro-techdevelopment.dev
+- Email: contact@ro-techdevelopment.dev
+- Telefoon: +31 6 57 23 55 74
+- Adres: Kruisstraat 64, 5502 JG Veldhoven
+
+## Diensten
+- Website ontwikkeling: Moderne, snelle websites op maat
+- Webshop ontwikkeling: E-commerce met iDEAL en voorraad beheer
+- Web applicatie ontwikkeling: Maatwerk software en portalen
+- Progressive Web Apps: App-ervaring zonder App Store
+- SEO optimalisatie: Hoger scoren in Google
+- Website onderhoud: Updates, beveiliging en support
+
+## Prijzen
+- Starter website: vanaf €997
+- Business website: vanaf €2.497
+- Webshop: vanaf €3.997
+- Maatwerk: vanaf €7.500
+
+## Onderhoud
+- Basis: €99/maand (1 uur support)
+- Business: €199/maand (3 uur support)
+- Premium: €399/maand (8 uur support)
+
+## Waarom Ro-Tech?
+- Persoonlijke aanpak: Direct contact met de ontwikkelaar
+- Transparante prijzen: Geen verborgen kosten
+- Moderne technologie: Next.js, TypeScript, Tailwind CSS
+- Snelle levering: Websites binnen 1-4 weken
+- Volledige eigendom: U bent eigenaar van de code
+```
+
+### AI Plugin Manifest
+
+```json
+// public/.well-known/ai-plugin.json
+{
+  "schema_version": "v1",
+  "name_for_human": "Ro-Tech Development",
+  "name_for_model": "rotech_development",
+  "description_for_human": "Webdesign bureau in Veldhoven - websites, webshops en web applicaties",
+  "description_for_model": "Ro-Tech Development is een web development agency in Veldhoven, Nederland. Gespecialiseerd in Next.js websites, e-commerce webshops, en maatwerk web applicaties voor MKB en ZZP'ers in regio Eindhoven en heel Nederland.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://ro-techdevelopment.dev/api/v1/openapi.json"
+  },
+  "logo_url": "https://ro-techdevelopment.dev/images/logo.png",
+  "contact_email": "contact@ro-techdevelopment.dev",
+  "legal_info_url": "https://ro-techdevelopment.dev/privacy"
+}
+```
+
+### AI Vragen Beantwoorden
+
+Deze vragen worden vaak aan AI gesteld. Zorg dat je content ze beantwoordt:
+
+| Vraag | Pagina om te optimaliseren |
+|-------|---------------------------|
+| "Wie kan een website voor mij maken?" | Homepage, Over Ons |
+| "Wat kost een website laten maken?" | Prijzen, FAQ |
+| "Hoelang duurt het om een website te bouwen?" | FAQ, Diensten |
+| "Website laten maken Veldhoven" | Homepage, Contact |
+| "Beste webdesigner regio Eindhoven" | Homepage, Over Ons |
+
+### Content Tips voor AI Citaties
+
+1. **Gebruik vraag-antwoord formaat** - FAQ pagina's worden vaker geciteerd
+2. **Wees specifiek** - Noem concrete prijzen, tijden, locaties
+3. **Gebruik lijsten** - Bullet points worden vaker geciteerd
+4. **Bedrijfsnaam consistent** - Altijd "Ro-Tech Development"
+5. **Actuele informatie** - Houd prijzen en diensten up-to-date
+
+---
+
+## 📊 SITEMAP & ROBOTS
+
+### Dynamische Sitemap
+
+```typescript
+// src/app/sitemap.ts
+import { MetadataRoute } from 'next';
+import { services } from '@/data/services';
+import { blogArticles } from '@/data/blog-articles';
+import { portfolio } from '@/data/portfolio';
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = 'https://ro-techdevelopment.dev';
+  
+  // Static pages
+  const staticPages = [
+    { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1.0 },
+    { url: `${baseUrl}/diensten`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${baseUrl}/prijzen`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/projecten`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/offerte`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/over-ons`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/veelgestelde-vragen`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+  ];
+  
+  // Dynamic service pages
+  const servicePages = services.map(service => ({
+    url: `${baseUrl}/diensten/${service.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }));
+  
+  // Dynamic blog pages
+  const blogPages = blogArticles.map(article => ({
+    url: `${baseUrl}/blog/${article.slug}`,
+    lastModified: new Date(article.publishedAt),
+    changeFrequency: 'yearly' as const,
+    priority: 0.6,
+  }));
+  
+  // Dynamic portfolio pages
+  const portfolioPages = portfolio.map(project => ({
+    url: `${baseUrl}/projecten/${project.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'yearly' as const,
+    priority: 0.6,
+  }));
+  
+  return [...staticPages, ...servicePages, ...blogPages, ...portfolioPages];
+}
+```
+
+### Robots.txt
+
+```typescript
+// src/app/robots.ts
+import { MetadataRoute } from 'next';
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: [
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: [
+          '/api/',
+          '/portal/',
+          '/admin/',
+          '/_next/',
+        ],
+      },
+      {
+        userAgent: 'GPTBot',
+        allow: '/',
+      },
+      {
+        userAgent: 'ChatGPT-User',
+        allow: '/',
+      },
+      {
+        userAgent: 'Claude-Web',
+        allow: '/',
+      },
+    ],
+    sitemap: 'https://ro-techdevelopment.dev/sitemap.xml',
+  };
+}
+```
+
+---
+
+## ✅ SEO CHECKLIST
+
+### Per Pagina
+
+- [ ] Title uniek, max 60 karakters, primair keyword vooraan
+- [ ] Description overtuigend, max 155 karakters, bevat keyword
+- [ ] H1 uniek, bevat primair keyword
+- [ ] H2-H6 hiërarchie logisch
+- [ ] Minimaal 300 woorden content
+- [ ] Afbeeldingen hebben alt-tekst met keywords
+- [ ] Interne links naar relevante pagina's
+- [ ] Canonical URL correct
+- [ ] Structured data aanwezig en gevalideerd
+
+### Technisch
+
+- [ ] Pagina laadt onder 3 seconden
+- [ ] Mobile-friendly (responsive)
+- [ ] HTTPS actief
+- [ ] Geen broken links
+- [ ] Sitemap.xml up-to-date
+- [ ] Robots.txt correct geconfigureerd
+
+### AI Vindbaarheid
+
+- [ ] llms.txt up-to-date met laatste diensten
+- [ ] FAQ content beantwoordt veelgestelde vragen
+- [ ] Bedrijfsnaam consistent (Ro-Tech Development)
+- [ ] Contact informatie duidelijk vindbaar
+- [ ] Prijzen en diensten actueel
+
+---
+
+## 🔄 WEKELIJKSE TAKEN
+
+### AI Vindbaarheid Check (5 min)
+
+Test in Perplexity, ChatGPT of Claude:
+- "website laten maken veldhoven"
+- "webshop ontwikkelaar eindhoven"
+- "web development brabant"
+
+Noteer of Ro-Tech Development wordt genoemd.
+
+### Content Review (10 min)
+
+- Check of FAQ items actueel zijn
+- Voeg nieuwe veelgestelde vragen toe
+- Update prijzen/diensten indien nodig
+
+### Technische Check (5 min)
+
+- Test laadsnelheid: https://pagespeed.web.dev/
+- Check Search Console op errors
+- Valideer structured data: https://validator.schema.org/
+
+---
+
+## 🛠️ CURSOR COMMANDS
+
+```
+# SEO Analyse
+"Analyseer de SEO van pagina [PAGINA]"
+"Check de meta tags van [PAGINA]"
+"Verbeter de H1 en H2 structuur van [PAGINA]"
+
+# AI Vindbaarheid
+"Update llms.txt met de laatste diensten"
+"Voeg FAQ items toe voor [ONDERWERP]"
+"Optimaliseer de content voor AI citaties"
+
+# Keywords
+"Voeg lokale keywords toe aan [PAGINA]"
+"Optimaliseer de content voor keyword [KEYWORD]"
+"Check keyword density voor [PAGINA]"
+
+# Structured Data
+"Voeg Service schema toe aan [DIENST]"
+"Valideer de structured data op [PAGINA]"
+"Genereer FAQ schema voor [PAGINA]"
+```

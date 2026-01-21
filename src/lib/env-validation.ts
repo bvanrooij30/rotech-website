@@ -9,7 +9,9 @@ interface EnvConfig {
   RESEND_API_KEY?: string;
   FROM_EMAIL?: string;
   OPENAI_API_KEY?: string;
-  MOLLIE_API_KEY?: string;
+  STRIPE_SECRET_KEY?: string;
+  STRIPE_WEBHOOK_SECRET?: string;
+  STRIPE_PUBLISHABLE_KEY?: string;
 }
 
 /**
@@ -59,11 +61,18 @@ export function validateEnv(): void {
     console.warn("⚠️  OPENAI_API_KEY format looks incorrect (should start with 'sk-')");
   }
   
-  // MOLLIE_API_KEY for payments
-  if (!process.env.MOLLIE_API_KEY) {
-    console.warn("⚠️  MOLLIE_API_KEY not set - payment functionality will not work");
-  } else if (!process.env.MOLLIE_API_KEY.startsWith("test_") && !process.env.MOLLIE_API_KEY.startsWith("live_")) {
-    console.warn("⚠️  MOLLIE_API_KEY format looks incorrect (should start with 'test_' or 'live_')");
+  // STRIPE_SECRET_KEY for payments
+  if (!process.env.STRIPE_SECRET_KEY) {
+    console.warn("⚠️  STRIPE_SECRET_KEY not set - payment functionality will not work");
+  } else if (!process.env.STRIPE_SECRET_KEY.startsWith("sk_test_") && !process.env.STRIPE_SECRET_KEY.startsWith("sk_live_")) {
+    console.warn("⚠️  STRIPE_SECRET_KEY format looks incorrect (should start with 'sk_test_' or 'sk_live_')");
+  }
+  
+  // STRIPE_WEBHOOK_SECRET for webhook verification
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    console.warn("⚠️  STRIPE_WEBHOOK_SECRET not set - webhook verification will be disabled");
+  } else if (!process.env.STRIPE_WEBHOOK_SECRET.startsWith("whsec_")) {
+    console.warn("⚠️  STRIPE_WEBHOOK_SECRET format looks incorrect (should start with 'whsec_')");
   }
   
   if (errors.length > 0) {
@@ -81,7 +90,9 @@ export function getEnvConfig(): EnvConfig {
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     FROM_EMAIL: process.env.FROM_EMAIL,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-    MOLLIE_API_KEY: process.env.MOLLIE_API_KEY,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+    STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
   };
 }
 

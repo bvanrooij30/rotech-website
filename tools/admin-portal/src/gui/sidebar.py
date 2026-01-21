@@ -87,10 +87,13 @@ class Sidebar(ctk.CTkFrame):
         nav_items = [
             ("Dashboard", "📊", "dashboard"),
             ("Email", "📧", "email"),
-            ("Website Inbox", "📥", "inbox"),
+            ("Werk Opdrachten", "📋", "inbox"),
             ("Leads", "🔍", "leads"),
             ("Klanten", "👥", "clients"),
             ("Facturatie", "📄", "invoices"),
+            ("Support", "🎫", "support"),
+            ("Website API", "🌐", "api"),
+            ("Monitoring", "🛡️", "monitor"),
         ]
         
         nav_frame = ctk.CTkFrame(self, fg_color="transparent")

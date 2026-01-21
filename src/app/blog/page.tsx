@@ -47,14 +47,20 @@ export default function BlogPage() {
       <section className="section-padding bg-white">
         <div className="container-custom">
           <Link href={`/blog/${featuredArticle.slug}`} className="group block">
-            <div className="grid lg:grid-cols-2 gap-8 card p-0 overflow-hidden">
-              <div className="h-64 lg:h-full bg-gradient-to-br from-indigo-600/90 to-violet-600/90 flex items-center justify-center">
+            <div className="relative grid lg:grid-cols-2 gap-0 overflow-hidden rounded-2xl transition-all duration-300 bg-white border border-slate-200 shadow-sm hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-500/10 hover:-translate-y-1.5">
+              {/* Corner accent */}
+              <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-40 pointer-events-none bg-gradient-to-bl from-indigo-200 via-indigo-100/50 to-transparent" />
+
+              {/* Bottom accent line */}
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-400 via-violet-400 to-indigo-400" />
+
+              <div className="h-64 lg:h-full bg-gradient-to-br from-indigo-500/90 to-violet-600/90 flex items-center justify-center group-hover:scale-[1.02] transition-transform duration-500">
                 <span className="text-white/90 text-xl font-medium text-center px-8">
                   {featuredArticle.title}
                 </span>
               </div>
-              <div className="p-8 lg:py-12">
-                <div className="flex items-center gap-4 text-sm text-slate-500 mb-4">
+              <div className="relative z-10 p-8 lg:py-12">
+                <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500 mb-4">
                   <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full font-medium">
                     {featuredArticle.category}
                   </span>
@@ -77,9 +83,9 @@ export default function BlogPage() {
                 <p className="text-slate-600 mb-6 text-lg">
                   {featuredArticle.excerpt}
                 </p>
-                <div className="flex items-center gap-2 text-indigo-600 font-medium group-hover:gap-3 transition-all">
+                <div className="flex items-center gap-2 text-indigo-600 font-semibold group-hover:gap-3 transition-all">
                   <span>Lees meer</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </div>
               </div>
             </div>
@@ -93,37 +99,70 @@ export default function BlogPage() {
           <h2 className="text-2xl font-bold text-slate-900 mb-8">Alle artikelen</h2>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {otherArticles.map((article) => (
-              <Link
-                key={article.slug}
-                href={`/blog/${article.slug}`}
-                className="group"
-              >
-                <div className="card h-full">
-                  <div className="h-48 -mx-6 -mt-6 mb-6 bg-gradient-to-br from-indigo-600/90 to-violet-600/90 flex items-center justify-center rounded-t-xl">
-                    <span className="text-white/90 font-medium text-center px-4">
-                      {article.title}
-                    </span>
+            {otherArticles.map((article, index) => {
+              const isPrimary = index % 2 === 0;
+              
+              return (
+                <Link
+                  key={article.slug}
+                  href={`/blog/${article.slug}`}
+                  className="group"
+                >
+                  <div className="relative h-full overflow-hidden rounded-2xl transition-all duration-300 bg-white border border-slate-200 shadow-sm hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-500/10 hover:-translate-y-1.5">
+                    {/* Corner accent */}
+                    <div className={`
+                      absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-40 pointer-events-none
+                      ${isPrimary
+                        ? "bg-gradient-to-bl from-indigo-200 via-indigo-100/50 to-transparent"
+                        : "bg-gradient-to-bl from-violet-200 via-violet-100/50 to-transparent"
+                      }
+                    `} />
+
+                    {/* Bottom accent line */}
+                    <div className={`
+                      absolute bottom-0 left-0 right-0 h-1
+                      ${isPrimary
+                        ? "bg-gradient-to-r from-indigo-400 via-violet-400 to-indigo-400"
+                        : "bg-gradient-to-r from-violet-400 via-purple-400 to-violet-400"
+                      }
+                    `} />
+
+                    {/* Image header */}
+                    <div className={`
+                      h-48 flex items-center justify-center group-hover:scale-[1.02] transition-transform duration-500
+                      ${isPrimary
+                        ? "bg-gradient-to-br from-indigo-500/90 to-violet-600/90"
+                        : "bg-gradient-to-br from-violet-500/90 to-purple-600/90"
+                      }
+                    `}>
+                      <span className="text-white/90 font-medium text-center px-4">
+                        {article.title}
+                      </span>
+                    </div>
+
+                    {/* Content */}
+                    <div className="relative z-10 p-6">
+                      <div className="flex items-center gap-3 text-sm text-slate-500 mb-3">
+                        <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded text-xs font-medium">
+                          {article.category}
+                        </span>
+                        <span>{article.readTime}</span>
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors">
+                        {article.title}
+                      </h3>
+                      <p className="text-slate-600 text-sm mb-4">
+                        {article.excerpt}
+                      </p>
+                      <div className="flex items-center gap-2 text-indigo-600 font-semibold text-sm group-hover:gap-3 transition-all">
+                        <span>Lees artikel</span>
+                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3 text-sm text-slate-500 mb-3">
-                    <span className="px-2 py-0.5 bg-slate-100 rounded text-xs font-medium">
-                      {article.category}
-                    </span>
-                    <span>{article.readTime}</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors">
-                    {article.title}
-                  </h3>
-                  <p className="text-slate-600 text-sm mb-4">
-                    {article.excerpt}
-                  </p>
-                  <div className="flex items-center gap-2 text-indigo-600 font-medium text-sm">
-                    <span>Lees artikel</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

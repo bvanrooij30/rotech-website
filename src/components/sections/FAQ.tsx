@@ -81,7 +81,7 @@ export default function FAQ() {
             {faqItems.map((item) => (
               <div
                 key={item.id}
-                className="bg-white rounded-xl border border-slate-100 overflow-hidden"
+                className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:border-indigo-300 transition-all"
               >
                 <button
                   onClick={() => toggleItem(item.id)}

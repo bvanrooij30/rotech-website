@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getMollieClient } from "@/lib/mollie";
+import { getStripeClient, toStripeAmount } from "@/lib/stripe";
 
 export async function POST(request: NextRequest) {
   try {
-    // Check if Mollie is configured
-    if (!process.env.MOLLIE_API_KEY) {
+    // Check if Stripe is configured
+    if (!process.env.STRIPE_SECRET_KEY) {
       return NextResponse.json(
         { error: "Betalingen zijn momenteel niet beschikbaar" },
         { status: 503 }
       );
     }
 
-    const mollieClient = getMollieClient();
+    const stripe = getStripeClient();
     const body = await request.json();
     
     const {
@@ -32,7 +32,8 @@ export async function POST(request: NextRequest) {
       maintenancePlanId,
       
       // Redirect URLs
-      redirectUrl,
+      successUrl,
+      cancelUrl,
     } = body;
 
     // Validate required fields
@@ -43,37 +44,60 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create Mollie payment
-    const payment = await mollieClient.payments.create({
-      amount: {
-        currency: "EUR",
-        value: amount.toFixed(2), // Mollie requires string with 2 decimals
-      },
-      description: description,
-      redirectUrl: redirectUrl || `${process.env.NEXT_PUBLIC_SITE_URL}/betaling/succes`,
-      webhookUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/api/payments/webhook`,
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.dev";
+
+    // Create Stripe Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card", "ideal", "bancontact"],
+      mode: "payment",
+      customer_email: customerEmail,
+      line_items: [
+        {
+          price_data: {
+            currency: "eur",
+            product_data: {
+              name: description,
+              description: `${paymentType === "deposit" ? "Aanbetaling" : paymentType === "final" ? "Eindbetaling" : "Betaling"} voor ${description}`,
+            },
+            unit_amount: toStripeAmount(amount),
+          },
+          quantity: 1,
+        },
+      ],
       metadata: {
         customerName,
         customerEmail,
-        customerPhone,
-        companyName,
+        customerPhone: customerPhone || "",
+        companyName: companyName || "",
         paymentType,
-        quoteId,
-        packageId,
-        maintenancePlanId,
+        quoteId: quoteId || "",
+        packageId: packageId || "",
+        maintenancePlanId: maintenancePlanId || "",
+      },
+      success_url: successUrl || `${siteUrl}/betaling/succes?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: cancelUrl || `${siteUrl}/betaling/geannuleerd`,
+      locale: "nl",
+      // Enable automatic tax calculation if configured
+      // automatic_tax: { enabled: true },
+      // Allow promotion codes
+      allow_promotion_codes: true,
+      // Billing address collection
+      billing_address_collection: "auto",
+      // Phone number collection
+      phone_number_collection: {
+        enabled: true,
       },
     });
 
-    // Return payment URL for redirect
+    // Return checkout URL for redirect
     return NextResponse.json({
       success: true,
-      paymentId: payment.id,
-      checkoutUrl: payment.getCheckoutUrl(),
-      status: payment.status,
+      sessionId: session.id,
+      checkoutUrl: session.url,
     });
     
   } catch (error) {
-    console.error("Mollie payment error:", error);
+    console.error("Stripe payment error:", error);
     return NextResponse.json(
       { error: "Er is een fout opgetreden bij het aanmaken van de betaling" },
       { status: 500 }

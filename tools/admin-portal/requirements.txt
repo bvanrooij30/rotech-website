@@ -22,3 +22,7 @@ schedule>=1.2.0                 # Background task scheduling
 # Utilities
 python-dateutil>=2.8.0          # Date parsing
 requests>=2.31.0                # HTTP requests voor webhook
+
+# AI & Monitoring
+openai>=1.0.0                   # AI Troubleshooting met GPT-4
+watchdog>=3.0.0                 # File system watching voor auto-discovery

@@ -1,32 +1,34 @@
-import createMollieClient, { MollieClient } from "@mollie/api-client";
+import Stripe from "stripe";
 
-// Mollie client singleton - lazy initialization
-let mollieClientInstance: MollieClient | null = null;
+// Stripe client singleton - lazy initialization
+let stripeInstance: Stripe | null = null;
 
-export function getMollieClient(): MollieClient {
-  if (!process.env.MOLLIE_API_KEY) {
-    throw new Error("MOLLIE_API_KEY is not configured");
+export function getStripeClient(): Stripe {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error("STRIPE_SECRET_KEY is not configured");
   }
   
-  if (!mollieClientInstance) {
-    mollieClientInstance = createMollieClient({
-      apiKey: process.env.MOLLIE_API_KEY,
+  if (!stripeInstance) {
+    stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2025-12-15.clover",
+      typescript: true,
     });
   }
   
-  return mollieClientInstance;
+  return stripeInstance;
 }
 
 // For backwards compatibility
-const mollieClient = {
-  get payments() { return getMollieClient().payments; },
-  get customers() { return getMollieClient().customers; },
-  get customerSubscriptions() { return getMollieClient().customerSubscriptions; },
+const stripeClient = {
+  get checkout() { return getStripeClient(); },
+  get customers() { return getStripeClient().customers; },
+  get subscriptions() { return getStripeClient().subscriptions; },
+  get paymentIntents() { return getStripeClient().paymentIntents; },
 };
 
-export default mollieClient;
+export default stripeClient;
 
-// Payment status types
+// Payment status types (mapped from Stripe)
 export type PaymentStatus = 
   | "open"
   | "canceled"
@@ -36,13 +38,19 @@ export type PaymentStatus =
   | "failed"
   | "paid";
 
-// Subscription status types
+// Subscription status types (mapped from Stripe)
 export type SubscriptionStatus =
   | "pending"
   | "active"
   | "canceled"
   | "suspended"
-  | "completed";
+  | "completed"
+  | "incomplete"
+  | "incomplete_expired"
+  | "trialing"
+  | "past_due"
+  | "unpaid"
+  | "paused";
 
 // Package types
 export interface Package {
@@ -128,4 +136,14 @@ export function formatPrice(amount: number): string {
     style: "currency",
     currency: "EUR",
   }).format(amount);
+}
+
+// Convert amount to Stripe cents format
+export function toStripeAmount(amount: number): number {
+  return Math.round(amount * 100);
+}
+
+// Convert Stripe cents to regular amount
+export function fromStripeAmount(cents: number): number {
+  return cents / 100;
 }

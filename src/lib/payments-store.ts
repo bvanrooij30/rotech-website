@@ -12,13 +12,15 @@ const PAYMENTS_FILE = path.join(DATA_DIR, "payments.json");
 
 export interface StoredPayment {
   id: string;
-  molliePaymentId: string;
+  stripePaymentId: string;
+  stripeSessionId?: string;
   
   // Customer
   customerName: string;
   customerEmail: string;
   customerPhone?: string;
   companyName?: string;
+  stripeCustomerId?: string;
   
   // Payment details
   amount: number;
@@ -75,13 +77,13 @@ async function writePayments(data: PaymentsData): Promise<void> {
 }
 
 /**
- * Store a new payment after successful Mollie webhook
+ * Store a new payment after successful Stripe webhook
  */
 export async function storePayment(payment: Omit<StoredPayment, "id" | "createdAt" | "syncedToAdmin">): Promise<StoredPayment> {
   const data = await readPayments();
   
   // Check for duplicate
-  const existing = data.payments.find(p => p.molliePaymentId === payment.molliePaymentId);
+  const existing = data.payments.find(p => p.stripePaymentId === payment.stripePaymentId);
   if (existing) {
     return existing;
   }
@@ -146,22 +148,30 @@ export async function markPaymentsSynced(
 }
 
 /**
- * Get a single payment by Mollie ID
+ * Get a single payment by Stripe Payment Intent ID
  */
-export async function getPaymentByMollieId(molliePaymentId: string): Promise<StoredPayment | null> {
+export async function getPaymentByStripeId(stripePaymentId: string): Promise<StoredPayment | null> {
   const data = await readPayments();
-  return data.payments.find(p => p.molliePaymentId === molliePaymentId) || null;
+  return data.payments.find(p => p.stripePaymentId === stripePaymentId) || null;
+}
+
+/**
+ * Get a single payment by Stripe Session ID
+ */
+export async function getPaymentBySessionId(sessionId: string): Promise<StoredPayment | null> {
+  const data = await readPayments();
+  return data.payments.find(p => p.stripeSessionId === sessionId) || null;
 }
 
 /**
  * Update payment status
  */
 export async function updatePaymentStatus(
-  molliePaymentId: string,
+  stripePaymentId: string,
   status: StoredPayment["status"]
 ): Promise<void> {
   const data = await readPayments();
-  const payment = data.payments.find(p => p.molliePaymentId === molliePaymentId);
+  const payment = data.payments.find(p => p.stripePaymentId === stripePaymentId);
   
   if (payment) {
     payment.status = status;

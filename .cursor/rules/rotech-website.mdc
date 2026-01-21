@@ -1,0 +1,587 @@
+---
+name: rotech-website
+description: Next.js website, klantenportaal en admin dashboard patronen en conventies
+globs:
+  - src/**/*
+  - public/**/*
+  - "*.config.*"
+---
+
+# 🌐 RO-TECH WEBSITE & PORTAL
+
+Next.js 16+ website met klantenportaal en admin dashboard.
+
+---
+
+## 📁 BESTANDSSTRUCTUUR
+
+```
+src/
+├── app/                         # Next.js App Router
+│   ├── (public)/               # Marketing pagina's (implicit)
+│   │   ├── page.tsx            # Homepage
+│   │   ├── diensten/           # Diensten overzicht + [slug]
+│   │   ├── projecten/          # Portfolio
+│   │   ├── blog/               # Blog artikelen
+│   │   ├── prijzen/            # Pricing page
+│   │   ├── contact/            # Contact formulier
+│   │   ├── offerte/            # Offerte wizard
+│   │   └── over-ons/           # About page
+│   │
+│   ├── portal/                 # 🔐 Klantenportaal (auth required)
+│   │   ├── layout.tsx          # Portal layout + auth check
+│   │   ├── page.tsx            # Dashboard
+│   │   ├── login/              # Login page
+│   │   ├── registreren/        # Register page
+│   │   ├── abonnement/         # Subscription management
+│   │   ├── facturen/           # Invoice history
+│   │   ├── producten/          # My products/websites
+│   │   ├── support/            # Support tickets
+│   │   └── instellingen/       # Account settings
+│   │
+│   ├── admin/                  # 🔐 Admin Dashboard (admin only)
+│   │   ├── layout.tsx          # Admin layout + role check
+│   │   ├── page.tsx            # Admin dashboard
+│   │   ├── users/              # User management
+│   │   └── subscriptions/      # Subscription management
+│   │
+│   ├── api/                    # API Routes
+│   │   ├── auth/               # NextAuth endpoints
+│   │   ├── contact/            # Contact form
+│   │   ├── offerte/            # Quote requests
+│   │   ├── portal/             # Portal API
+│   │   ├── admin/              # Admin API
+│   │   ├── payments/           # Stripe payments
+│   │   ├── subscriptions/      # Subscription management
+│   │   └── support/            # Support tickets
+│   │
+│   ├── layout.tsx              # Root layout
+│   ├── globals.css             # Global styles
+│   ├── sitemap.ts              # Dynamic sitemap
+│   └── robots.ts               # Robots.txt
+│
+├── components/
+│   ├── layout/                 # Header, Footer
+│   ├── sections/               # Homepage sections (Hero, CTA, etc.)
+│   ├── forms/                  # ContactForm, OfferteWizard
+│   ├── ui/                     # Reusable UI components
+│   ├── portal/                 # Portal-specific components
+│   ├── admin/                  # Admin-specific components
+│   ├── checkout/               # Payment flow components
+│   ├── chat/                   # Chat widget
+│   ├── quote/                  # Quote builder
+│   └── seo/                    # Structured data
+│
+├── data/                       # Static data files
+│   ├── services.ts             # Diensten data
+│   ├── packages.ts             # Pricing packages
+│   ├── portfolio.ts            # Project portfolio
+│   ├── testimonials.ts         # Reviews
+│   ├── faq.ts                  # FAQ items
+│   └── blog-articles.ts        # Blog content
+│
+└── lib/                        # Utilities & services
+    ├── prisma.ts               # Prisma client
+    ├── auth.ts                 # Auth utilities
+    ├── stripe.ts               # Stripe client
+    ├── utils.ts                # General utilities
+    ├── seo-config.ts           # SEO configuration
+    └── rate-limit.ts           # Rate limiting
+```
+
+---
+
+## 🎨 DESIGN SYSTEEM
+
+### Kleuren
+
+```tsx
+// Primaire kleuren - gebruik Tailwind classes
+const colors = {
+  primary: 'bg-indigo-600',      // #4F46E5 - CTA, links
+  primaryHover: 'hover:bg-indigo-700',
+  secondary: 'bg-violet-600',    // #7C3AED - Accenten
+  accent: 'bg-emerald-500',      // #10B981 - Success
+  dark: 'bg-slate-900',          // #0F172A - Tekst, dark sections
+  light: 'bg-slate-50',          // #F8FAFC - Achtergronden
+  muted: 'text-slate-600',       // Body text
+};
+
+// Gradient (hero, headers)
+<div className="bg-gradient-to-r from-indigo-600 to-violet-600">
+```
+
+### Typografie
+
+```tsx
+// Headings - Space Grotesk
+<h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+
+// Subheadings
+<h2 className="font-heading text-3xl md:text-4xl font-bold">
+
+// Body - Inter (default)
+<p className="text-base md:text-lg text-slate-600 leading-relaxed">
+
+// Small/Caption
+<span className="text-sm text-slate-500">
+```
+
+### Spacing & Layout
+
+```tsx
+// Section padding
+<section className="py-16 md:py-24 lg:py-32">
+
+// Container
+<div className="container mx-auto px-4 md:px-6 lg:px-8">
+
+// Grid patronen
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+
+// Consistent spacing scale: 4, 6, 8, 12, 16, 24, 32
+```
+
+### Component Voorbeelden
+
+```tsx
+// Button - Primary
+<button className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+
+// Button - Secondary/Outline
+<button className="inline-flex items-center justify-center border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 px-6 py-3 rounded-lg font-medium transition-colors">
+
+// Card
+<div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+
+// Card met border
+<div className="bg-white rounded-xl border border-slate-200 p-6 hover:border-indigo-300 transition-colors">
+```
+
+### Animaties (Framer Motion)
+
+```tsx
+// Fade up (meest gebruikt)
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+>
+
+// Stagger container
+<motion.div
+  initial="hidden"
+  animate="visible"
+  variants={{
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.1 } }
+  }}
+>
+
+// Stagger child
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+};
+
+// Hover scale
+<motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+
+// Scroll animation (whileInView)
+<motion.div
+  initial={{ opacity: 0, y: 40 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.6 }}
+>
+```
+
+---
+
+## 🔧 CODE PATRONEN
+
+### Server Component (Default)
+
+```tsx
+// src/app/diensten/page.tsx
+import { services } from '@/data/services';
+import { ServiceCard } from '@/components/ui/ServiceCard';
+
+export const metadata = {
+  title: 'Diensten | Ro-Tech Development',
+  description: 'Bekijk onze diensten...',
+};
+
+export default function DienstenPage() {
+  return (
+    <main className="py-16 md:py-24">
+      <div className="container mx-auto px-4">
+        <h1 className="font-heading text-4xl md:text-5xl font-bold">
+          Onze Diensten
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+          {services.map((service) => (
+            <ServiceCard key={service.id} service={service} />
+          ))}
+        </div>
+      </div>
+    </main>
+  );
+}
+```
+
+### Client Component
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { LucideIcon } from 'lucide-react';
+
+interface ComponentNameProps {
+  title: string;
+  description?: string;
+  icon?: LucideIcon;
+}
+
+export function ComponentName({ title, description, icon: Icon }: ComponentNameProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-white rounded-2xl p-6"
+    >
+      {Icon && <Icon className="w-6 h-6 text-indigo-600" />}
+      <h3 className="font-heading text-xl font-bold mt-4">{title}</h3>
+      {description && (
+        <p className="text-slate-600 mt-2">{description}</p>
+      )}
+    </motion.div>
+  );
+}
+```
+
+### Data Bestand
+
+```typescript
+// src/data/[naam].ts
+
+export interface ItemType {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+}
+
+export const items: ItemType[] = [
+  {
+    id: '1',
+    slug: 'item-slug',
+    title: 'Item Titel',
+    description: 'Beschrijving',
+  },
+];
+
+// Helper functies
+export function getItemBySlug(slug: string): ItemType | undefined {
+  return items.find(item => item.slug === slug);
+}
+
+export function getAllSlugs(): string[] {
+  return items.map(item => item.slug);
+}
+```
+
+### API Route met Validatie
+
+```typescript
+// src/app/api/[route]/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { rateLimit } from '@/lib/rate-limit';
+
+const RequestSchema = z.object({
+  name: z.string().min(2, 'Naam is te kort'),
+  email: z.string().email('Ongeldig email adres'),
+  message: z.string().min(10, 'Bericht is te kort'),
+});
+
+export async function POST(request: NextRequest) {
+  try {
+    // Rate limiting
+    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    const { success } = await rateLimit(ip, 5, 60); // 5 requests per minute
+    
+    if (!success) {
+      return NextResponse.json(
+        { error: 'Te veel verzoeken. Probeer later opnieuw.' },
+        { status: 429 }
+      );
+    }
+    
+    // Validate input
+    const body = await request.json();
+    const validated = RequestSchema.parse(body);
+    
+    // Process request...
+    
+    return NextResponse.json({ 
+      success: true,
+      message: 'Succesvol verwerkt'
+    });
+    
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Validatie mislukt', details: error.errors },
+        { status: 400 }
+      );
+    }
+    
+    console.error('API Error:', error);
+    return NextResponse.json(
+      { error: 'Er ging iets mis' },
+      { status: 500 }
+    );
+  }
+}
+```
+
+### Form met React Hook Form + Zod
+
+```tsx
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+const formSchema = z.object({
+  name: z.string().min(2, 'Naam is verplicht'),
+  email: z.string().email('Ongeldig email adres'),
+  message: z.string().min(10, 'Minimaal 10 karakters'),
+});
+
+type FormData = z.infer<typeof formSchema>;
+
+export function ContactForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+  });
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) throw new Error('Verzenden mislukt');
+      
+      reset();
+      // Show success message
+    } catch (error) {
+      // Handle error
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-2">
+          Naam
+        </label>
+        <input
+          {...register('name')}
+          className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        />
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+        )}
+      </div>
+      
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50"
+      >
+        {isSubmitting ? 'Verzenden...' : 'Verstuur'}
+      </button>
+    </form>
+  );
+}
+```
+
+---
+
+## 🔐 PORTAL SPECIFIEKE PATRONEN
+
+### Protected Route Layout
+
+```tsx
+// src/app/portal/layout.tsx
+import { redirect } from 'next/navigation';
+import { getServerSession } from '@/lib/auth';
+import { PortalSidebar } from '@/components/portal/PortalSidebar';
+
+export default async function PortalLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await getServerSession();
+  
+  if (!session) {
+    redirect('/portal/login');
+  }
+  
+  return (
+    <div className="min-h-screen bg-slate-50">
+      <PortalSidebar user={session.user} />
+      <main className="ml-64 p-8">
+        {children}
+      </main>
+    </div>
+  );
+}
+```
+
+### Portal API Route met Auth
+
+```typescript
+// src/app/api/portal/[...]/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+
+export async function GET(request: NextRequest) {
+  const session = await getServerSession();
+  
+  if (!session) {
+    return NextResponse.json(
+      { error: 'Niet ingelogd' },
+      { status: 401 }
+    );
+  }
+  
+  // Fetch user-specific data
+  const data = await prisma.subscription.findMany({
+    where: { userId: session.user.id },
+  });
+  
+  return NextResponse.json(data);
+}
+```
+
+---
+
+## 🛡️ ADMIN SPECIFIEKE PATRONEN
+
+### Admin Role Check
+
+```tsx
+// src/app/admin/layout.tsx
+import { redirect } from 'next/navigation';
+import { getServerSession } from '@/lib/auth';
+import { AdminSidebar } from '@/components/admin/AdminSidebar';
+
+export default async function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await getServerSession();
+  
+  if (!session || session.user.role !== 'admin') {
+    redirect('/portal');
+  }
+  
+  return (
+    <div className="min-h-screen bg-slate-900">
+      <AdminSidebar />
+      <main className="ml-64 p-8">
+        {children}
+      </main>
+    </div>
+  );
+}
+```
+
+---
+
+## ⚠️ ANTI-PATTERNS (Vermijden)
+
+```typescript
+// ❌ NOOIT: any type
+const data: any = response;
+
+// ✅ ALTIJD: Specifieke types
+interface ApiResponse {
+  success: boolean;
+  data: DataType;
+}
+const data: ApiResponse = response;
+
+// ❌ NOOIT: useEffect voor data die SSR kan
+useEffect(() => {
+  fetch('/api/data').then(...)
+}, []);
+
+// ✅ ALTIJD: Server Components of Server Actions
+async function Page() {
+  const data = await fetchData();
+  return <Component data={data} />;
+}
+
+// ❌ NOOIT: Inline styles
+<div style={{ marginTop: '20px' }}>
+
+// ✅ ALTIJD: Tailwind classes
+<div className="mt-5">
+
+// ❌ NOOIT: Index als key
+{items.map((item, index) => <Item key={index} />)}
+
+// ✅ ALTIJD: Unieke identifier
+{items.map(item => <Item key={item.id} />)}
+
+// ❌ NOOIT: Hardcoded kleuren
+<div className="bg-[#3B82F6]">
+
+// ✅ ALTIJD: Tailwind presets
+<div className="bg-indigo-600">
+```
+
+---
+
+## 📦 VEELGEBRUIKTE IMPORTS
+
+```typescript
+// Components
+import { motion } from 'framer-motion';
+import { Icon } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+
+// Forms
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+// Data
+import { services, getServiceBySlug } from '@/data/services';
+
+// Lib
+import { prisma } from '@/lib/prisma';
+import { getServerSession } from '@/lib/auth';
+import { cn } from '@/lib/utils';
+```

@@ -1,0 +1,277 @@
+---
+name: rotech-master
+description: Hoofd projectrule voor Ro-Tech Development - altijd geladen voor kerncontext en AI gedragsinstructies
+alwaysApply: true
+---
+
+# 🚀 RO-TECH DEVELOPMENT - MASTER RULE
+
+---
+
+## 🧠 AI GEDRAGSINSTRUCTIES
+
+### Kernprincipes
+
+1. **Lees eerst, handel daarna** - Inspecteer ALTIJD relevante bestanden voordat je code voorstelt. Raad nooit naar bestaande implementaties.
+
+2. **Consistentie boven creativiteit** - Volg bestaande patronen in de codebase. Kijk naar vergelijkbare componenten/functies voor stijl en structuur.
+
+3. **Minimale wijzigingen** - Verander alleen wat nodig is. Geen "verbeteringen" aan omliggende code tenzij expliciet gevraagd.
+
+4. **Nederlandse communicatie** - Praat in het Nederlands met de gebruiker. Code, variabelen en technische termen blijven Engels.
+
+5. **Proactief maar niet opdringerig** - Meld potentiële problemen, maar voer geen ongeplande wijzigingen door.
+
+### Context Herkenning
+
+**Herken het actieve subproject aan:**
+
+| Signaal | Subproject | Gerelateerde Rule |
+|---------|------------|-------------------|
+| Bestand in `src/`, `public/` | Website/Portal | `rotech-website.mdc` |
+| Bestand in `src/app/portal/` | Klantenportaal | `rotech-website.mdc` |
+| Bestand in `src/app/api/` | API Routes | `rotech-database.mdc` |
+| Bestand in `prisma/` | Database | `rotech-database.mdc` |
+| Bestand in `mobile-app/` | Mobile App | `rotech-mobile.mdc` |
+| Bestand in `tools/admin-portal/` | Admin Portal | `rotech-admin-portal.mdc` |
+| Bestand in `tools/lead-finder/` | Lead Finder | Python context |
+| Bestand in `master-prompts/` | Klant Prompts | Markdown focus |
+
+### Beslisboom: Nieuwe Feature
+
+```
+1. Bestaat er al iets vergelijkbaars?
+   → JA: Gebruik/extend dat patroon
+   → NEE: Ga naar 2
+
+2. Past het in een bestaand bestand?
+   → JA: Voeg toe aan bestaand bestand
+   → NEE: Maak nieuw bestand in correcte map
+
+3. Is nieuwe dependency nodig?
+   → VERMIJD: Gebruik bestaande tools eerst
+   → NOODZAKELIJK: Vraag bevestiging aan gebruiker
+```
+
+### Beslisboom: Bug Fix
+
+```
+1. Reproduceer het probleem mentaal
+2. Identificeer root cause (niet symptoom)
+3. Zoek vergelijkbare code voor correcte aanpak
+4. Fix minimaal - alleen wat kapot is
+5. Controleer of fix geen side effects heeft
+```
+
+### Wanneer Om Verduidelijking Vragen
+
+- ❓ Meerdere valide interpretaties van de vraag
+- ❓ Wijziging zou breaking change zijn
+- ❓ Nieuwe externe dependency nodig
+- ❓ Significant andere aanpak dan bestaand patroon
+- ❓ Onduidelijk welk subproject bedoeld wordt
+
+### Wanneer NIET Vragen (Direct Handelen)
+
+- ✅ Duidelijke bug met voor de hand liggende fix
+- ✅ Vraag matcht exact één bestaand patroon
+- ✅ Simpele toevoeging/wijziging
+- ✅ Expliciet gevraagde actie
+
+---
+
+## 📋 PROJECTOVERZICHT
+
+**Ro-Tech Development (BVR Services)** - Web development agency, Veldhoven, Nederland.
+
+### Ecosysteem Architectuur
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        RO-TECH DEVELOPMENT PLATFORM                      │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐  │
+│  │    🌐 WEBSITE    │    │   📱 MOBILE APP  │    │  🏢 ADMIN PORTAL │  │
+│  │   Next.js 16+    │    │   Expo/RN 0.81   │    │  Python/CTk      │  │
+│  │                  │    │                  │    │                  │  │
+│  │  • Marketing     │    │  • Klant login   │    │  • Email inbox   │  │
+│  │  • Diensten      │    │  • Dashboard     │    │  • CRM           │  │
+│  │  • Blog/SEO      │    │  • Support       │    │  • Leads         │  │
+│  │  • Portal        │    │  • Producten     │    │  • Facturen      │  │
+│  └────────┬─────────┘    └────────┬─────────┘    └────────┬─────────┘  │
+│           │                       │                       │             │
+│           └───────────────────────┼───────────────────────┘             │
+│                                   │                                      │
+│                          ┌────────▼────────┐                            │
+│                          │   🗄️ DATABASE   │                            │
+│                          │  Prisma/SQLite  │                            │
+│                          │   (+ Stripe)    │                            │
+│                          └─────────────────┘                            │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Subprojecten
+
+| Project | Locatie | Tech | Doel |
+|---------|---------|------|------|
+| **Website** | `src/`, `public/` | Next.js 16, TypeScript | Bedrijfswebsite + marketing |
+| **Klantenportaal** | `src/app/portal/` | Next.js 16, TypeScript | Klant self-service |
+| **Admin Dashboard** | `src/app/admin/` | Next.js 16, TypeScript | Interne admin UI |
+| **Mobile App** | `mobile-app/` | Expo 54, React Native | Klant mobile app |
+| **Admin Portal** | `tools/admin-portal/` | Python, CustomTkinter | Desktop CRM/Email |
+| **Lead Finder** | `tools/lead-finder/` | Python, Apify | Lead generatie |
+| **Master Prompts** | `master-prompts/` | Markdown | Klantproject templates |
+
+---
+
+## 📞 BEDRIJFSCONTEXT
+
+| Aspect | Details |
+|--------|---------|
+| **Naam** | Ro-Tech Development |
+| **Rechtsvorm** | BVR Services (handelsnaam) |
+| **Eigenaar** | Bart van Rooij |
+| **Locatie** | Veldhoven, Noord-Brabant |
+| **Doelgroep** | MKB & ZZP in Nederland |
+| **USP's** | Persoonlijke aanpak, moderne tech, eerlijke prijzen |
+| **Tone of Voice** | Professioneel maar toegankelijk, Brabantse no-nonsense |
+
+### Contact
+
+- **Website:** ro-techdevelopment.dev
+- **Email:** contact@ro-techdevelopment.dev
+- **Telefoon:** +31 6 57 23 55 74
+- **Adres:** Kruisstraat 64, 5502 JG Veldhoven
+
+### Diensten & Prijzen
+
+| Pakket | Prijs vanaf | Doelgroep |
+|--------|-------------|-----------|
+| Starter | €997 | ZZP'ers, freelancers |
+| Business | €2.497 | MKB, dienstverleners |
+| Webshop | €3.997 | Retailers |
+| Maatwerk | €7.500+ | Complexe processen |
+
+### Onderhoudspakketten
+
+| Pakket | Prijs/maand | Uren |
+|--------|-------------|------|
+| Basis | €99 | 1 uur |
+| Business | €199 | 3 uur |
+| Premium | €399 | 8 uur |
+
+---
+
+## 🛠️ TECH STACK OVERZICHT
+
+### Frontend (Website + Portal)
+- **Framework:** Next.js 16+ (App Router)
+- **Taal:** TypeScript (strict mode)
+- **Styling:** Tailwind CSS v4
+- **Animaties:** Framer Motion
+- **Forms:** React Hook Form + Zod
+- **Icons:** Lucide React
+- **Fonts:** Space Grotesk + Inter
+
+### Backend (API + Database)
+- **Runtime:** Node.js 18+
+- **ORM:** Prisma 6+
+- **Database:** SQLite (dev) / PostgreSQL (prod)
+- **Auth:** NextAuth v5 (beta)
+- **Payments:** Stripe
+- **Email:** Resend
+
+### Mobile App
+- **Framework:** Expo 54
+- **Platform:** React Native 0.81
+- **Navigation:** React Navigation 7
+- **Storage:** AsyncStorage, SecureStore
+
+### Admin Portal (Python)
+- **GUI:** CustomTkinter
+- **Database:** SQLAlchemy + SQLite
+- **Email:** IMAP/SMTP
+- **AI:** OpenAI GPT-4
+
+---
+
+## 🔧 COMMANDS
+
+```bash
+# === WEBSITE ===
+npm run dev              # Development server (localhost:3000)
+npm run build            # Production build
+npm run lint             # ESLint check
+npm run db:push          # Push Prisma schema to DB
+npm run db:studio        # Open Prisma Studio
+npm run db:seed          # Seed database
+npm run admin:create     # Create admin user
+npm run env:generate     # Generate .env template
+
+# === MOBILE APP ===
+cd mobile-app
+npm start                # Expo development
+npm run android          # Android emulator
+npm run ios              # iOS simulator
+npm run web              # Web browser
+
+# === ADMIN PORTAL ===
+cd tools/admin-portal
+pip install -r requirements.txt
+python main.py           # Start GUI
+
+# === LEAD FINDER ===
+cd tools/lead-finder
+python apify_quick_start.py
+python email_outreach.py --csv output/file.csv --live
+```
+
+---
+
+## ⚠️ KRITIEKE REGELS
+
+### ALTIJD (Verplicht)
+
+| Regel | Reden |
+|-------|-------|
+| TypeScript strict mode | Voorkomt runtime errors |
+| Zod validatie op API input | Security & data integriteit |
+| Mobile-first responsive | 60%+ traffic is mobiel |
+| Semantic HTML | Accessibility & SEO |
+| Error boundaries/handling | Graceful degradation |
+| Nederlandse content | Doelgroep is NL |
+| Consistente naming | Maintainability |
+
+### NOOIT (Verboden)
+
+| Regel | Reden |
+|-------|-------|
+| `any` type in TypeScript | Verliest type safety |
+| Hardcoded secrets/API keys | Security risico |
+| `console.log` in productie | Performance & professionaliteit |
+| Nieuwe packages zonder vraag | Bundle size & maintenance |
+| Breaking API changes | Backward compatibility |
+| Inline styles (bij Tailwind) | Inconsistentie |
+| Force push naar main | Git safety |
+
+---
+
+## 🎯 KWALITEITSCHECKLIST
+
+Voordat je code als "klaar" beschouwt:
+
+- [ ] Types volledig gedefinieerd (geen `any`)
+- [ ] Error handling aanwezig
+- [ ] Responsive (test mobile breakpoints mentaal)
+- [ ] Toegankelijk (aria-labels waar nodig)
+- [ ] Consistent met bestaande patronen
+- [ ] Geen console.log/debugs
+- [ ] Nederlandse teksten correct gespeld
+- [ ] API validatie met Zod
+- [ ] Loading/error states
+
+---
+
+*Zie specifieke rules voor gedetailleerde patronen per subproject.*

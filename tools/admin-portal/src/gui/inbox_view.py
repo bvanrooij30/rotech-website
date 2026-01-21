@@ -1,14 +1,17 @@
 """
-Website Inbox View - Contact forms en offerte aanvragen van website.
+Werk Opdrachten View - Werkopdrachten van klanten via de website.
+Contact forms, offerte aanvragen en werkorders.
 """
 
 import customtkinter as ctk
+from tkinter import messagebox
 from typing import Optional
 from datetime import datetime
 
 from ..database import get_db
 from ..database.models import FormSubmission, FormStatus, FormType, Note
 from ..utils.helpers import format_datetime, format_relative_time, truncate_text
+from ..services.cursor_prompt_generator import get_cursor_prompt_generator
 
 
 class FormListItem(ctk.CTkFrame):
@@ -256,7 +259,17 @@ class FormDetailView(ctk.CTkFrame):
             hover_color="#2d8f47",
             command=self._on_convert
         )
-        convert_btn.pack(side="left")
+        convert_btn.pack(side="left", padx=(0, 10))
+        
+        # Cursor AI Prompt button
+        cursor_btn = ctk.CTkButton(
+            buttons_frame,
+            text="🤖 Cursor Prompt",
+            fg_color="#7c3aed",
+            hover_color="#6d28d9",
+            command=self._on_generate_cursor_prompt
+        )
+        cursor_btn.pack(side="left")
     
     def show_form(self, form: FormSubmission):
         """Display form details."""
@@ -305,6 +318,145 @@ class FormDetailView(ctk.CTkFrame):
         """Convert to client."""
         # TODO: Implement conversion
         pass
+    
+    def _on_generate_cursor_prompt(self):
+        """Generate and show Cursor AI prompt."""
+        if not self.current_form:
+            return
+        
+        # Generate prompt
+        generator = get_cursor_prompt_generator()
+        prompt = generator.generate_prompt(self.current_form)
+        
+        # Show in popup window
+        CursorPromptDialog(self, prompt, self.current_form.name)
+
+
+class CursorPromptDialog(ctk.CTkToplevel):
+    """Dialog window showing generated Cursor AI prompt."""
+    
+    def __init__(self, parent, prompt: str, customer_name: str):
+        super().__init__(parent)
+        
+        self.prompt = prompt
+        
+        # Window settings
+        self.title(f"🤖 Cursor AI Prompt - {customer_name}")
+        self.geometry("900x700")
+        self.minsize(700, 500)
+        
+        # Center window
+        self.update_idletasks()
+        x = (self.winfo_screenwidth() - 900) // 2
+        y = (self.winfo_screenheight() - 700) // 2
+        self.geometry(f"+{x}+{y}")
+        
+        # Make modal
+        self.transient(parent)
+        self.grab_set()
+        
+        self._setup_ui()
+        
+        # Focus
+        self.after(100, self.focus_force)
+    
+    def _setup_ui(self):
+        """Setup dialog UI."""
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        
+        # Header
+        header_frame = ctk.CTkFrame(self, fg_color="transparent")
+        header_frame.grid(row=0, column=0, sticky="ew", padx=20, pady=(20, 10))
+        
+        title_label = ctk.CTkLabel(
+            header_frame,
+            text="🤖 Gegenereerde Cursor AI Prompt",
+            font=ctk.CTkFont(size=18, weight="bold")
+        )
+        title_label.pack(side="left")
+        
+        # Copy button in header
+        copy_btn = ctk.CTkButton(
+            header_frame,
+            text="📋 Kopieer naar Klembord",
+            fg_color="#7c3aed",
+            hover_color="#6d28d9",
+            command=self._copy_to_clipboard
+        )
+        copy_btn.pack(side="right")
+        
+        # Info label
+        info_label = ctk.CTkLabel(
+            self,
+            text="Kopieer deze prompt en plak in een nieuwe Cursor AI chat om het project te starten.",
+            font=ctk.CTkFont(size=12),
+            text_color="gray50"
+        )
+        info_label.grid(row=0, column=0, sticky="w", padx=20, pady=(50, 0))
+        
+        # Prompt text area
+        text_frame = ctk.CTkFrame(self, corner_radius=12)
+        text_frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=10)
+        text_frame.grid_columnconfigure(0, weight=1)
+        text_frame.grid_rowconfigure(0, weight=1)
+        
+        self.prompt_text = ctk.CTkTextbox(
+            text_frame,
+            font=ctk.CTkFont(size=12, family="Consolas"),
+            wrap="word"
+        )
+        self.prompt_text.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+        
+        # Insert prompt
+        self.prompt_text.insert("1.0", self.prompt)
+        
+        # Footer with buttons
+        footer_frame = ctk.CTkFrame(self, fg_color="transparent")
+        footer_frame.grid(row=2, column=0, sticky="ew", padx=20, pady=(0, 20))
+        
+        # Status label
+        self.status_label = ctk.CTkLabel(
+            footer_frame,
+            text="",
+            font=ctk.CTkFont(size=11),
+            text_color="#34a853"
+        )
+        self.status_label.pack(side="left")
+        
+        # Close button
+        close_btn = ctk.CTkButton(
+            footer_frame,
+            text="Sluiten",
+            fg_color="gray40",
+            width=100,
+            command=self.destroy
+        )
+        close_btn.pack(side="right")
+        
+        # Select all button
+        select_btn = ctk.CTkButton(
+            footer_frame,
+            text="Alles Selecteren",
+            fg_color="gray40",
+            width=120,
+            command=self._select_all
+        )
+        select_btn.pack(side="right", padx=(0, 10))
+    
+    def _copy_to_clipboard(self):
+        """Copy prompt to clipboard."""
+        self.clipboard_clear()
+        self.clipboard_append(self.prompt)
+        self.update()  # Required for clipboard
+        
+        self.status_label.configure(text="✓ Gekopieerd naar klembord!")
+        self.after(3000, lambda: self.status_label.configure(text=""))
+    
+    def _select_all(self):
+        """Select all text in prompt."""
+        self.prompt_text.tag_add("sel", "1.0", "end")
+        self.prompt_text.focus_set()
 
 
 class InboxView(ctk.CTkFrame):
@@ -329,11 +481,21 @@ class InboxView(ctk.CTkFrame):
         
         title = ctk.CTkLabel(
             header_frame,
-            text="📥 Website Inbox",
+            text="📋 Werk Opdrachten",
             font=ctk.CTkFont(size=24, weight="bold"),
             anchor="w"
         )
         title.pack(side="left")
+        
+        # Sync button
+        sync_btn = ctk.CTkButton(
+            header_frame,
+            text="🔄 Sync",
+            width=80,
+            fg_color="gray40",
+            command=self._sync_orders
+        )
+        sync_btn.pack(side="right")
         
         # Filters
         filter_frame = ctk.CTkFrame(self, fg_color="transparent")
@@ -427,7 +589,7 @@ class InboxView(ctk.CTkFrame):
             if not forms:
                 empty_label = ctk.CTkLabel(
                     self.list_frame,
-                    text="Geen formulier inzendingen.\n\nWebsite formulieren worden hier automatisch\nweergegeven zodra ze binnenkomen.",
+                    text="Geen werk opdrachten.\n\nWerk opdrachten van klanten worden hier\nautomatisch weergegeven zodra ze binnenkomen.",
                     text_color="gray50",
                     justify="center"
                 )
@@ -481,3 +643,20 @@ class InboxView(ctk.CTkFrame):
         self.detail_view.grid_forget()
         self.list_frame.grid(row=0, column=0, sticky="nsew")
         self.refresh()
+    
+    def _sync_orders(self):
+        """Sync work orders from website."""
+        from tkinter import messagebox
+        from ..services.work_order_service import get_work_order_sync_service
+        
+        service = get_work_order_sync_service()
+        synced, errors, msgs = service.sync_work_orders()
+        
+        self.refresh()
+        
+        if synced > 0:
+            messagebox.showinfo("Sync", f"{synced} nieuwe werk opdrachten gesynchroniseerd!")
+        elif errors > 0:
+            messagebox.showwarning("Sync", f"Sync met fouten:\n" + "\n".join(msgs))
+        else:
+            messagebox.showinfo("Sync", "Geen nieuwe werk opdrachten gevonden.")

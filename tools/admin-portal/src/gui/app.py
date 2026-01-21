@@ -17,7 +17,10 @@ from .leads_view import LeadsView
 from .inbox_view import InboxView
 from .clients_view import ClientsView
 from .invoices_view import InvoicesView
+from .monitor_view import MonitorView
+from .support_view import SupportView
 from .settings_view import SettingsView
+from .api_view import APIView
 
 
 class AdminPortalApp(ctk.CTk):
@@ -89,6 +92,9 @@ class AdminPortalApp(ctk.CTk):
             "leads": LeadsView,
             "clients": ClientsView,
             "invoices": InvoicesView,
+            "monitor": MonitorView,
+            "support": SupportView,
+            "api": APIView,
             "settings": SettingsView,
         }
     
@@ -140,6 +146,9 @@ class AdminPortalApp(ctk.CTk):
         
         # Payment sync from website
         self._start_payment_sync()
+        
+        # Work order sync from website
+        self._start_work_order_sync()
     
     def _start_email_sync(self):
         """Start automatic email sync in background."""
@@ -174,6 +183,25 @@ class AdminPortalApp(ctk.CTk):
         )
         
         logger.info(f"Payment auto-sync started: checking every {Config.PAYMENT_SYNC_INTERVAL} minutes")
+    
+    def _start_work_order_sync(self):
+        """Start automatic work order sync from website."""
+        from ..services.work_order_service import start_work_order_sync
+        
+        def on_new_orders(count: int):
+            """Callback when new work orders are synced."""
+            self.after(0, lambda: self._notify_new_work_orders(count))
+        
+        self._work_order_scheduler = start_work_order_sync(on_new_orders=on_new_orders)
+        logger.info("Work order auto-sync started")
+    
+    def _notify_new_work_orders(self, count: int):
+        """Show notification for new work orders."""
+        if self._current_view in ['inbox', 'dashboard']:
+            if self._current_view in self._views:
+                self._views[self._current_view].refresh()
+        
+        self._show_toast(f"📋 {count} nieuwe werk opdracht{'en' if count > 1 else ''} ontvangen!")
     
     def _notify_new_payments(self, count: int):
         """Show notification for new payments/invoices."""

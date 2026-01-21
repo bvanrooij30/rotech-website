@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
 import { validateCSRF } from "@/lib/csrf";
+import { storeFormSubmission } from "@/lib/forms-store";
+import { webhooks } from "@/lib/webhook";
 
 // HTML escape function for security
 function escapeHtml(text: string): string {
@@ -92,6 +94,32 @@ export async function POST(request: NextRequest) {
     }
 
     const { name, email, phone, company, subject, message } = validationResult.data;
+
+    // Store form submission for Admin Portal sync
+    try {
+      await storeFormSubmission({
+        formType: "contact",
+        name,
+        email,
+        phone: phone || undefined,
+        company: company || undefined,
+        subject,
+        message,
+      });
+    } catch (storeError) {
+      console.error("Failed to store contact form:", storeError);
+    }
+
+    // Send webhook to portal (non-blocking)
+    webhooks.contactSubmitted({
+      name,
+      email,
+      phone: phone || "",
+      company: company || "",
+      subject,
+      message,
+      submittedAt: new Date().toISOString(),
+    }).catch(err => console.error("Webhook failed:", err));
 
     // Send email using Resend (if configured)
     if (process.env.RESEND_API_KEY && process.env.CONTACT_EMAIL) {

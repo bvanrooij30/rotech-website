@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Ro-Tech Development",
+  "name_for_model": "rotech_development",
+  "description_for_human": "Professional web development agency in the Netherlands specializing in websites, webshops, and web applications.",
+  "description_for_model": "Ro-Tech Development is a web development agency based in Veldhoven, Netherlands. They create custom websites, e-commerce webshops, and web applications. Services include responsive website development, CMS implementation, SEO optimization, payment integration (iDEAL, Stripe), and maintenance packages. They serve small and medium businesses in the Netherlands and Belgium. Contact: contact@ro-techdevelopment.dev, Phone: +31 6 57 23 55 74. For quotes, customers can configure their desired features and receive transparent pricing.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://ro-techdevelopment.dev/api/openapi.json",
+    "is_user_authenticated": false
+  },
+  "logo_url": "https://ro-techdevelopment.dev/images/rotech/rotech-icon.svg",
+  "contact_email": "contact@ro-techdevelopment.dev",
+  "legal_info_url": "https://ro-techdevelopment.dev/algemene-voorwaarden"
+}
