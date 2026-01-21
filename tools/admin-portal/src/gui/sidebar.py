@@ -91,6 +91,7 @@ class Sidebar(ctk.CTkFrame):
             ("Leads", "🔍", "leads"),
             ("Klanten", "👥", "clients"),
             ("Facturatie", "📄", "invoices"),
+            ("Snelstart", "📈", "snelstart"),
             ("Support", "🎫", "support"),
             ("Website API", "🌐", "api"),
             ("Monitoring", "🛡️", "monitor"),

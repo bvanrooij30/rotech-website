@@ -278,6 +278,13 @@ class Client(Base):
     # Status
     status = Column(String(20), default=ClientStatus.PROSPECT.value)
     
+    # Snelstart integration
+    snelstart_relatie_id = Column(String(100), nullable=True)  # Snelstart relatie UUID
+    snelstart_relatiecode = Column(String(50), nullable=True)  # Snelstart relatiecode
+    snelstart_sync_status = Column(String(20), nullable=True)  # pending, synced, error
+    snelstart_last_sync = Column(DateTime, nullable=True)
+    snelstart_error = Column(Text, nullable=True)
+    
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -365,9 +372,16 @@ class Invoice(Base):
     # Notes
     notes = Column(Text, nullable=True)
     
-    # Snelstart export
+    # Snelstart integration (legacy CSV export)
     exported_to_snelstart = Column(Boolean, default=False)
     exported_at = Column(DateTime, nullable=True)
+    
+    # Snelstart API sync
+    snelstart_id = Column(String(100), nullable=True)  # Snelstart boeking UUID
+    snelstart_relatie_id = Column(String(100), nullable=True)  # Gekoppelde Snelstart relatie
+    snelstart_sync_status = Column(String(20), nullable=True)  # pending, synced, error
+    snelstart_last_sync = Column(DateTime, nullable=True)
+    snelstart_error = Column(Text, nullable=True)
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)

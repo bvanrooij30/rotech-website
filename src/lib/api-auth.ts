@@ -237,3 +237,22 @@ export function logApiAccess(
   // In production, send to logging service
   console.log("[API Access]", JSON.stringify(logEntry));
 }
+
+/**
+ * Get webhook queue status
+ * Returns pending webhooks and queue health
+ */
+export async function getWebhookQueueStatus(): Promise<{
+  pending: number;
+  failed: number;
+  lastProcessed: string | null;
+  healthy: boolean;
+}> {
+  // Placeholder - in production, this would query a Redis queue or database
+  return {
+    pending: 0,
+    failed: 0,
+    lastProcessed: new Date().toISOString(),
+    healthy: true,
+  };
+}

@@ -18,6 +18,7 @@ from ..database.models import Invoice, InvoiceStatus, InvoiceType, Client
 from ..utils.config import Config, logger
 from ..utils.helpers import format_datetime, truncate_text
 from ..services.payment_sync_service import get_payment_sync_service, get_payment_sync_scheduler
+from ..services.snelstart_sync_service import get_snelstart_sync_service
 
 
 # Create invoices directory
@@ -112,7 +113,32 @@ class InvoiceListItem(ctk.CTkFrame):
                 text="📄",
                 font=ctk.CTkFont(size=14)
             )
-            file_label.grid(row=0, column=4, rowspan=2, padx=(0, 10))
+            file_label.grid(row=0, column=4, rowspan=2, padx=(0, 5))
+        
+        # Snelstart sync indicator
+        if self.invoice.invoice_type == InvoiceType.OUTGOING.value:
+            sync_status = self.invoice.snelstart_sync_status
+            if sync_status == "synced":
+                sync_icon = "✓"
+                sync_color = "#34a853"
+            elif sync_status == "error":
+                sync_icon = "⚠"
+                sync_color = "#ea4335"
+            elif sync_status == "pending":
+                sync_icon = "⏳"
+                sync_color = "#fbbc04"
+            else:
+                sync_icon = "○"
+                sync_color = "gray50"
+            
+            sync_label = ctk.CTkLabel(
+                self,
+                text=sync_icon,
+                font=ctk.CTkFont(size=12),
+                text_color=sync_color,
+                width=20
+            )
+            sync_label.grid(row=0, column=5, rowspan=2, padx=(0, 10))
 
 
 class AddInvoiceDialog(ctk.CTkToplevel):
@@ -519,15 +545,29 @@ class InvoiceDetailView(ctk.CTkFrame):
         spacer = ctk.CTkFrame(info_frame, fg_color="transparent", height=15)
         spacer.grid(row=len(fields) + 1, column=0)
         
+        # Action buttons frame
+        action_btns_frame = ctk.CTkFrame(info_frame, fg_color="transparent")
+        action_btns_frame.grid(row=len(fields) + 2, column=0, columnspan=2, sticky="w", padx=20, pady=(10, 20))
+        
         # Mark as paid button
         self.paid_btn = ctk.CTkButton(
-            info_frame,
+            action_btns_frame,
             text="✅ Markeer als Betaald",
             fg_color="#34a853",
             hover_color="#2d8f47",
             command=self._mark_as_paid
         )
-        self.paid_btn.grid(row=len(fields) + 2, column=0, columnspan=2, sticky="w", padx=20, pady=(10, 20))
+        self.paid_btn.pack(side="left", padx=(0, 10))
+        
+        # Snelstart sync button
+        self.snelstart_btn = ctk.CTkButton(
+            action_btns_frame,
+            text="📊 Push naar Snelstart",
+            fg_color="#1a73e8",
+            hover_color="#1557b0",
+            command=self._push_to_snelstart
+        )
+        self.snelstart_btn.pack(side="left")
     
     def show_invoice(self, invoice: Invoice):
         """Display invoice details."""
@@ -567,6 +607,33 @@ class InvoiceDetailView(ctk.CTkFrame):
             self.paid_btn.configure(text="✅ Betaald", state="disabled")
         else:
             self.paid_btn.configure(text="✅ Markeer als Betaald", state="normal")
+        
+        # Update Snelstart button based on sync status
+        if invoice.invoice_type == InvoiceType.OUTGOING.value:
+            self.snelstart_btn.pack(side="left")
+            if invoice.snelstart_sync_status == "synced":
+                self.snelstart_btn.configure(
+                    text="✓ Gesynchroniseerd", 
+                    state="disabled",
+                    fg_color="gray40"
+                )
+            elif invoice.snelstart_sync_status == "error":
+                self.snelstart_btn.configure(
+                    text="⚠️ Opnieuw proberen",
+                    state="normal",
+                    fg_color="#ea4335",
+                    hover_color="#d33426"
+                )
+            else:
+                self.snelstart_btn.configure(
+                    text="📊 Push naar Snelstart",
+                    state="normal",
+                    fg_color="#1a73e8",
+                    hover_color="#1557b0"
+                )
+        else:
+            # Hide for incoming invoices
+            self.snelstart_btn.pack_forget()
     
     def _on_download(self):
         """Download invoice PDF."""
@@ -630,6 +697,67 @@ class InvoiceDetailView(ctk.CTkFrame):
             with db.session() as session:
                 inv = session.query(Invoice).get(self.current_invoice.id)
                 self.show_invoice(inv)
+    
+    def _push_to_snelstart(self):
+        """Push invoice to Snelstart."""
+        if not self.current_invoice:
+            return
+        
+        if not Config.is_snelstart_configured():
+            messagebox.showwarning(
+                "Niet Geconfigureerd",
+                "Snelstart API is niet geconfigureerd.\n\n"
+                "Ga naar Snelstart Integratie om de configuratie te bekijken."
+            )
+            return
+        
+        # Check if invoice has a linked client
+        if not self.current_invoice.client_id:
+            messagebox.showwarning(
+                "Geen Klant Gekoppeld",
+                "Deze factuur heeft geen gekoppelde klant.\n\n"
+                "Koppel eerst een klant aan deze factuur om te synchroniseren naar Snelstart."
+            )
+            return
+        
+        self.snelstart_btn.configure(state="disabled", text="⏳ Bezig...")
+        
+        import threading
+        
+        def do_sync():
+            sync_service = get_snelstart_sync_service()
+            
+            # Reload invoice from database
+            db = get_db()
+            with db.session() as session:
+                invoice = session.query(Invoice).get(self.current_invoice.id)
+                success, result = sync_service.sync_invoice_to_snelstart(invoice)
+            
+            self.after(0, lambda: self._on_snelstart_sync_complete(success, result))
+        
+        threading.Thread(target=do_sync, daemon=True).start()
+    
+    def _on_snelstart_sync_complete(self, success: bool, result: str):
+        """Handle Snelstart sync completion."""
+        self.on_refresh()
+        
+        # Reload invoice
+        db = get_db()
+        with db.session() as session:
+            inv = session.query(Invoice).get(self.current_invoice.id)
+            self.show_invoice(inv)
+        
+        if success:
+            messagebox.showinfo(
+                "Synchronisatie Voltooid",
+                f"Factuur succesvol gesynchroniseerd naar Snelstart!\n\n"
+                f"Snelstart ID: {result}"
+            )
+        else:
+            messagebox.showerror(
+                "Synchronisatie Mislukt",
+                f"Kon factuur niet synchroniseren:\n\n{result}"
+            )
 
 
 class InvoicesView(ctk.CTkFrame):

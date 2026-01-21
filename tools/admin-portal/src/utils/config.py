@@ -50,6 +50,15 @@ class Config:
     WEBSITE_ADMIN_API_KEY: str = os.getenv("WEBSITE_ADMIN_API_KEY", "rotech-admin-secret-key")
     PAYMENT_SYNC_INTERVAL: int = int(os.getenv("PAYMENT_SYNC_INTERVAL", "5"))  # minutes
     
+    # === SNELSTART API ===
+    SNELSTART_API_URL: str = os.getenv("SNELSTART_API_URL", "https://b2bapi.snelstart.nl/v2")
+    SNELSTART_AUTH_URL: str = os.getenv("SNELSTART_AUTH_URL", "https://auth.snelstart.nl/b2b/token")
+    SNELSTART_CLIENT_ID: str = os.getenv("SNELSTART_CLIENT_ID", "")
+    SNELSTART_CLIENT_SECRET: str = os.getenv("SNELSTART_CLIENT_SECRET", "")
+    SNELSTART_SUBSCRIPTION_KEY: str = os.getenv("SNELSTART_SUBSCRIPTION_KEY", "")
+    SNELSTART_SYNC_INTERVAL: int = int(os.getenv("SNELSTART_SYNC_INTERVAL", "15"))  # minutes
+    SNELSTART_AUTO_SYNC: bool = os.getenv("SNELSTART_AUTO_SYNC", "false").lower() == "true"
+    
     # === LEAD FINDER ===
     LEAD_FINDER_OUTPUT: Path = Path(os.getenv("LEAD_FINDER_OUTPUT", "../lead-finder/output"))
     
@@ -93,6 +102,15 @@ class Config:
     def is_email_configured(cls) -> bool:
         """Check of email credentials zijn ingevuld."""
         return bool(cls.EMAIL_USERNAME and cls.EMAIL_PASSWORD)
+    
+    @classmethod
+    def is_snelstart_configured(cls) -> bool:
+        """Check of Snelstart API credentials zijn ingevuld."""
+        return bool(
+            cls.SNELSTART_CLIENT_ID and 
+            cls.SNELSTART_CLIENT_SECRET and 
+            cls.SNELSTART_SUBSCRIPTION_KEY
+        )
     
     @classmethod
     def get_lead_finder_path(cls) -> Path:
