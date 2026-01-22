@@ -113,9 +113,8 @@ export default function RootLayout({
         className={`${spaceGrotesk.variable} ${inter.variable} antialiased bg-slate-50 text-slate-900`}
       >
         <ErrorBoundary>
-          {/* Development Banner uitgeschakeld voor productie - behouden voor als nodig 
+          {/* 🚧 WERKZAAMHEDEN BANNER - Verwijder deze regel als de site klaar is */}
           <DevelopmentBanner />
-          */}
           <Header />
           <main className="min-h-screen">{children}</main>
           <Footer />
