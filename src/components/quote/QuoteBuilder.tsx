@@ -18,7 +18,9 @@ import {
   Plus,
   Minus,
   Loader2,
+  Download,
 } from "lucide-react";
+import { generateQuotePDF, generateQuoteNumber } from "@/lib/quote-pdf";
 import {
   packageDefinitions,
   allFeatures,
@@ -93,6 +95,9 @@ export default function QuoteBuilder() {
   // Signature
   const [signature, setSignature] = useState("");
   const [signatureDate] = useState(new Date().toLocaleDateString("nl-NL"));
+  
+  // Quote number for PDF
+  const [quoteNumber] = useState(() => generateQuoteNumber());
 
   // Get selected package
   const selectedPackage = selectedPackageId ? getPackageById(selectedPackageId) : null;
@@ -283,11 +288,31 @@ export default function QuoteBuilder() {
     }
   };
 
+  // Download quote as PDF
+  const handleDownloadPDF = () => {
+    if (!selectedPackage) return;
+    
+    generateQuotePDF({
+      quoteNumber,
+      date: new Date().toLocaleDateString("nl-NL", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }),
+      package: selectedPackage,
+      selectedFeatures,
+      totalAmount: quoteTotal,
+      customerName: customerInfo.name || undefined,
+      customerEmail: customerInfo.email || undefined,
+    });
+  };
+
   // Render feature card
   const renderFeatureCard = (feature: SelectableFeature) => {
     const isSelected = isFeatureSelected(feature.id);
     const isRequired = selectedPackage?.requiredFeatures.includes(feature.id);
     const quantity = getFeatureQuantity(feature.id);
+    const featurePrice = feature.price * (isSelected ? quantity : 1);
     
     return (
       <div
@@ -313,16 +338,29 @@ export default function QuoteBuilder() {
           </div>
           
           <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <h4 className="font-medium text-slate-900">{feature.name}</h4>
-              {isRequired && (
-                <span className="text-xs bg-indigo-200 text-indigo-700 px-2 py-0.5 rounded">
-                  Inbegrepen
-                </span>
-              )}
-              {feature.isIncluded && (
-                <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded">
-                  Gratis
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h4 className="font-medium text-slate-900">{feature.name}</h4>
+                {isRequired && (
+                  <span className="text-xs bg-indigo-200 text-indigo-700 px-2 py-0.5 rounded">
+                    Inbegrepen
+                  </span>
+                )}
+                {feature.isIncluded && (
+                  <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded">
+                    Gratis
+                  </span>
+                )}
+              </div>
+              {/* Price indicator */}
+              {!feature.isIncluded && feature.price > 0 && (
+                <span className={`text-sm font-medium shrink-0 ml-2 ${
+                  isSelected ? "text-indigo-600" : "text-slate-400"
+                }`}>
+                  {feature.unit 
+                    ? `${formatPrice(feature.price)}/${feature.unit}`
+                    : formatPrice(feature.price)
+                  }
                 </span>
               )}
             </div>
@@ -330,26 +368,32 @@ export default function QuoteBuilder() {
             
             {/* Quantity selector */}
             {feature.unit && isSelected && (
-              <div className="flex items-center gap-3 mt-3" onClick={e => e.stopPropagation()}>
-                <span className="text-sm text-slate-500">Aantal:</span>
-                <button
-                  type="button"
-                  onClick={() => updateQuantity(feature.id, -1)}
-                  className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50"
-                  disabled={quantity <= (feature.minQuantity || 1)}
-                >
-                  <Minus className="w-4 h-4" />
-                </button>
-                <span className="w-8 text-center font-medium">{quantity}</span>
-                <button
-                  type="button"
-                  onClick={() => updateQuantity(feature.id, 1)}
-                  className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50"
-                  disabled={quantity >= (feature.maxQuantity || 99)}
-                >
-                  <Plus className="w-4 h-4" />
-                </button>
-                <span className="text-sm text-slate-500">{feature.unit}</span>
+              <div className="flex items-center justify-between mt-3" onClick={e => e.stopPropagation()}>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-slate-500">Aantal:</span>
+                  <button
+                    type="button"
+                    onClick={() => updateQuantity(feature.id, -1)}
+                    className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50"
+                    disabled={quantity <= (feature.minQuantity || 1)}
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <span className="w-8 text-center font-medium">{quantity}</span>
+                  <button
+                    type="button"
+                    onClick={() => updateQuantity(feature.id, 1)}
+                    className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50"
+                    disabled={quantity >= (feature.maxQuantity || 99)}
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                  <span className="text-sm text-slate-500">{feature.unit}</span>
+                </div>
+                {/* Subtotal for quantity features */}
+                <span className="text-sm font-medium text-indigo-600">
+                  = {formatPrice(featurePrice)}
+                </span>
               </div>
             )}
           </div>
@@ -969,17 +1013,58 @@ export default function QuoteBuilder() {
 
         {/* Floating Price Summary (Steps 2-4) */}
         {step >= 2 && step < 5 && (
-          <div className="mt-6 p-4 bg-indigo-50 rounded-xl border border-indigo-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-indigo-600 font-medium">Geschatte offerte</p>
-                <p className="text-2xl font-bold text-indigo-700">{formatPrice(quoteTotal)}</p>
-                <p className="text-xs text-indigo-500">excl. BTW</p>
+          <div className="mt-6 bg-gradient-to-br from-indigo-50 to-violet-50 rounded-xl border border-indigo-100 overflow-hidden">
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <p className="text-sm text-indigo-600 font-medium">Uw offerte</p>
+                  <p className="text-3xl font-bold text-indigo-700">{formatPrice(quoteTotal)}</p>
+                  <p className="text-xs text-indigo-500">excl. BTW</p>
+                </div>
+                <div className="text-right">
+                  <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center">
+                    <Package className="w-6 h-6 text-indigo-600" />
+                  </div>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="text-sm text-indigo-600">{selectedFeatures.length} functies</p>
-                <p className="text-sm text-indigo-600">{selectedPackage?.name}</p>
+              
+              {/* Quick breakdown */}
+              <div className="pt-3 border-t border-indigo-200/50 space-y-1">
+                <div className="flex justify-between text-sm">
+                  <span className="text-indigo-600">Pakket</span>
+                  <span className="font-medium text-indigo-700">{selectedPackage?.name}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-indigo-600">Functies</span>
+                  <span className="font-medium text-indigo-700">{selectedFeatures.length} geselecteerd</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-indigo-600">Incl. BTW (21%)</span>
+                  <span className="font-medium text-indigo-700">{formatPrice(quoteTotal * 1.21)}</span>
+                </div>
               </div>
+            </div>
+            
+            {/* Deposit indicator */}
+            <div className="bg-indigo-100/50 px-4 py-2 border-t border-indigo-200/50">
+              <div className="flex justify-between text-xs">
+                <span className="text-indigo-600">Aanbetaling (50%)</span>
+                <span className="font-medium text-indigo-700">{formatPrice(quoteTotal * 0.5)}</span>
+              </div>
+            </div>
+            
+            {/* Download PDF Button */}
+            <div className="p-4 border-t border-indigo-200/50">
+              <button
+                onClick={handleDownloadPDF}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white border-2 border-indigo-200 text-indigo-700 rounded-xl font-medium hover:bg-indigo-50 hover:border-indigo-300 transition-all"
+              >
+                <Download className="w-4 h-4" />
+                <span>Download Geschatte Offerte (PDF)</span>
+              </button>
+              <p className="text-xs text-indigo-500 text-center mt-2">
+                Vrijblijvend - definitieve prijs na bespreking
+              </p>
             </div>
           </div>
         )}

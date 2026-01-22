@@ -9,7 +9,7 @@ export default function DevelopmentBanner() {
         <Construction className="w-5 h-5 md:w-6 md:h-6 animate-bounce flex-shrink-0" />
         <span className="text-center">
           <span className="hidden md:inline">
-            🚧 Wij zijn druk bezig met het bouwen van onze webshop! Wijzigingen worden nog doorgevoerd. 🚧
+            🚧 Wij zijn druk bezig met het bouwen van onze website! Wijzigingen worden nog doorgevoerd. 🚧
           </span>
           <span className="md:hidden">
             🚧 Website in aanbouw - Wijzigingen volgen!
