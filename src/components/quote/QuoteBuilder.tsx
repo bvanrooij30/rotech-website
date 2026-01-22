@@ -19,6 +19,11 @@ import {
   Minus,
   Loader2,
   Download,
+  Globe,
+  Search,
+  Workflow,
+  Link2,
+  Wrench,
 } from "lucide-react";
 import { generateQuotePDF, generateQuoteNumber } from "@/lib/quote-pdf";
 import {
@@ -32,12 +37,53 @@ import {
   calculateCancellationFee,
   cancellationTiers,
   categoryNames,
+  maintenancePlans,
   type SelectedFeature,
   type SelectableFeature,
   type PackageDefinition,
   type FeatureCategory,
+  type ServiceType,
 } from "@/data/packages";
 import { formatPrice } from "@/lib/stripe";
+
+// Service types met iconen en info
+const serviceTypeOptions = [
+  {
+    id: "website" as ServiceType,
+    name: "Website of Webshop",
+    description: "Een nieuwe website, webshop of web applicatie laten bouwen",
+    icon: Globe,
+    color: "from-indigo-500 to-violet-600",
+  },
+  {
+    id: "seo" as ServiceType,
+    name: "SEO Optimalisatie",
+    description: "Uw bestaande website beter vindbaar maken in Google",
+    icon: Search,
+    color: "from-emerald-500 to-teal-600",
+  },
+  {
+    id: "automation" as ServiceType,
+    name: "Automatisering",
+    description: "Bedrijfsprocessen automatiseren en tijd besparen",
+    icon: Workflow,
+    color: "from-orange-500 to-amber-600",
+  },
+  {
+    id: "maintenance" as ServiceType,
+    name: "Website Onderhoud",
+    description: "Onderhoud van uw bestaande website overnemen",
+    icon: Wrench,
+    color: "from-blue-500 to-cyan-600",
+  },
+  {
+    id: "integration" as ServiceType,
+    name: "API & Integraties",
+    description: "Systemen koppelen en data synchroniseren",
+    icon: Link2,
+    color: "from-purple-500 to-pink-600",
+  },
+];
 
 interface CustomerInfo {
   name: string;
@@ -60,14 +106,22 @@ interface LegalAgreements {
 export default function QuoteBuilder() {
   const searchParams = useSearchParams();
   const preselectedPackage = searchParams.get("pakket");
+  const preselectedService = searchParams.get("dienst") as ServiceType | null;
   
-  const [step, setStep] = useState(1);
+  // Step 0 = service type, step 1+ = depends on service type
+  const [step, setStep] = useState(preselectedService ? 1 : 0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   
-  // Package selection
+  // Service type selection (website, seo, automation, maintenance, integration)
+  const [selectedServiceType, setSelectedServiceType] = useState<ServiceType | null>(preselectedService);
+  
+  // Package selection (only for website service type)
   const [selectedPackageId, setSelectedPackageId] = useState<string | null>(preselectedPackage);
+  
+  // Maintenance plan selection
+  const [selectedMaintenancePlan, setSelectedMaintenancePlan] = useState<string | null>(null);
   
   // Feature selection
   const [selectedFeatures, setSelectedFeatures] = useState<SelectedFeature[]>([]);
@@ -208,33 +262,94 @@ export default function QuoteBuilder() {
     return selectedFeatures.find(f => f.featureId === featureId)?.quantity || 0;
   };
 
+  // Helper to determine what step type we're on
+  const getStepType = () => {
+    if (step === 0) return "serviceType";
+    
+    if (selectedServiceType === "website") {
+      if (step === 1) return "package";
+      if (step === 2) return "features";
+      if (step === 3) return "customerInfo";
+      if (step === 4) return "agreement";
+      if (step === 5) return "success";
+    }
+    
+    if (selectedServiceType === "maintenance") {
+      if (step === 1) return "maintenancePlan";
+      if (step === 2) return "customerInfo";
+      if (step === 3) return "agreement";
+      if (step === 4) return "success";
+    }
+    
+    // SEO, automation, integration
+    if (step === 1) return "features";
+    if (step === 2) return "customerInfo";
+    if (step === 3) return "agreement";
+    if (step === 4) return "success";
+    
+    return "unknown";
+  };
+  
+  const stepType = getStepType();
+  
+  // Check if customer info is valid
+  const isCustomerInfoValid = () => {
+    return (
+      customerInfo.name &&
+      customerInfo.email &&
+      customerInfo.phone &&
+      customerInfo.address &&
+      customerInfo.postalCode &&
+      customerInfo.city
+    );
+  };
+  
+  // Check if agreements are valid
+  const isAgreementsValid = () => {
+    // For maintenance, we don't need cancellation accepted
+    if (selectedServiceType === "maintenance") {
+      return (
+        agreements.termsAccepted &&
+        agreements.quoteAccepted &&
+        agreements.privacyAccepted &&
+        signature.trim().length > 0
+      );
+    }
+    return (
+      agreements.termsAccepted &&
+      agreements.quoteAccepted &&
+      agreements.cancellationAccepted &&
+      agreements.privacyAccepted &&
+      signature.trim().length > 0
+    );
+  };
+
   // Validate step
   const canProceed = () => {
-    switch (step) {
-      case 1:
+    switch (stepType) {
+      case "serviceType":
+        return selectedServiceType !== null;
+      case "package":
         return selectedPackageId !== null;
-      case 2:
+      case "maintenancePlan":
+        return selectedMaintenancePlan !== null;
+      case "features":
+        // For non-website services, features are optional (just a starting point)
+        if (selectedServiceType !== "website") return true;
         return selectedFeatures.length > 0;
-      case 3:
-        return (
-          customerInfo.name &&
-          customerInfo.email &&
-          customerInfo.phone &&
-          customerInfo.address &&
-          customerInfo.postalCode &&
-          customerInfo.city
-        );
-      case 4:
-        return (
-          agreements.termsAccepted &&
-          agreements.quoteAccepted &&
-          agreements.cancellationAccepted &&
-          agreements.privacyAccepted &&
-          signature.trim().length > 0
-        );
+      case "customerInfo":
+        return isCustomerInfoValid();
+      case "agreement":
+        return isAgreementsValid();
       default:
         return false;
     }
+  };
+
+  // Get success step number based on service type
+  const getSuccessStep = () => {
+    if (selectedServiceType === "website") return 5;
+    return 4; // maintenance, seo, automation, integration
   };
 
   // Submit quote request
@@ -255,22 +370,38 @@ export default function QuoteBuilder() {
         };
       });
       
+      // Build request body based on service type
+      const requestBody: Record<string, unknown> = {
+        serviceType: selectedServiceType,
+        customer: customerInfo,
+        agreements: {
+          ...agreements,
+          signature,
+          signatureDate,
+        },
+      };
+      
+      if (selectedServiceType === "website") {
+        requestBody.packageId = selectedPackageId;
+        requestBody.packageName = selectedPackage?.name;
+        requestBody.features = featureDetails;
+        requestBody.totalAmount = quoteTotal;
+        requestBody.cancellationFee = cancellationFee;
+      } else if (selectedServiceType === "maintenance") {
+        const plan = maintenancePlans.find(p => p.id === selectedMaintenancePlan);
+        requestBody.maintenancePlanId = selectedMaintenancePlan;
+        requestBody.maintenancePlanName = plan?.name;
+        requestBody.monthlyPrice = plan?.price;
+      } else {
+        // SEO, automation, integration
+        requestBody.features = featureDetails;
+        requestBody.totalAmount = quoteTotal;
+      }
+      
       const response = await fetch("/api/quote-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          packageId: selectedPackageId,
-          packageName: selectedPackage?.name,
-          features: featureDetails,
-          totalAmount: quoteTotal,
-          customer: customerInfo,
-          agreements: {
-            ...agreements,
-            signature,
-            signatureDate,
-          },
-          cancellationFee,
-        }),
+        body: JSON.stringify(requestBody),
       });
       
       if (!response.ok) {
@@ -279,7 +410,7 @@ export default function QuoteBuilder() {
       }
       
       setSubmitSuccess(true);
-      setStep(5); // Success step
+      setStep(getSuccessStep());
       
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : "Er is een fout opgetreden");
@@ -402,18 +533,50 @@ export default function QuoteBuilder() {
     );
   };
 
+  // Get steps based on service type
+  const getSteps = () => {
+    if (!selectedServiceType) {
+      return [{ num: 0, label: "Dienst", icon: Package }];
+    }
+    
+    if (selectedServiceType === "website") {
+      return [
+        { num: 0, label: "Dienst", icon: Globe },
+        { num: 1, label: "Pakket", icon: Package },
+        { num: 2, label: "Functies", icon: Settings },
+        { num: 3, label: "Gegevens", icon: User },
+        { num: 4, label: "Akkoord", icon: FileText },
+      ];
+    }
+    
+    if (selectedServiceType === "maintenance") {
+      return [
+        { num: 0, label: "Dienst", icon: Globe },
+        { num: 1, label: "Plan", icon: Package },
+        { num: 2, label: "Gegevens", icon: User },
+        { num: 3, label: "Akkoord", icon: FileText },
+      ];
+    }
+    
+    // SEO, automation, integration - direct naar functies
+    return [
+      { num: 0, label: "Dienst", icon: Globe },
+      { num: 1, label: "Opties", icon: Settings },
+      { num: 2, label: "Gegevens", icon: User },
+      { num: 3, label: "Akkoord", icon: FileText },
+    ];
+  };
+  
+  const steps = getSteps();
+  const maxStep = steps[steps.length - 1].num;
+
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
       {/* Progress Header */}
       <div className="bg-gradient-to-r from-indigo-600 to-violet-600 p-6 text-white">
         <h1 className="text-2xl font-bold mb-4">Offerte Aanvragen</h1>
         <div className="flex items-center gap-2 overflow-x-auto">
-          {[
-            { num: 1, label: "Pakket", icon: Package },
-            { num: 2, label: "Functies", icon: Settings },
-            { num: 3, label: "Gegevens", icon: User },
-            { num: 4, label: "Akkoord", icon: FileText },
-          ].map((s, i) => (
+          {steps.map((s, i) => (
             <div key={s.num} className="flex items-center shrink-0">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${
@@ -424,12 +587,12 @@ export default function QuoteBuilder() {
                     : "bg-white/20"
                 }`}
               >
-                {step > s.num ? <Check className="w-5 h-5" /> : s.num}
+                {step > s.num ? <Check className="w-5 h-5" /> : i + 1}
               </div>
               <span className="ml-2 hidden sm:inline text-sm font-medium whitespace-nowrap">
                 {s.label}
               </span>
-              {i < 3 && (
+              {i < steps.length - 1 && (
                 <div className={`w-8 sm:w-12 h-0.5 mx-2 ${
                   step > s.num ? "bg-emerald-500" : "bg-white/20"
                 }`} />
@@ -441,8 +604,65 @@ export default function QuoteBuilder() {
 
       <div className="p-6 md:p-8">
         <AnimatePresence mode="wait">
-          {/* Step 1: Package Selection */}
-          {step === 1 && (
+          {/* Step 0: Service Type Selection */}
+          {step === 0 && (
+            <motion.div
+              key="step0"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+            >
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                Wat wilt u laten maken?
+              </h2>
+              <p className="text-slate-600 mb-6">
+                Kies de dienst die het beste bij uw wensen past. Op basis hiervan stellen we de juiste opties samen.
+              </p>
+
+              <div className="grid gap-4">
+                {serviceTypeOptions.map((service) => {
+                  const IconComponent = service.icon;
+                  return (
+                    <label
+                      key={service.id}
+                      className={`block p-5 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md ${
+                        selectedServiceType === service.id
+                          ? "border-indigo-600 bg-indigo-50"
+                          : "border-slate-200 hover:border-slate-300"
+                      }`}
+                    >
+                      <div className="flex items-start gap-4">
+                        <input
+                          type="radio"
+                          name="serviceType"
+                          value={service.id}
+                          checked={selectedServiceType === service.id}
+                          onChange={() => {
+                            setSelectedServiceType(service.id);
+                            // Reset selections when changing service type
+                            setSelectedPackageId(null);
+                            setSelectedFeatures([]);
+                            setSelectedMaintenancePlan(null);
+                          }}
+                          className="mt-1 w-5 h-5 text-indigo-600"
+                        />
+                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center shrink-0`}>
+                          <IconComponent className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-bold text-slate-900 text-lg">{service.name}</h3>
+                          <p className="text-sm text-slate-600 mt-1">{service.description}</p>
+                        </div>
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+          
+          {/* Step 1: Package Selection (Website only) */}
+          {step === 1 && selectedServiceType === "website" && (
             <motion.div
               key="step1"
               initial={{ opacity: 0, x: 20 }}
@@ -512,8 +732,121 @@ export default function QuoteBuilder() {
             </motion.div>
           )}
 
-          {/* Step 2: Feature Selection */}
-          {step === 2 && (
+          {/* Step 1: Maintenance Plan Selection */}
+          {step === 1 && selectedServiceType === "maintenance" && (
+            <motion.div
+              key="step1-maintenance"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+            >
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                Kies uw onderhoudsplan
+              </h2>
+              <p className="text-slate-600 mb-6">
+                Selecteer het plan dat het beste past bij uw behoeften. Alle plannen bevatten essentiële diensten.
+              </p>
+
+              <div className="grid gap-4">
+                {maintenancePlans.map((plan) => (
+                  <label
+                    key={plan.id}
+                    className={`block p-5 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md ${
+                      selectedMaintenancePlan === plan.id
+                        ? "border-indigo-600 bg-indigo-50"
+                        : "border-slate-200 hover:border-slate-300"
+                    } ${plan.id === "business" ? "ring-2 ring-emerald-500 ring-offset-2" : ""}`}
+                  >
+                    <div className="flex items-start gap-4">
+                      <input
+                        type="radio"
+                        name="maintenancePlan"
+                        value={plan.id}
+                        checked={selectedMaintenancePlan === plan.id}
+                        onChange={() => setSelectedMaintenancePlan(plan.id)}
+                        className="mt-1 w-5 h-5 text-indigo-600"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-bold text-slate-900 text-lg">{plan.name}</h3>
+                            {plan.id === "business" && (
+                              <span className="text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">
+                                Populair
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-right">
+                            <span className="text-2xl font-bold text-indigo-600">{formatPrice(plan.price)}</span>
+                            <span className="text-sm text-slate-500">/maand</span>
+                          </div>
+                        </div>
+                        <ul className="space-y-2 mt-4">
+                          {plan.features.map((feature, i) => (
+                            <li key={i} className="flex items-center gap-2 text-sm text-slate-600">
+                              <Check className="w-4 h-4 text-emerald-500 shrink-0" />
+                              {feature}
+                            </li>
+                          ))}
+                        </ul>
+                        {plan.hoursIncluded > 0 && (
+                          <p className="mt-3 text-sm text-indigo-600 font-medium">
+                            Inclusief {plan.hoursIncluded} uur content wijzigingen per maand
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 1: Feature Selection for SEO, Automation, Integration */}
+          {step === 1 && (selectedServiceType === "seo" || selectedServiceType === "automation" || selectedServiceType === "integration") && (
+            <motion.div
+              key="step1-features"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+            >
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                {selectedServiceType === "seo" && "SEO Opties"}
+                {selectedServiceType === "automation" && "Automatisering Opties"}
+                {selectedServiceType === "integration" && "Integratie Opties"}
+              </h2>
+              <p className="text-slate-600 mb-6">
+                Selecteer de diensten die u nodig heeft. Wij nemen contact met u op voor een gedetailleerde bespreking.
+              </p>
+
+              <div className="space-y-4">
+                {allFeatures
+                  .filter(f => {
+                    if (selectedServiceType === "seo") return f.category === "seo";
+                    if (selectedServiceType === "automation") return f.category === "automation";
+                    if (selectedServiceType === "integration") return f.category === "integration";
+                    return false;
+                  })
+                  .map((feature) => renderFeatureCard(feature))}
+              </div>
+
+              <div className="mt-8 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                <div className="flex items-start gap-3">
+                  <Info className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-amber-800">Prijzen zijn indicatief</p>
+                    <p className="text-sm text-amber-700">
+                      De exacte prijs hangt af van uw specifieke situatie. Na ontvangst van uw aanvraag 
+                      nemen wij contact op voor een vrijblijvend adviesgesprek.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 2: Feature Selection (Website only) */}
+          {step === 2 && selectedServiceType === "website" && (
             <motion.div
               key="step2"
               initial={{ opacity: 0, x: 20 }}
@@ -563,8 +896,8 @@ export default function QuoteBuilder() {
             </motion.div>
           )}
 
-          {/* Step 3: Customer Info */}
-          {step === 3 && (
+          {/* Customer Info Step */}
+          {stepType === "customerInfo" && (
             <motion.div
               key="step3"
               initial={{ opacity: 0, x: 20 }}
@@ -692,8 +1025,8 @@ export default function QuoteBuilder() {
             </motion.div>
           )}
 
-          {/* Step 4: Quote Review & Legal */}
-          {step === 4 && (
+          {/* Quote Review & Legal Step */}
+          {stepType === "agreement" && (
             <motion.div
               key="step4"
               initial={{ opacity: 0, x: 20 }}
@@ -934,8 +1267,8 @@ export default function QuoteBuilder() {
             </motion.div>
           )}
 
-          {/* Step 5: Success */}
-          {step === 5 && submitSuccess && (
+          {/* Success Step */}
+          {stepType === "success" && submitSuccess && (
             <motion.div
               key="step5"
               initial={{ opacity: 0, scale: 0.95 }}
@@ -984,9 +1317,9 @@ export default function QuoteBuilder() {
         </AnimatePresence>
 
         {/* Navigation */}
-        {step < 5 && (
+        {stepType !== "success" && (
           <div className="flex justify-between mt-8 pt-6 border-t border-slate-200">
-            {step > 1 ? (
+            {step > 0 ? (
               <button
                 onClick={() => setStep(step - 1)}
                 className="btn-secondary inline-flex items-center gap-2"
@@ -998,7 +1331,7 @@ export default function QuoteBuilder() {
               <div />
             )}
 
-            {step < 4 && (
+            {stepType !== "agreement" && (
               <button
                 onClick={() => setStep(step + 1)}
                 disabled={!canProceed()}
@@ -1011,19 +1344,31 @@ export default function QuoteBuilder() {
           </div>
         )}
 
-        {/* Floating Price Summary (Steps 2-4) */}
-        {step >= 2 && step < 5 && (
+        {/* Floating Price Summary */}
+        {step >= 1 && stepType !== "success" && (selectedServiceType === "website" ? step >= 2 : true) && (
           <div className="mt-6 bg-gradient-to-br from-indigo-50 to-violet-50 rounded-xl border border-indigo-100 overflow-hidden">
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <p className="text-sm text-indigo-600 font-medium">Uw offerte</p>
-                  <p className="text-3xl font-bold text-indigo-700">{formatPrice(quoteTotal)}</p>
-                  <p className="text-xs text-indigo-500">excl. BTW</p>
+                  <p className="text-sm text-indigo-600 font-medium">
+                    {selectedServiceType === "maintenance" ? "Uw plan" : "Uw offerte"}
+                  </p>
+                  <p className="text-3xl font-bold text-indigo-700">
+                    {selectedServiceType === "maintenance" && selectedMaintenancePlan
+                      ? formatPrice(maintenancePlans.find(p => p.id === selectedMaintenancePlan)?.price || 0)
+                      : formatPrice(quoteTotal)}
+                  </p>
+                  <p className="text-xs text-indigo-500">
+                    {selectedServiceType === "maintenance" ? "per maand" : "excl. BTW"}
+                  </p>
                 </div>
                 <div className="text-right">
                   <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center">
-                    <Package className="w-6 h-6 text-indigo-600" />
+                    {selectedServiceType === "maintenance" ? (
+                      <Wrench className="w-6 h-6 text-indigo-600" />
+                    ) : (
+                      <Package className="w-6 h-6 text-indigo-600" />
+                    )}
                   </div>
                 </div>
               </div>
@@ -1031,32 +1376,67 @@ export default function QuoteBuilder() {
               {/* Quick breakdown */}
               <div className="pt-3 border-t border-indigo-200/50 space-y-1">
                 <div className="flex justify-between text-sm">
-                  <span className="text-indigo-600">Pakket</span>
-                  <span className="font-medium text-indigo-700">{selectedPackage?.name}</span>
+                  <span className="text-indigo-600">Dienst</span>
+                  <span className="font-medium text-indigo-700">
+                    {serviceTypeOptions.find(s => s.id === selectedServiceType)?.name}
+                  </span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-indigo-600">Functies</span>
-                  <span className="font-medium text-indigo-700">{selectedFeatures.length} geselecteerd</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-indigo-600">Incl. BTW (21%)</span>
-                  <span className="font-medium text-indigo-700">{formatPrice(quoteTotal * 1.21)}</span>
-                </div>
+                {selectedServiceType === "website" && selectedPackage && (
+                  <>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-indigo-600">Pakket</span>
+                      <span className="font-medium text-indigo-700">{selectedPackage.name}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-indigo-600">Functies</span>
+                      <span className="font-medium text-indigo-700">{selectedFeatures.length} geselecteerd</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-indigo-600">Incl. BTW (21%)</span>
+                      <span className="font-medium text-indigo-700">{formatPrice(quoteTotal * 1.21)}</span>
+                    </div>
+                  </>
+                )}
+                {selectedServiceType === "maintenance" && selectedMaintenancePlan && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-indigo-600">Plan</span>
+                    <span className="font-medium text-indigo-700">
+                      {maintenancePlans.find(p => p.id === selectedMaintenancePlan)?.name}
+                    </span>
+                  </div>
+                )}
+                {(selectedServiceType === "seo" || selectedServiceType === "automation" || selectedServiceType === "integration") && (
+                  <>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-indigo-600">Opties</span>
+                      <span className="font-medium text-indigo-700">{selectedFeatures.length} geselecteerd</span>
+                    </div>
+                    {quoteTotal > 0 && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-indigo-600">Geschat (incl. BTW)</span>
+                        <span className="font-medium text-indigo-700">{formatPrice(quoteTotal * 1.21)}</span>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             </div>
             
-            {/* Deposit indicator */}
-            <div className="bg-indigo-100/50 px-4 py-2 border-t border-indigo-200/50">
-              <div className="flex justify-between text-xs">
-                <span className="text-indigo-600">Aanbetaling (50%)</span>
-                <span className="font-medium text-indigo-700">{formatPrice(quoteTotal * 0.5)}</span>
+            {/* Deposit indicator (only for website projects) */}
+            {selectedServiceType === "website" && quoteTotal > 0 && (
+              <div className="bg-indigo-100/50 px-4 py-2 border-t border-indigo-200/50">
+                <div className="flex justify-between text-xs">
+                  <span className="text-indigo-600">Aanbetaling (50%)</span>
+                  <span className="font-medium text-indigo-700">{formatPrice(quoteTotal * 0.5)}</span>
+                </div>
               </div>
-            </div>
+            )}
             
-            {/* Download PDF Button */}
-            <div className="p-4 border-t border-indigo-200/50">
-              <button
-                onClick={handleDownloadPDF}
+            {/* Download PDF Button (only for website projects with selected features) */}
+            {selectedServiceType === "website" && selectedFeatures.length > 0 && (
+              <div className="p-4 border-t border-indigo-200/50">
+                <button
+                  onClick={handleDownloadPDF}
                 className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white border-2 border-indigo-200 text-indigo-700 rounded-xl font-medium hover:bg-indigo-50 hover:border-indigo-300 transition-all"
               >
                 <Download className="w-4 h-4" />
@@ -1066,6 +1446,7 @@ export default function QuoteBuilder() {
                 Vrijblijvend - definitieve prijs na bespreking
               </p>
             </div>
+            )}
           </div>
         )}
       </div>
