@@ -24,7 +24,7 @@ export default function PrivacyPage() {
         <div className="container-custom">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-4xl font-bold text-slate-900 mb-4">Privacyverklaring</h1>
-            <p className="text-slate-500 mb-8">Laatst bijgewerkt: 20 januari 2026</p>
+            <p className="text-slate-500 mb-8">Laatst bijgewerkt: 21 januari 2026</p>
             
             <div className="prose prose-slate max-w-none prose-headings:text-slate-900 prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-p:text-slate-600 prose-li:text-slate-600">
               

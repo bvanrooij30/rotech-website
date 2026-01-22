@@ -24,7 +24,7 @@ export default function AlgemeneVoorwaardenPage() {
         <div className="container-custom">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-4xl font-bold text-slate-900 mb-4">Algemene Voorwaarden</h1>
-            <p className="text-slate-500 mb-8">Laatst bijgewerkt: 20 januari 2026</p>
+            <p className="text-slate-500 mb-8">Laatst bijgewerkt: 21 januari 2026</p>
             
             <div className="prose prose-slate max-w-none prose-headings:text-slate-900 prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-p:text-slate-600 prose-li:text-slate-600">
               
@@ -116,7 +116,52 @@ export default function AlgemeneVoorwaardenPage() {
                 <li>Wijzigingen in de oorspronkelijk gesloten overeenkomst die leiden tot meerwerk worden door Opdrachtnemer vooraf schriftelijk aan Opdrachtgever geoffreerd.</li>
                 <li>Meerwerk wordt pas uitgevoerd na schriftelijke goedkeuring door Opdrachtgever.</li>
                 <li>Kleine aanpassingen die minder dan 30 minuten werk vergen, worden gedurende de looptijd van het project kosteloos uitgevoerd.</li>
-                <li>Het uurtarief voor meerwerk bedraagt €75,- exclusief BTW, tenzij schriftelijk anders is overeengekomen.</li>
+                <li>Het uurtarief voor meerwerk bedraagt €95,- exclusief BTW, tenzij schriftelijk anders is overeengekomen.</li>
+              </ol>
+
+              <h2>Artikel 7A – Aard van de Dienstverlening</h2>
+              <ol>
+                <li>Opdrachtnemer is een technisch webontwikkelingsbureau en geen designbureau. Opdrachtnemer werkt met moderne design frameworks, component libraries en templates die worden aangepast aan de huisstijl van Opdrachtgever.</li>
+                <li>Voor volledig op maat ontworpen designs (custom design from scratch) door een grafisch ontwerper, kan Opdrachtnemer doorverwijzen naar gespecialiseerde design partners. De kosten hiervan zijn niet inbegrepen in de standaard offertes.</li>
+                <li>Opdrachtnemer is geen professionele copywriter. Tekstuele content dient door Opdrachtgever te worden aangeleverd, tenzij schriftelijk anders is overeengekomen.</li>
+                <li>Indien Opdrachtnemer content verzorgt, geschiedt dit met behulp van AI-ondersteunde tools. Opdrachtgever is verantwoordelijk voor de controle en goedkeuring van alle content vóór publicatie.</li>
+                <li>Opdrachtnemer garandeert geen specifieke zakelijke resultaten zoals omzetstijging, meer klanten of hogere conversie. De effectiviteit van digitale producten is mede afhankelijk van factoren buiten de invloedssfeer van Opdrachtnemer.</li>
+              </ol>
+
+              <h2>Artikel 7B – SEO Dienstverlening</h2>
+              <ol>
+                <li>SEO dienstverlening door Opdrachtnemer richt zich primair op technische SEO optimalisatie, on-page optimalisatie en content structuur.</li>
+                <li>Linkbuilding, PR en off-page SEO vallen niet onder de standaard SEO dienstverlening, tenzij uitdrukkelijk en schriftelijk overeengekomen.</li>
+                <li>Opdrachtnemer garandeert geen specifieke posities in zoekmachines. Zoekresultaten worden bepaald door algoritmes van zoekmachines waarop Opdrachtnemer geen invloed heeft.</li>
+                <li>SEO is een continu proces. Resultaten zijn afhankelijk van vele factoren waaronder concurrentie, zoekvolume, domeinautoriteit en content kwaliteit.</li>
+                <li>Wijzigingen in zoekalgoritmes kunnen invloed hebben op behaalde posities. Opdrachtnemer is niet aansprakelijk voor dalingen in zoekresultaten als gevolg van algoritme-updates.</li>
+              </ol>
+
+              <h2>Artikel 7C – API Integraties en Koppelingen</h2>
+              <ol>
+                <li>De mogelijkheid tot het realiseren van API integraties en systeemkoppelingen is afhankelijk van de beschikbaarheid en functionaliteit van API&apos;s van externe systemen.</li>
+                <li>Geoffreerde prijzen voor integraties zijn onder voorbehoud van technische haalbaarheid. Na inventarisatie van het betreffende systeem wordt een definitieve prijs vastgesteld.</li>
+                <li>Opdrachtnemer is niet aansprakelijk indien integraties niet of beperkt mogelijk blijken door beperkingen in de API van externe systemen, ontbrekende documentatie, of wijzigingen door de leverancier van het externe systeem.</li>
+                <li>Indien een integratie technisch niet haalbaar blijkt, worden reeds gemaakte onderzoeks- en ontwikkeluren in rekening gebracht tegen het geldende uurtarief.</li>
+                <li>Opdrachtnemer biedt geen garantie op de continuïteit van integraties. Wijzigingen in externe systemen kunnen leiden tot het (tijdelijk) niet functioneren van koppelingen.</li>
+              </ol>
+
+              <h2>Artikel 7D – Automatisering en Workflows</h2>
+              <ol>
+                <li>Automatiseringsdiensten worden geleverd met behulp van tools zoals n8n, Make.com of vergelijkbare platformen.</li>
+                <li>De effectiviteit van geautomatiseerde workflows is afhankelijk van de correctheid van aangeleverde data en de beschikbaarheid van gekoppelde systemen.</li>
+                <li>Opdrachtgever is verantwoordelijk voor het monitoren van geautomatiseerde processen en het tijdig melden van afwijkingen.</li>
+                <li>Opdrachtnemer is niet aansprakelijk voor schade als gevolg van foutief verwerkte data door automatisering, tenzij sprake is van aantoonbare fouten in de door Opdrachtnemer gebouwde workflow.</li>
+                <li>Bij zelf-gehoste automatiseringsoplossingen is Opdrachtgever verantwoordelijk voor de serverkosten en beschikbaarheid van de hostingomgeving.</li>
+              </ol>
+
+              <h2>Artikel 7E – Content en Materiaal</h2>
+              <ol>
+                <li>Opdrachtgever is verantwoordelijk voor het tijdig aanleveren van alle benodigde content, waaronder teksten, afbeeldingen, logo&apos;s en overig materiaal.</li>
+                <li>Opdrachtgever garandeert dat aangeleverd materiaal geen inbreuk maakt op rechten van derden, waaronder auteursrechten, merkrechten en portretrechten.</li>
+                <li>Opdrachtnemer is niet aansprakelijk voor claims van derden met betrekking tot door Opdrachtgever aangeleverd materiaal.</li>
+                <li>Indien Opdrachtgever geen afbeeldingen aanlevert, kan Opdrachtnemer gebruik maken van royalty-free stockfoto&apos;s. De keuze en geschiktheid van deze afbeeldingen is ter beoordeling van Opdrachtnemer.</li>
+                <li>AI-gegenereerde content en afbeeldingen worden duidelijk als zodanig gemarkeerd en dienen door Opdrachtgever te worden gecontroleerd op feitelijke juistheid vóór publicatie.</li>
               </ol>
 
               <h2>Artikel 8 – Herroepingsrecht voor Consumenten</h2>

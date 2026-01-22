@@ -56,10 +56,28 @@ Project → Settings → Environment Variables
 
 **Voeg toe:**
 ```env
-NEXT_PUBLIC_SITE_URL=https://ro-techdevelopment.com
-CONTACT_EMAIL=contact@ro-techdevelopment.com
+# Verplicht voor website
+NEXT_PUBLIC_SITE_URL=https://ro-techdevelopment.dev
+CONTACT_EMAIL=contact@ro-techdevelopment.dev
+
+# Verplicht voor klantenportaal (Auth.js v5)
+AUTH_SECRET=genereer-met-openssl-rand-base64-32
+AUTH_TRUST_HOST=true
+DATABASE_URL=postgresql://user:password@host:5432/database
+
+# E-mail (Resend)
 RESEND_API_KEY=re_xxxxxxxxxxxxx
-FROM_EMAIL=noreply@ro-techdevelopment.com
+FROM_EMAIL=noreply@ro-techdevelopment.dev
+
+# Betalingen (Stripe)
+STRIPE_SECRET_KEY=sk_live_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
+```
+
+**Genereer AUTH_SECRET:**
+```bash
+openssl rand -base64 32
 ```
 
 **Belangrijk:** Selecteer **Production**, **Preview**, en **Development** voor elke variable!
@@ -78,9 +96,44 @@ FROM_EMAIL=noreply@ro-techdevelopment.com
 
 ---
 
-## ✅ STAP 5: TESTEN (5 min)
+## 🔐 STAP 5: KLANTENPORTAAL SETUP (10 min)
 
-1. **Website checken:** https://ro-techdevelopment.com
+### Lokale Development
+
+```bash
+# 1. Genereer environment variabelen
+npm run env:generate
+
+# 2. Kopieer de output naar .env.local en pas aan:
+#    - AUTH_SECRET (al gegenereerd)
+#    - DATABASE_URL (je database connectie string)
+#    - SUPER_ADMIN_EMAIL (jouw email)
+
+# 3. Database setup
+npx prisma generate
+npx prisma db push
+
+# 4. Admin account aanmaken
+npm run admin:create
+# Volg de prompts, bewaar het wachtwoord!
+
+# 5. Test login
+npm run dev
+# Ga naar http://localhost:3000/portal/login
+```
+
+### Productie (Vercel)
+
+1. **Database:** Maak een PostgreSQL database aan (bijv. Neon, Supabase, Railway)
+2. **Environment:** Voeg `DATABASE_URL` toe aan Vercel
+3. **Prisma:** Deploy pusht automatisch het schema
+4. **Admin:** Maak admin via `npm run admin:create` lokaal met productie DATABASE_URL
+
+---
+
+## ✅ STAP 6: TESTEN (5 min)
+
+1. **Website checken:** https://ro-techdevelopment.dev
 2. **Contact formulier testen:**
    - Ga naar `/contact`
    - Vul formulier in
@@ -91,6 +144,10 @@ FROM_EMAIL=noreply@ro-techdevelopment.com
    - Doorloop alle stappen
    - Submit
    - Check email inbox
+4. **Klantenportaal testen:**
+   - Ga naar `/portal/login`
+   - Login met admin account
+   - Ga naar `/admin` voor admin dashboard
 
 ---
 

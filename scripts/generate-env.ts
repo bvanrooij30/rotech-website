@@ -26,10 +26,14 @@ console.log(`
 Copy these to your .env.local file:
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# NextAuth Configuration
+# Auth.js (NextAuth v5) Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
-NEXTAUTH_SECRET="${generateKey(32)}"
-NEXTAUTH_URL="http://localhost:3000"
+AUTH_SECRET="${generateSecret(32)}"
+AUTH_URL="http://localhost:3000"
+
+# For production (Vercel):
+# AUTH_URL="https://ro-techdevelopment.dev"
+# AUTH_TRUST_HOST=true
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Database Configuration

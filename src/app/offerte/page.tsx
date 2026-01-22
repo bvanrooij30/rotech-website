@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { CheckCircle, Loader2, Info } from "lucide-react";
+import Link from "next/link";
 import { QuoteBuilder } from "@/components/quote";
 import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
@@ -126,6 +127,51 @@ export default function OffertePage() {
                 <p className="text-sm text-slate-600">
                   Na aanbetaling starten wij direct met uw project.
                 </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Belangrijke informatie */}
+      <section className="py-8 bg-slate-50 border-t border-slate-200">
+        <div className="container-custom">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
+              <div className="flex items-start gap-3">
+                <Info className="w-6 h-6 text-amber-600 shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-bold text-slate-900 mb-2">Goed om te weten</h3>
+                  <ul className="text-sm text-slate-700 space-y-2">
+                    <li>
+                      <strong>Wij zijn een technisch ontwikkelingsbureau</strong> – Wij bouwen uw 
+                      website met moderne frameworks. Voor volledig custom grafisch ontwerp werken 
+                      wij samen met design partners.
+                    </li>
+                    <li>
+                      <strong>Content levert u zelf aan</strong> – Teksten en afbeeldingen levert u aan. 
+                      Wij kunnen AI-ondersteunde content verzorgen tegen meerprijs; u keurt deze goed vóór publicatie.
+                    </li>
+                    <li>
+                      <strong>API integraties onder voorbehoud</strong> – De haalbaarheid van koppelingen 
+                      met externe systemen is afhankelijk van de API mogelijkheden van die systemen.
+                    </li>
+                    <li>
+                      <strong>SEO = technische optimalisatie</strong> – Wij optimaliseren technisch; 
+                      linkbuilding en PR zijn niet standaard inbegrepen. Posities in Google kunnen wij niet garanderen.
+                    </li>
+                  </ul>
+                  <p className="text-sm text-slate-600 mt-4">
+                    Door een offerte te accepteren gaat u akkoord met onze{" "}
+                    <Link href="/algemene-voorwaarden" className="text-indigo-600 hover:underline">
+                      algemene voorwaarden
+                    </Link>{" "}
+                    en{" "}
+                    <Link href="/disclaimer" className="text-indigo-600 hover:underline">
+                      disclaimer
+                    </Link>.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

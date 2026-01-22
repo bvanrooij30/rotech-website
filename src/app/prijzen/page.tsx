@@ -1,16 +1,66 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { Check, ArrowRight, Star, Zap } from "lucide-react";
+import { Check, ArrowRight, Star, Zap, Search, Workflow, Settings, Link2, Globe } from "lucide-react";
 import { BreadcrumbSchema } from "@/components/seo/StructuredData";
+import { getPackagePriceRange } from "@/data/packages";
 
 export const metadata: Metadata = {
-  title: "Prijzen | Website, Webshop & Web App - Op Basis van Uw Wensen",
-  description: "Transparante prijzen voor websites, webshops en web applicaties. U kiest zelf welke functies u nodig heeft - de prijs past zich aan uw wensen aan.",
-  keywords: ["website prijzen", "webshop kosten", "wat kost een website", "website laten maken kosten"],
+  title: "Prijzen | Website, SEO, Automatisering & Onderhoud - Transparant",
+  description: "Transparante prijzen voor websites, webshops, SEO optimalisatie, proces automatisering en website onderhoud. U kiest zelf wat u nodig heeft.",
+  keywords: ["website prijzen", "webshop kosten", "SEO prijzen", "automatisering kosten", "website onderhoud prijzen"],
   alternates: {
     canonical: "/prijzen",
   },
 };
+
+// Wat wil de klant? Service categorieën
+const serviceCategories = [
+  {
+    id: "website",
+    name: "Website of Webshop",
+    description: "Nieuwe website, webshop of web applicatie laten bouwen",
+    icon: Globe,
+    color: "indigo",
+    ctaLink: "/offerte?dienst=website",
+    priceRange: "Vanaf €800",
+  },
+  {
+    id: "seo",
+    name: "SEO Optimalisatie",
+    description: "Uw bestaande website beter vindbaar maken in Google",
+    icon: Search,
+    color: "emerald",
+    ctaLink: "/offerte?dienst=seo",
+    priceRange: "Vanaf €495",
+  },
+  {
+    id: "automation",
+    name: "Proces Automatisering",
+    description: "Bedrijfsprocessen automatiseren en tijd besparen",
+    icon: Workflow,
+    color: "violet",
+    ctaLink: "/offerte?dienst=automation",
+    priceRange: "Vanaf €495",
+  },
+  {
+    id: "maintenance",
+    name: "Website Onderhoud",
+    description: "Onderhoud van uw bestaande website overnemen",
+    icon: Settings,
+    color: "amber",
+    ctaLink: "#onderhoud",
+    priceRange: "Vanaf €99/maand",
+  },
+  {
+    id: "integration",
+    name: "API & Integraties",
+    description: "Systemen koppelen en data synchroniseren",
+    icon: Link2,
+    color: "rose",
+    ctaLink: "/offerte?dienst=integration",
+    priceRange: "Vanaf €695",
+  },
+];
 
 const packages = [
   {
@@ -148,28 +198,110 @@ export default function PrijzenPage() {
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
             <span className="inline-block px-4 py-1.5 bg-indigo-600/20 text-indigo-300 rounded-full text-sm font-medium mb-6">
-              U Bepaalt De Prijs
+              Transparante Prijzen
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Prijs op basis van uw wensen
+              Wat kunnen wij voor u betekenen?
             </h1>
             <p className="text-xl text-slate-300">
-              Geen vaste prijzen - u selecteert zelf welke functies u nodig heeft 
-              en ziet direct wat uw project kost. Volledig transparant.
+              Website bouwen, SEO verbeteren, processen automatiseren of onderhoud overnemen - 
+              wij helpen u verder. Selecteer wat u nodig heeft.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Packages */}
+      {/* Wat wil de klant? Service categorieën */}
       <section className="section-padding bg-white">
         <div className="container-custom">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Kies uw startpunt
+              Waar kunnen wij u mee helpen?
             </h2>
             <p className="text-lg text-slate-600">
-              Selecteer een pakket en bepaal daarna precies welke functies u nodig heeft.
+              Selecteer de dienst die het beste bij uw situatie past.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-16">
+            {serviceCategories.map((service) => {
+              const IconComponent = service.icon;
+              const colorClasses = {
+                indigo: {
+                  bg: "bg-indigo-50",
+                  border: "border-indigo-200 hover:border-indigo-400",
+                  icon: "bg-gradient-to-br from-indigo-500 to-violet-600",
+                  text: "text-indigo-600",
+                  badge: "bg-indigo-100 text-indigo-700",
+                },
+                emerald: {
+                  bg: "bg-emerald-50",
+                  border: "border-emerald-200 hover:border-emerald-400",
+                  icon: "bg-gradient-to-br from-emerald-500 to-teal-600",
+                  text: "text-emerald-600",
+                  badge: "bg-emerald-100 text-emerald-700",
+                },
+                violet: {
+                  bg: "bg-violet-50",
+                  border: "border-violet-200 hover:border-violet-400",
+                  icon: "bg-gradient-to-br from-violet-500 to-purple-600",
+                  text: "text-violet-600",
+                  badge: "bg-violet-100 text-violet-700",
+                },
+                amber: {
+                  bg: "bg-amber-50",
+                  border: "border-amber-200 hover:border-amber-400",
+                  icon: "bg-gradient-to-br from-amber-500 to-orange-600",
+                  text: "text-amber-600",
+                  badge: "bg-amber-100 text-amber-700",
+                },
+                rose: {
+                  bg: "bg-rose-50",
+                  border: "border-rose-200 hover:border-rose-400",
+                  icon: "bg-gradient-to-br from-rose-500 to-pink-600",
+                  text: "text-rose-600",
+                  badge: "bg-rose-100 text-rose-700",
+                },
+              };
+              const colors = colorClasses[service.color as keyof typeof colorClasses];
+
+              return (
+                <Link
+                  key={service.id}
+                  href={service.ctaLink}
+                  className={`group relative rounded-2xl p-6 border-2 ${colors.border} ${colors.bg} transition-all duration-300 hover:-translate-y-1 hover:shadow-xl`}
+                >
+                  <div className={`w-14 h-14 rounded-xl ${colors.icon} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
+                    <IconComponent className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">{service.name}</h3>
+                  <p className="text-slate-600 text-sm mb-4">{service.description}</p>
+                  <div className="flex items-center justify-between">
+                    <span className={`text-sm font-semibold px-3 py-1 rounded-full ${colors.badge}`}>
+                      {service.priceRange}
+                    </span>
+                    <ArrowRight className={`w-5 h-5 ${colors.text} group-hover:translate-x-1 transition-transform`} />
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Website Pakketten */}
+      <section className="section-padding bg-slate-50">
+        <div className="container-custom">
+          <div className="text-center mb-12">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium mb-4">
+              <Globe className="w-4 h-4" />
+              Website & Webshop
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+              Website of Webshop laten bouwen
+            </h2>
+            <p className="text-lg text-slate-600">
+              Kies een pakket als startpunt en bepaal precies welke functies u nodig heeft.
             </p>
           </div>
 
@@ -231,8 +363,8 @@ export default function PrijzenPage() {
                     {/* Prijs indicator */}
                     <div className="mb-4 pb-4 border-b border-slate-100/50">
                       <div className={`rounded-xl p-4 ${pkg.popular ? "bg-emerald-50" : "bg-gradient-to-r from-indigo-50 to-violet-50"}`}>
-                        <p className={`text-sm font-medium ${pkg.popular ? "text-emerald-700" : "text-indigo-700"}`}>
-                          Prijs op basis van uw selectie
+                        <p className={`text-lg font-bold ${pkg.popular ? "text-emerald-700" : "text-indigo-700"}`}>
+                          {getPackagePriceRange(pkg.name.toLowerCase())}
                         </p>
                         <p className={`text-xs mt-1 ${pkg.popular ? "text-emerald-600" : "text-indigo-500"}`}>
                           U kiest zelf welke functies u nodig heeft
@@ -314,8 +446,187 @@ export default function PrijzenPage() {
         </div>
       </section>
 
-      {/* Transparantie - Wat zit er WEL en NIET in */}
+      {/* SEO Diensten */}
+      <section className="section-padding bg-white">
+        <div className="container-custom">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-12">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-4">
+                <Search className="w-4 h-4" />
+                SEO Optimalisatie
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                Beter vindbaar in Google
+              </h2>
+              <p className="text-lg text-slate-600">
+                Heeft u al een website maar wordt u niet gevonden? Wij optimaliseren uw bestaande website.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                {
+                  name: "SEO Audit",
+                  price: "495",
+                  description: "Complete analyse van uw huidige SEO status",
+                  features: ["Technische analyse", "Content analyse", "Concurrentie onderzoek", "Prioriteiten rapport"],
+                  oneTime: true,
+                },
+                {
+                  name: "Technische SEO",
+                  price: "695",
+                  description: "Technische optimalisatie van uw website",
+                  features: ["Snelheidsoptimalisatie", "Core Web Vitals", "Structured data", "Indexering fixen"],
+                  oneTime: true,
+                },
+                {
+                  name: "Content SEO",
+                  price: "595",
+                  description: "Content en on-page optimalisatie",
+                  features: ["Keyword research", "Meta tags optimalisatie", "Content herschrijven", "Interne linking"],
+                  oneTime: true,
+                },
+                {
+                  name: "Doorlopende SEO",
+                  price: "395",
+                  description: "Maandelijkse optimalisatie en rapportage",
+                  features: ["Maandelijkse updates", "Ranking monitoring", "Content advies", "Maandrapportage"],
+                  oneTime: false,
+                },
+              ].map((pkg, index) => (
+                <div
+                  key={pkg.name}
+                  className="relative rounded-2xl p-6 bg-white border border-slate-200 hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-500/10 transition-all duration-300 hover:-translate-y-1"
+                >
+                  <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-40 pointer-events-none bg-gradient-to-bl from-emerald-200 via-emerald-100/50 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-400" />
+                  
+                  <div className="relative z-10">
+                    <h3 className="text-lg font-bold text-slate-900 mb-1">{pkg.name}</h3>
+                    <div className="mb-3">
+                      <span className="text-2xl font-bold text-slate-900">€{pkg.price}</span>
+                      <span className="text-slate-500 text-sm">{pkg.oneTime ? " eenmalig" : "/maand"}</span>
+                    </div>
+                    <p className="text-sm text-slate-600 mb-4">{pkg.description}</p>
+                    <ul className="space-y-2">
+                      {pkg.features.map((feature, i) => (
+                        <li key={i} className="flex items-center gap-2 text-sm text-slate-600">
+                          <Check className="w-4 h-4 text-emerald-500" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 text-center">
+              <Link href="/offerte?dienst=seo" className="btn-primary inline-flex items-center gap-2">
+                SEO offerte aanvragen
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Automatisering Diensten */}
       <section className="section-padding bg-slate-50">
+        <div className="container-custom">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-12">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-violet-100 text-violet-700 rounded-full text-sm font-medium mb-4">
+                <Workflow className="w-4 h-4" />
+                Proces Automatisering
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                Automatiseer uw bedrijfsprocessen
+              </h2>
+              <p className="text-lg text-slate-600">
+                Bespaar uren per week door repetitieve taken te automatiseren met n8n, Make.com en AI.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                {
+                  name: "Consultatie",
+                  price: "295",
+                  description: "Analyse van uw processen en mogelijkheden",
+                  features: ["2-3 uur analyse", "Automatiseringsplan", "Prioriteiten overzicht", "Kosten/baten schatting"],
+                },
+                {
+                  name: "Eenvoudige Workflow",
+                  price: "495",
+                  description: "Automatisering van één proces",
+                  features: ["1 workflow", "Tot 5 stappen", "Documentatie", "1 maand support"],
+                },
+                {
+                  name: "Medium Workflow",
+                  price: "995",
+                  description: "Complexere automatisering",
+                  features: ["1-2 workflows", "Condities & filters", "Error handling", "3 maanden support"],
+                },
+                {
+                  name: "Complexe Workflow",
+                  price: "1.995",
+                  description: "Geavanceerde automatisering met AI",
+                  features: ["Meerdere workflows", "AI integratie", "Meerdere systemen", "6 maanden support"],
+                },
+                {
+                  name: "n8n Hosting",
+                  price: "149",
+                  description: "Zelf-gehoste n8n met onderhoud",
+                  features: ["Eigen n8n instantie", "Dagelijkse backups", "Updates & onderhoud", "Onbeperkte workflows"],
+                  monthly: true,
+                },
+                {
+                  name: "Training",
+                  price: "595",
+                  description: "Leer zelf workflows bouwen",
+                  features: ["4 uur training", "Hands-on oefeningen", "Documentatie", "1 maand Q&A support"],
+                },
+              ].map((pkg) => (
+                <div
+                  key={pkg.name}
+                  className="relative rounded-2xl p-6 bg-white border border-slate-200 hover:border-violet-300 hover:shadow-xl hover:shadow-violet-500/10 transition-all duration-300 hover:-translate-y-1"
+                >
+                  <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-40 pointer-events-none bg-gradient-to-bl from-violet-200 via-violet-100/50 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-400 via-purple-400 to-violet-400" />
+                  
+                  <div className="relative z-10">
+                    <h3 className="text-lg font-bold text-slate-900 mb-1">{pkg.name}</h3>
+                    <div className="mb-3">
+                      <span className="text-2xl font-bold text-slate-900">€{pkg.price}</span>
+                      <span className="text-slate-500 text-sm">{pkg.monthly ? "/maand" : ""}</span>
+                    </div>
+                    <p className="text-sm text-slate-600 mb-4">{pkg.description}</p>
+                    <ul className="space-y-2">
+                      {pkg.features.map((feature, i) => (
+                        <li key={i} className="flex items-center gap-2 text-sm text-slate-600">
+                          <Check className="w-4 h-4 text-violet-500" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 text-center">
+              <Link href="/offerte?dienst=automation" className="btn-primary inline-flex items-center gap-2">
+                Automatisering bespreken
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Transparantie - Wat zit er WEL en NIET in */}
+      <section className="section-padding bg-white">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
@@ -395,7 +706,7 @@ export default function PrijzenPage() {
 
             <div className="mt-8 p-4 bg-indigo-50 rounded-xl border border-indigo-100 text-center">
               <p className="text-slate-700">
-                <strong>Meerwerk tarief:</strong> €75/uur voor extra werk buiten de scope. 
+                <strong>Meerwerk tarief:</strong> €95/uur voor extra werk buiten de scope. 
                 Dit wordt altijd vooraf besproken en goedgekeurd.
               </p>
             </div>
@@ -404,18 +715,18 @@ export default function PrijzenPage() {
       </section>
 
       {/* Maintenance */}
-      <section className="section-padding bg-white">
+      <section id="onderhoud" className="section-padding bg-slate-50">
         <div className="container-custom">
           <div className="text-center mb-12">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium mb-4">
-              <Zap className="w-4 h-4" />
-              Onderhoud & Support
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-amber-100 text-amber-700 rounded-full text-sm font-medium mb-4">
+              <Settings className="w-4 h-4" />
+              Website Onderhoud
             </span>
             <h2 className="text-3xl font-bold text-slate-900 mb-4">
-              Zorgeloos online met onderhoud
+              Onderhoud overnemen of uitbreiden
             </h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Houd uw website veilig, snel en up-to-date met onze onderhoudspakketten.
+              Heeft u al een website? Wij nemen het onderhoud over zodat u zich kunt focussen op uw bedrijf.
             </p>
           </div>
 
@@ -464,7 +775,7 @@ export default function PrijzenPage() {
                       <span className="text-3xl font-bold text-slate-900">€{pkg.price}</span>
                       <span className="text-slate-500">/maand</span>
                     </div>
-                    <ul className="space-y-2">
+                    <ul className="space-y-2 mb-6">
                       {pkg.features.map((feature, i) => (
                         <li key={i} className="flex items-center gap-2 text-sm text-slate-600">
                           <Check className="w-4 h-4 text-emerald-500" />
@@ -472,10 +783,28 @@ export default function PrijzenPage() {
                         </li>
                       ))}
                     </ul>
+                    <Link
+                      href={`/onderhoud?plan=${pkg.name.toLowerCase()}`}
+                      className={`block text-center py-3 rounded-xl font-semibold transition-all ${
+                        isMiddle
+                          ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600"
+                          : "btn-secondary"
+                      }`}
+                    >
+                      Direct bestellen
+                      <ArrowRight className="w-4 h-4 inline ml-2" />
+                    </Link>
                   </div>
                 </div>
               );
             })}
+          </div>
+
+          <div className="mt-8 text-center">
+            <Link href="/onderhoud" className="text-indigo-600 font-medium hover:underline inline-flex items-center gap-2">
+              Bekijk alle onderhoudspakketten
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </section>

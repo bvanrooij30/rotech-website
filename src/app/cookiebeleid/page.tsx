@@ -23,7 +23,7 @@ export default function CookiebeleidPage() {
         <div className="container-custom">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-4xl font-bold text-slate-900 mb-4">Cookiebeleid</h1>
-            <p className="text-slate-500 mb-8">Laatst bijgewerkt: 14 januari 2026</p>
+            <p className="text-slate-500 mb-8">Laatst bijgewerkt: 21 januari 2026</p>
             
             <div className="prose prose-slate max-w-none prose-headings:text-slate-900 prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-p:text-slate-600 prose-li:text-slate-600">
               
@@ -31,6 +31,16 @@ export default function CookiebeleidPage() {
                 Op deze pagina leggen wij uit welke cookies onze website gebruikt en waarom. 
                 Wij streven naar minimaal cookiegebruik met respect voor uw privacy.
               </p>
+
+              <div className="bg-emerald-50 p-6 rounded-xl border border-emerald-200 mb-8">
+                <h3 className="text-lg font-semibold text-emerald-900 mb-2 mt-0">Uw cookie-voorkeuren</h3>
+                <p className="mb-0 text-emerald-800">
+                  Bij uw eerste bezoek aan onze website vragen wij via een cookie banner toestemming 
+                  voor analytische cookies. U kunt deze toestemming weigeren zonder dat dit invloed 
+                  heeft op de werking van de website. Strikt noodzakelijke en functionele cookies 
+                  worden altijd geplaatst omdat deze essentieel zijn voor de werking van de website.
+                </p>
+              </div>
 
               <h2>Wat zijn cookies?</h2>
               <p>
@@ -63,7 +73,34 @@ export default function CookiebeleidPage() {
                 </tbody>
               </table>
 
-              <h3>2. Analytische cookies (optioneel)</h3>
+              <h3>2. Functionele cookies</h3>
+              <p>
+                Deze cookies zorgen voor extra functionaliteit, zoals het onthouden van uw 
+                inloggegevens voor het klantenportaal.
+              </p>
+              <table className="w-full border-collapse text-sm">
+                <thead>
+                  <tr className="border-b bg-slate-50">
+                    <th className="text-left py-2 px-3">Cookie</th>
+                    <th className="text-left py-2 px-3">Doel</th>
+                    <th className="text-left py-2 px-3">Bewaartermijn</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b">
+                    <td className="py-2 px-3">authjs.session-token</td>
+                    <td className="py-2 px-3">Inlogsessie klantenportaal</td>
+                    <td className="py-2 px-3">30 dagen</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-2 px-3">authjs.csrf-token</td>
+                    <td className="py-2 px-3">Beveiliging tegen CSRF-aanvallen</td>
+                    <td className="py-2 px-3">Sessie</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <h3>3. Analytische cookies (optioneel)</h3>
               <p>
                 Wij kunnen Google Analytics gebruiken om inzicht te krijgen in het gebruik van 
                 onze website. Deze gegevens helpen ons de website te verbeteren.
@@ -95,7 +132,7 @@ export default function CookiebeleidPage() {
                 </tbody>
               </table>
 
-              <h3>3. Marketing cookies</h3>
+              <h3>4. Marketing cookies</h3>
               <p>
                 <strong>Wij gebruiken geen marketing of tracking cookies.</strong> Wij volgen 
                 u niet over andere websites en delen geen gegevens met advertentienetwerken.

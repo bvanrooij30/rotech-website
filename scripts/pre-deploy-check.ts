@@ -48,9 +48,11 @@ function checkEnvVariables(): boolean {
   
   const requiredEnvVars = [
     'DATABASE_URL',
-    'NEXTAUTH_SECRET',
-    'NEXTAUTH_URL',
+    'AUTH_SECRET',
   ];
+  
+  // Note: AUTH_URL is optional - Auth.js auto-detects from request headers
+  // AUTH_TRUST_HOST=true is needed for Vercel deployments
   
   const optionalEnvVars = [
     'STRIPE_SECRET_KEY',

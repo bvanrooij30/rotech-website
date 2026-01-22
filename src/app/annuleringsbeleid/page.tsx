@@ -24,7 +24,7 @@ export default function AnnuleringsbeleidPage() {
         <div className="container-custom">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-4xl font-bold text-slate-900 mb-4">Annuleringsbeleid</h1>
-            <p className="text-slate-500 mb-8">Laatst bijgewerkt: 20 januari 2026</p>
+            <p className="text-slate-500 mb-8">Laatst bijgewerkt: 21 januari 2026</p>
             
             <div className="prose prose-slate max-w-none prose-headings:text-slate-900 prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-p:text-slate-600 prose-li:text-slate-600">
               
@@ -101,8 +101,8 @@ export default function AnnuleringsbeleidPage() {
                     </div>
                   </div>
                   <p className="text-slate-600 mb-0">
-                    Wanneer de technische ontwikkeling is gestart. Naast het basispercentage worden 
-                    extra gemaakte uren tegen het geldende uurtarief (€75/uur) in rekening gebracht.
+Wanneer de technische ontwikkeling is gestart. Naast het basispercentage worden 
+                extra gemaakte uren tegen het geldende uurtarief (€95/uur) in rekening gebracht.
                   </p>
                 </div>
 
@@ -225,12 +225,12 @@ export default function AnnuleringsbeleidPage() {
                       <td className="py-2 text-right">Tijdens ontwikkeling (50%)</td>
                     </tr>
                     <tr className="border-b border-slate-200">
-                      <td className="py-2">Extra uren (10 uur × €75)</td>
-                      <td className="py-2 text-right">€750</td>
+                      <td className="py-2">Extra uren (10 uur × €95)</td>
+                      <td className="py-2 text-right">€950</td>
                     </tr>
                     <tr className="border-b border-slate-200">
                       <td className="py-2">Annuleringskosten (50% + uren)</td>
-                      <td className="py-2 text-right font-medium">€2.250</td>
+                      <td className="py-2 text-right font-medium">€2.450</td>
                     </tr>
                     <tr className="border-b border-slate-200">
                       <td className="py-2">Reeds betaald (50%)</td>
@@ -238,7 +238,7 @@ export default function AnnuleringsbeleidPage() {
                     </tr>
                     <tr>
                       <td className="py-2 font-medium">Nog te betalen</td>
-                      <td className="py-2 text-right font-bold text-red-600">€750</td>
+                      <td className="py-2 text-right font-bold text-red-600">€950</td>
                     </tr>
                   </tbody>
                 </table>

@@ -1,10 +1,18 @@
 /**
  * Environment variable validation
  * Ensures all required environment variables are present at startup
+ * 
+ * Auth.js v5 (NextAuth v5) uses:
+ * - AUTH_SECRET (required) - for signing tokens
+ * - AUTH_URL (optional) - auto-detected from request headers
+ * - AUTH_TRUST_HOST (for Vercel deployments)
  */
 
 interface EnvConfig {
   NEXT_PUBLIC_SITE_URL: string;
+  AUTH_SECRET?: string;
+  AUTH_URL?: string;
+  DATABASE_URL?: string;
   CONTACT_EMAIL?: string;
   RESEND_API_KEY?: string;
   FROM_EMAIL?: string;
@@ -31,6 +39,19 @@ export function validateEnv(): void {
     } catch {
       errors.push("NEXT_PUBLIC_SITE_URL must be a valid URL");
     }
+  }
+  
+  // Auth.js v5 Configuration (critical for login functionality)
+  if (!process.env.AUTH_SECRET) {
+    console.warn("⚠️  AUTH_SECRET not set - authentication will NOT work!");
+    console.warn("   Generate one with: openssl rand -base64 32");
+  } else if (process.env.AUTH_SECRET.length < 32) {
+    console.warn("⚠️  AUTH_SECRET should be at least 32 characters for security");
+  }
+  
+  // Database
+  if (!process.env.DATABASE_URL) {
+    console.warn("⚠️  DATABASE_URL not set - database features will not work");
   }
   
   // Optional but recommended
@@ -86,6 +107,9 @@ export function validateEnv(): void {
 export function getEnvConfig(): EnvConfig {
   return {
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.dev",
+    AUTH_SECRET: process.env.AUTH_SECRET,
+    AUTH_URL: process.env.AUTH_URL,
+    DATABASE_URL: process.env.DATABASE_URL,
     CONTACT_EMAIL: process.env.CONTACT_EMAIL,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     FROM_EMAIL: process.env.FROM_EMAIL,

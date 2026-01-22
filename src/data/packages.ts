@@ -27,16 +27,74 @@ export type FeatureCategory =
   | "integration"
   | "content"
   | "advanced"
+  | "automation"
   | "support";
 
-// Alle beschikbare features met marktconforme prijzen
+// ============================================
+// SERVICE TYPES - Wat wil de klant?
+// ============================================
+
+export type ServiceType = 
+  | "website"        // Nieuwe website/webshop bouwen
+  | "seo"            // SEO optimalisatie (bestaande site)
+  | "automation"     // Proces automatisering
+  | "maintenance"    // Website onderhoud overnemen
+  | "integration";   // API/systeem koppelingen
+
+export interface ServiceTypeDefinition {
+  id: ServiceType;
+  name: string;
+  description: string;
+  icon: string; // Lucide icon name
+  ctaText: string;
+}
+
+export const serviceTypes: ServiceTypeDefinition[] = [
+  {
+    id: "website",
+    name: "Website of Webshop",
+    description: "Een nieuwe website, webshop of web applicatie laten bouwen",
+    icon: "Globe",
+    ctaText: "Website samenstellen",
+  },
+  {
+    id: "seo",
+    name: "SEO Optimalisatie",
+    description: "Uw bestaande website beter vindbaar maken in Google",
+    icon: "Search",
+    ctaText: "SEO offerte aanvragen",
+  },
+  {
+    id: "automation",
+    name: "Proces Automatisering",
+    description: "Bedrijfsprocessen automatiseren en tijd besparen",
+    icon: "Workflow",
+    ctaText: "Automatisering bespreken",
+  },
+  {
+    id: "maintenance",
+    name: "Website Onderhoud",
+    description: "Onderhoud van uw bestaande website overnemen",
+    icon: "Settings",
+    ctaText: "Onderhoud bekijken",
+  },
+  {
+    id: "integration",
+    name: "API & Integraties",
+    description: "Systemen koppelen en data synchroniseren",
+    icon: "Link2",
+    ctaText: "Integratie bespreken",
+  },
+];
+
+// Alle beschikbare features met MARKTCONFORME prijzen
 export const allFeatures: SelectableFeature[] = [
   // === DESIGN & DEVELOPMENT ===
   {
     id: "pages",
     name: "Pagina's",
     description: "Aantal pagina's voor uw website",
-    price: 175,
+    price: 225, // Was 175, marktwaarde €200-400
     category: "design",
     unit: "pagina",
     minQuantity: 1,
@@ -47,7 +105,7 @@ export const allFeatures: SelectableFeature[] = [
     id: "responsive-design",
     name: "Responsive Design",
     description: "Perfect weergave op mobiel, tablet en desktop",
-    price: 0, // Altijd inbegrepen
+    price: 0, // Altijd inbegrepen - onderscheidend
     category: "design",
     isIncluded: true,
     isRequired: true,
@@ -56,21 +114,21 @@ export const allFeatures: SelectableFeature[] = [
     id: "custom-design",
     name: "Maatwerk Design",
     description: "Uniek ontwerp afgestemd op uw huisstijl",
-    price: 395,
+    price: 595, // Was 395, marktwaarde €500-1.500
     category: "design",
   },
   {
     id: "premium-design",
     name: "Premium Design",
     description: "Exclusief premium design met geavanceerde visuele elementen",
-    price: 695,
+    price: 995, // Was 695, marktwaarde €1.000-3.000
     category: "design",
   },
   {
     id: "animations",
     name: "Geavanceerde Animaties",
     description: "Subtiele animaties en micro-interacties",
-    price: 395,
+    price: 495, // Was 395, marktwaarde €500-1.500
     category: "design",
   },
   {
@@ -86,35 +144,35 @@ export const allFeatures: SelectableFeature[] = [
     id: "speed-optimization",
     name: "Snelheidsoptimalisatie",
     description: "Laadtijd onder 2 seconden gegarandeerd",
-    price: 145,
+    price: 245, // Was 145, marktwaarde €200-500
     category: "development",
   },
   {
     id: "cms",
     name: "CMS (Content Management)",
     description: "Zelf teksten en afbeeldingen aanpassen",
-    price: 395,
+    price: 695, // Was 395, marktwaarde €500-2.000
     category: "development",
   },
   {
     id: "blog-module",
     name: "Blog/Nieuws Module",
     description: "Publiceer artikelen en nieuws op uw website",
-    price: 295,
+    price: 395, // Was 295, marktwaarde €400-1.000
     category: "content",
   },
   {
     id: "contact-form",
     name: "Contactformulier",
     description: "Contactformulier met e-mail notificatie",
-    price: 95,
+    price: 145, // Was 95, marktwaarde €100-300
     category: "development",
   },
   {
     id: "custom-forms",
     name: "Complexe Formulieren",
     description: "Uitgebreide formulieren met validatie",
-    price: 195,
+    price: 295, // Was 195, marktwaarde €200-500
     category: "development",
     unit: "formulier",
     minQuantity: 1,
@@ -122,27 +180,68 @@ export const allFeatures: SelectableFeature[] = [
     defaultQuantity: 1,
   },
   
-  // === SEO ===
+  // === SEO (voor website projecten) ===
   {
     id: "basic-seo",
     name: "Basis SEO",
     description: "Meta tags, sitemap, robots.txt, basis optimalisatie",
-    price: 195,
+    price: 345, // Was 195, marktwaarde €300-600
     category: "seo",
   },
   {
     id: "advanced-seo",
     name: "Geavanceerde SEO",
     description: "Lokale SEO, schema markup, keyword optimalisatie",
-    price: 495,
+    price: 745, // Was 495, marktwaarde €800-2.000
     category: "seo",
   },
   {
     id: "google-analytics",
     name: "Google Analytics & Search Console",
     description: "Volg uw bezoekers en zoekprestaties",
-    price: 95,
+    price: 145, // Was 95, marktwaarde €100-200
     category: "seo",
+  },
+  
+  // === SEO LOSSE DIENSTEN (voor bestaande websites) ===
+  {
+    id: "seo-audit",
+    name: "SEO Audit & Analyse",
+    description: "Complete analyse van uw huidige SEO status met rapport",
+    price: 495, // Marktwaarde €400-800
+    category: "seo",
+  },
+  {
+    id: "seo-technical",
+    name: "Technische SEO Optimalisatie",
+    description: "Snelheid, indexering, structured data, core web vitals",
+    price: 695, // Marktwaarde €500-1.200
+    category: "seo",
+  },
+  {
+    id: "seo-content",
+    name: "Content SEO Optimalisatie",
+    description: "Keyword research, content optimalisatie, meta tags",
+    price: 595, // Marktwaarde €400-1.000
+    category: "seo",
+  },
+  {
+    id: "seo-local",
+    name: "Lokale SEO Setup",
+    description: "Google Mijn Bedrijf, lokale schema markup, citaties",
+    price: 445, // Marktwaarde €300-700
+    category: "seo",
+  },
+  {
+    id: "seo-monthly",
+    name: "Maandelijkse SEO Ondersteuning",
+    description: "Doorlopende optimalisatie, rapportages, advies",
+    price: 395, // Per maand, marktwaarde €300-600/maand
+    category: "seo",
+    unit: "maand",
+    minQuantity: 3,
+    maxQuantity: 12,
+    defaultQuantity: 6,
   },
   
   // === E-COMMERCE ===
@@ -150,63 +249,63 @@ export const allFeatures: SelectableFeature[] = [
     id: "webshop-basic",
     name: "Webshop Basis",
     description: "E-commerce functionaliteit tot 25 producten",
-    price: 895,
+    price: 1495, // Was 895, marktwaarde €1.500-3.000
     category: "ecommerce",
   },
   {
     id: "webshop-extended",
     name: "Webshop Uitgebreid",
     description: "Uitbreiding tot 100 producten",
-    price: 595,
+    price: 795, // Was 595, marktwaarde €500-1.000
     category: "ecommerce",
   },
   {
     id: "webshop-unlimited",
     name: "Webshop Onbeperkt",
     description: "Onbeperkt aantal producten",
-    price: 995,
+    price: 1295, // Was 995, marktwaarde €1.000-2.000
     category: "ecommerce",
   },
   {
     id: "payment-ideal",
     name: "iDEAL & Bancontact",
     description: "Betalen via iDEAL en Bancontact",
-    price: 195,
+    price: 245, // Was 195, marktwaarde €200-500
     category: "ecommerce",
   },
   {
     id: "payment-creditcard",
     name: "Creditcard Betaling",
     description: "Visa, Mastercard, American Express",
-    price: 125,
+    price: 195, // Was 125, marktwaarde €150-300
     category: "ecommerce",
   },
   {
     id: "payment-paypal",
     name: "PayPal Integratie",
     description: "Betalen via PayPal",
-    price: 95,
+    price: 145, // Was 95, marktwaarde €100-200
     category: "ecommerce",
   },
   {
     id: "inventory-management",
     name: "Voorraad- & Orderbeheer",
     description: "Beheer voorraad en bestellingen",
-    price: 345,
+    price: 595, // Was 345, marktwaarde €500-1.500
     category: "ecommerce",
   },
   {
     id: "order-emails",
     name: "Automatische Bestelbevestigingen",
     description: "E-mails bij bestelling, verzending, etc.",
-    price: 175,
+    price: 245, // Was 175, marktwaarde €200-400
     category: "ecommerce",
   },
   {
     id: "product-filters",
     name: "Productfilters & Zoekfunctie",
     description: "Filter op categorie, prijs, kenmerken",
-    price: 245,
+    price: 395, // Was 245, marktwaarde €300-800
     category: "ecommerce",
   },
   
@@ -215,35 +314,35 @@ export const allFeatures: SelectableFeature[] = [
     id: "social-media",
     name: "Social Media Integratie",
     description: "Links en feeds van social media",
-    price: 125,
+    price: 175, // Was 125, marktwaarde €100-300
     category: "integration",
   },
   {
     id: "newsletter",
     name: "Nieuwsbrief Integratie",
     description: "Mailchimp, ActiveCampaign, etc.",
-    price: 195,
+    price: 295, // Was 195, marktwaarde €200-500
     category: "integration",
   },
   {
     id: "accounting",
     name: "Boekhouding Koppeling",
     description: "Koppeling met Exact, Moneybird, e-Boekhouden",
-    price: 495,
+    price: 795, // Was 495, marktwaarde €800-2.000
     category: "integration",
   },
   {
     id: "crm",
     name: "CRM Integratie",
     description: "Koppeling met HubSpot, Salesforce, Pipedrive",
-    price: 595,
+    price: 995, // Was 595, marktwaarde €1.000-3.000
     category: "integration",
   },
   {
     id: "api-integration",
     name: "API Integratie",
     description: "Koppeling met externe systemen",
-    price: 495,
+    price: 695, // Was 495, marktwaarde €500-2.000
     category: "integration",
     unit: "koppeling",
     minQuantity: 1,
@@ -254,8 +353,56 @@ export const allFeatures: SelectableFeature[] = [
     id: "booking-system",
     name: "Boekingssysteem",
     description: "Online afspraken maken en beheren",
-    price: 695,
+    price: 1195, // Was 695, marktwaarde €1.000-3.000
     category: "integration",
+  },
+  
+  // === AUTOMATISERING (nieuwe categorie) ===
+  {
+    id: "automation-consultation",
+    name: "Automatisering Consultatie",
+    description: "Analyse van uw processen en automatiseringsmogelijkheden",
+    price: 295, // 2-3 uur, marktwaarde €200-400
+    category: "automation",
+  },
+  {
+    id: "automation-simple",
+    name: "Eenvoudige Workflow",
+    description: "Automatisering van één proces (bijv. lead naar CRM)",
+    price: 495, // Marktwaarde €400-800
+    category: "automation",
+  },
+  {
+    id: "automation-medium",
+    name: "Medium Workflow",
+    description: "Complexere automatisering met meerdere stappen en condities",
+    price: 995, // Marktwaarde €800-1.500
+    category: "automation",
+  },
+  {
+    id: "automation-complex",
+    name: "Complexe Workflow",
+    description: "Geavanceerde automatisering met AI, meerdere systemen",
+    price: 1995, // Marktwaarde €1.500-3.000
+    category: "automation",
+  },
+  {
+    id: "automation-n8n-hosting",
+    name: "n8n Hosting & Beheer",
+    description: "Zelf-gehoste n8n instantie met onderhoud",
+    price: 149, // Per maand
+    category: "automation",
+    unit: "maand",
+    minQuantity: 1,
+    maxQuantity: 12,
+    defaultQuantity: 1,
+  },
+  {
+    id: "automation-training",
+    name: "Automatisering Training",
+    description: "Leer zelf workflows bouwen in n8n of Make",
+    price: 595, // 4 uur training
+    category: "automation",
   },
   
   // === GEAVANCEERD ===
@@ -263,7 +410,7 @@ export const allFeatures: SelectableFeature[] = [
     id: "multilingual",
     name: "Meertaligheid",
     description: "Extra taal voor uw website",
-    price: 345,
+    price: 495, // Was 345, marktwaarde €500-1.000
     category: "advanced",
     unit: "taal",
     minQuantity: 1,
@@ -274,28 +421,28 @@ export const allFeatures: SelectableFeature[] = [
     id: "user-portal",
     name: "Klantportaal met Login",
     description: "Beveiligde omgeving voor klanten",
-    price: 995,
+    price: 1795, // Was 995, marktwaarde €2.000-5.000
     category: "advanced",
   },
   {
     id: "user-roles",
     name: "Gebruikersbeheer met Rollen",
     description: "Verschillende toegangsniveaus",
-    price: 795,
+    price: 1295, // Was 795, marktwaarde €1.500-4.000
     category: "advanced",
   },
   {
     id: "database-custom",
     name: "Database Architectuur op Maat",
     description: "Custom database structuur",
-    price: 995,
+    price: 1995, // Was 995, marktwaarde €2.000-8.000
     category: "advanced",
   },
   {
     id: "documentation",
     name: "Uitgebreide Documentatie",
     description: "Technische documentatie en handleidingen",
-    price: 445,
+    price: 545, // Was 445, marktwaarde €500-1.000
     category: "advanced",
   },
   
@@ -312,21 +459,21 @@ export const allFeatures: SelectableFeature[] = [
     id: "support-3months",
     name: "3 Maanden Gratis Support",
     description: "Uitgebreide ondersteuning na oplevering",
-    price: 295,
+    price: 395, // Was 295, marktwaarde €300-600
     category: "support",
   },
   {
     id: "support-6months",
     name: "6 Maanden Gratis Support",
     description: "Premium ondersteuning na oplevering",
-    price: 545,
+    price: 695, // Was 545, marktwaarde €600-1.200
     category: "support",
   },
   {
     id: "project-manager",
     name: "Persoonlijke Projectmanager",
     description: "Dedicated contactpersoon voor uw project",
-    price: 495,
+    price: 695, // Was 495, marktwaarde €500-1.500
     category: "support",
   },
 ];
@@ -574,6 +721,7 @@ export function getFeaturesByCategory(
     integration: [],
     content: [],
     advanced: [],
+    automation: [],
     support: [],
   };
   
@@ -613,6 +761,7 @@ export const categoryNames: Record<FeatureCategory, string> = {
   integration: "Integraties",
   content: "Content & Blog",
   advanced: "Geavanceerde Functies",
+  automation: "Automatisering",
   support: "Support & Onderhoud",
 };
 
@@ -621,4 +770,86 @@ export function getYearlyPrice(monthlyPrice: number): number {
   const yearlyTotal = monthlyPrice * 12;
   const discount = yearlyTotal * 0.10;
   return Math.round((yearlyTotal - discount) * 100) / 100;
+}
+
+// ============================================
+// PACKAGE PRICE CALCULATIONS
+// ============================================
+
+/**
+ * Calculate the minimum "vanaf" price for a package
+ * This includes required features and a basic subset of recommended features
+ */
+export function calculateMinPackagePrice(packageId: string): number {
+  const pkg = getPackageById(packageId);
+  if (!pkg) return 0;
+  
+  let total = 0;
+  
+  // Add required features (these are always included)
+  for (const featureId of pkg.requiredFeatures) {
+    const feature = getFeatureById(featureId);
+    if (feature && !feature.isIncluded) {
+      total += feature.price * (feature.defaultQuantity || 1);
+    }
+  }
+  
+  // Add minimum recommended features for a basic functional website
+  const basicFeatures = ["pages", "contact-form", "basic-seo"];
+  for (const featureId of basicFeatures) {
+    if (pkg.recommendedFeatures.includes(featureId) && !pkg.requiredFeatures.includes(featureId)) {
+      const feature = getFeatureById(featureId);
+      if (feature) {
+        // For pages, use minimum quantity (e.g., 3 for starter)
+        const quantity = featureId === "pages" ? (pkg.id === "starter" ? 3 : 5) : 1;
+        total += feature.price * quantity;
+      }
+    }
+  }
+  
+  return total;
+}
+
+/**
+ * Calculate a typical/recommended price for a package
+ * This includes all recommended features
+ */
+export function calculateRecommendedPackagePrice(packageId: string): number {
+  const pkg = getPackageById(packageId);
+  if (!pkg) return 0;
+  
+  let total = 0;
+  const countedFeatures = new Set<string>();
+  
+  // Add required features
+  for (const featureId of pkg.requiredFeatures) {
+    const feature = getFeatureById(featureId);
+    if (feature && !feature.isIncluded) {
+      total += feature.price * (feature.defaultQuantity || 1);
+      countedFeatures.add(featureId);
+    }
+  }
+  
+  // Add all recommended features
+  for (const featureId of pkg.recommendedFeatures) {
+    if (countedFeatures.has(featureId)) continue;
+    const feature = getFeatureById(featureId);
+    if (feature && !feature.isIncluded) {
+      total += feature.price * (feature.defaultQuantity || 1);
+    }
+  }
+  
+  return total;
+}
+
+/**
+ * Get price range string for a package
+ */
+export function getPackagePriceRange(packageId: string): string {
+  const minPrice = calculateMinPackagePrice(packageId);
+  
+  // Round to nearest 50
+  const roundedMin = Math.round(minPrice / 50) * 50;
+  
+  return `Vanaf €${roundedMin.toLocaleString("nl-NL")}`;
 }
