@@ -1,14 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MapPin, Clock, Users, Star, Shield, Award } from "lucide-react";
-import Link from "next/link";
+import { Zap, Clock, Users, Star, Shield, Award } from "lucide-react";
 
 const trustItems = [
   {
-    icon: MapPin,
-    label: "Gevestigd in Veldhoven",
-    subLabel: "Persoonlijk contact mogelijk",
+    icon: Zap,
+    label: "Snelle Websites",
+    subLabel: "Optimale performance",
     color: "indigo",
   },
   {
@@ -19,20 +18,20 @@ const trustItems = [
   },
   {
     icon: Users,
-    label: "50+ Projecten",
-    subLabel: "Tevreden klanten",
+    label: "Persoonlijk Contact",
+    subLabel: "Direct met de developer",
     color: "indigo",
   },
   {
     icon: Star,
-    label: "5.0 Beoordeling",
-    subLabel: "Google Reviews",
+    label: "100% Maatwerk",
+    subLabel: "Geen templates",
     color: "amber",
   },
   {
     icon: Shield,
-    label: "KvK Geregistreerd",
-    subLabel: "86858173",
+    label: "Veilig & Betrouwbaar",
+    subLabel: "SSL & security",
     color: "emerald",
   },
   {
@@ -41,15 +40,6 @@ const trustItems = [
     subLabel: "Next.js & React",
     color: "violet",
   },
-];
-
-const localAreas = [
-  { name: "Veldhoven", href: "/regio/veldhoven" },
-  { name: "Eindhoven", href: "/regio/eindhoven" },
-  { name: "Waalre", href: "/regio/waalre" },
-  { name: "Best", href: "/regio/best" },
-  { name: "Helmond", href: "/regio/helmond" },
-  { name: "Noord-Brabant", href: "/regio/noord-brabant" },
 ];
 
 export default function TrustBadges() {
@@ -61,7 +51,7 @@ export default function TrustBadges() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"
         >
           {trustItems.map((item, index) => {
             const IconComponent = item.icon;
@@ -89,25 +79,6 @@ export default function TrustBadges() {
               </motion.div>
             );
           })}
-        </motion.div>
-
-        {/* Local SEO Links */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="flex flex-wrap justify-center items-center gap-2 pt-6 border-t border-slate-100"
-        >
-          <span className="text-sm text-slate-500 mr-2">Website laten maken in:</span>
-          {localAreas.map((area, index) => (
-            <Link
-              key={index}
-              href={area.href}
-              className="px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors"
-            >
-              {area.name}
-            </Link>
-          ))}
         </motion.div>
       </div>
     </section>

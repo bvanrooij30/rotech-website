@@ -86,30 +86,28 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* Main heading - Optimized for local SEO */}
+          {/* Main heading */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 mb-6 leading-tight"
           >
-            Website Laten Maken{" "}
-            <span className="gradient-text">Veldhoven</span>
+            Professionele{" "}
+            <span className="gradient-text">Websites</span>
             <br />
-            <span className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl">& Regio Eindhoven</span>
+            <span className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl">Die Resultaat Leveren</span>
           </motion.h1>
 
-          {/* Subtitle - Local keywords */}
+          {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
             className="text-lg sm:text-xl text-slate-600 mb-10 max-w-2xl mx-auto"
           >
-            Uw lokale webdesigner in <strong className="text-slate-800">Veldhoven</strong>. 
-            Wij bouwen professionele websites, webshops en web applicaties voor ondernemers in{" "}
-            <strong className="text-slate-800">Eindhoven</strong>,{" "}
-            <strong className="text-slate-800">Noord-Brabant</strong> en heel Nederland.
+            Wij bouwen moderne websites, webshops en web applicaties die uw bedrijf 
+            laten groeien. Persoonlijke aanpak, transparante prijzen en vakmanschap.
           </motion.p>
 
           {/* CTA Buttons */}
