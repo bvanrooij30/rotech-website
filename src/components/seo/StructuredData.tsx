@@ -56,13 +56,20 @@ const websiteSchema = {
 
 const localBusinessSchema = {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
+  "@type": "ProfessionalService",
   "@id": `${baseUrl}/#localbusiness`,
   name: "RoTech Development",
+  alternateName: "BVR Services",
   image: `${baseUrl}/images/rotech/rotech-logo.svg`,
   url: baseUrl,
+  telephone: "+31657235574",
   email: "contact@ro-techdevelopment.dev",
-  description: "Web development agency gespecialiseerd in websites, webshops en web applicaties op maat.",
+  description: "Website laten maken in Veldhoven? RoTech Development is uw lokale webdesigner voor professionele websites, webshops en web applicaties. Gevestigd in Veldhoven, actief in heel Noord-Brabant.",
+  slogan: "Website laten maken Veldhoven | Webdesign bureau regio Eindhoven",
+  founder: {
+    "@type": "Person",
+    name: "Bart van Rooij",
+  },
   address: {
     "@type": "PostalAddress",
     streetAddress: "Kruisstraat 64",
@@ -85,20 +92,92 @@ const localBusinessSchema = {
     },
   ],
   priceRange: "€€-€€€",
+  currenciesAccepted: "EUR",
+  paymentAccepted: "Cash, Credit Card, Bank Transfer, iDEAL",
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: "5.0",
-    reviewCount: "10",
+    reviewCount: "12",
+    bestRating: "5",
+    worstRating: "1",
   },
   areaServed: [
+    {
+      "@type": "City",
+      name: "Veldhoven",
+    },
+    {
+      "@type": "City",
+      name: "Eindhoven",
+    },
+    {
+      "@type": "State",
+      name: "Noord-Brabant",
+    },
     {
       "@type": "Country",
       name: "Nederland",
     },
-    {
-      "@type": "Country",
-      name: "België",
-    },
+  ],
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Website Diensten",
+    itemListElement: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Starter Website",
+          description: "One-page website voor ZZP'ers en starters",
+        },
+        priceSpecification: {
+          "@type": "PriceSpecification",
+          price: "997",
+          priceCurrency: "EUR",
+          minPrice: "997",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Business Website",
+          description: "Professionele bedrijfswebsite met CMS",
+        },
+        priceSpecification: {
+          "@type": "PriceSpecification",
+          price: "2497",
+          priceCurrency: "EUR",
+          minPrice: "2497",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Webshop",
+          description: "E-commerce website met iDEAL betaling",
+        },
+        priceSpecification: {
+          "@type": "PriceSpecification",
+          price: "3997",
+          priceCurrency: "EUR",
+          minPrice: "3997",
+        },
+      },
+    ],
+  },
+  sameAs: [
+    "https://linkedin.com/company/ro-tech-development",
+  ],
+  knowsAbout: [
+    "Web Development",
+    "Website Design",
+    "E-commerce",
+    "SEO",
+    "Next.js",
+    "React",
+    "TypeScript",
   ],
 };
 

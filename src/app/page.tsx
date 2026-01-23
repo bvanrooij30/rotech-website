@@ -1,4 +1,5 @@
 import Hero from "@/components/sections/Hero";
+import TrustBadges from "@/components/sections/TrustBadges";
 import Services from "@/components/sections/Services";
 import WhyChooseUs from "@/components/sections/WhyChooseUs";
 import Portfolio from "@/components/sections/Portfolio";
@@ -15,6 +16,7 @@ export default function HomePage() {
       <StructuredData type="website" />
       <StructuredData type="localBusiness" />
       <Hero />
+      <TrustBadges />
       <Services />
       <WhyChooseUs />
       <Portfolio />

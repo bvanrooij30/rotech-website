@@ -142,22 +142,89 @@ export default function DienstenPage() {
         </div>
       </section>
 
+      {/* Werkwijze Teaser */}
+      <section className="section-padding bg-white">
+        <div className="container-custom">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                Hoe Wij Werken
+              </h2>
+              <p className="text-lg text-slate-600">
+                Van eerste gesprek tot lancering - een transparant en persoonlijk proces.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              {[
+                { step: "1", title: "Kennismaking", desc: "Gratis gesprek om uw wensen te begrijpen" },
+                { step: "2", title: "Ontwerp & Bouw", desc: "Wij maken uw visie werkelijkheid" },
+                { step: "3", title: "Lancering", desc: "Uw website gaat live met volledige training" },
+              ].map((item) => (
+                <div key={item.step} className="text-center p-6 bg-slate-50 rounded-2xl">
+                  <div className="w-12 h-12 rounded-full gradient-bg flex items-center justify-center text-xl font-bold text-white mx-auto mb-4">
+                    {item.step}
+                  </div>
+                  <h3 className="font-bold text-slate-900 mb-2">{item.title}</h3>
+                  <p className="text-sm text-slate-600">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center">
+              <Link href="/werkwijze" className="inline-flex items-center gap-2 text-indigo-600 font-medium hover:underline">
+                Bekijk onze volledige werkwijze
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Lokale SEO sectie */}
+      <section className="py-12 bg-slate-50 border-t border-slate-100">
+        <div className="container-custom">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">Ons Werkgebied</h2>
+            <p className="text-slate-600">Wij helpen ondernemers in heel Noord-Brabant</p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-3">
+            {[
+              { name: "Veldhoven", href: "/regio/veldhoven" },
+              { name: "Eindhoven", href: "/regio/eindhoven" },
+              { name: "Waalre", href: "/regio/waalre" },
+              { name: "Best", href: "/regio/best" },
+              { name: "Helmond", href: "/regio/helmond" },
+              { name: "Noord-Brabant", href: "/regio/noord-brabant" },
+            ].map((area) => (
+              <Link
+                key={area.name}
+                href={area.href}
+                className="px-4 py-2 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:border-indigo-300 hover:text-indigo-600 transition-colors"
+              >
+                {area.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
-      <section className="section-padding bg-slate-50">
+      <section className="section-padding bg-gradient-to-r from-indigo-600 to-violet-600 text-white">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
               Niet zeker welke dienst u nodig heeft?
             </h2>
-            <p className="text-lg text-slate-600 mb-8">
+            <p className="text-xl text-indigo-100 mb-8">
               Neem contact met ons op voor een vrijblijvend adviesgesprek. 
               Wij denken graag mee over de beste oplossing voor uw situatie.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contact" className="btn-primary inline-flex items-center justify-center gap-2">
+              <Link href="/contact" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-indigo-600 rounded-xl font-bold hover:bg-indigo-50 transition-colors">
                 Gratis Adviesgesprek
               </Link>
-              <Link href="/veelgestelde-vragen" className="btn-secondary inline-flex items-center justify-center gap-2">
+              <Link href="/veelgestelde-vragen" className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white text-white rounded-xl font-bold hover:bg-white/10 transition-colors">
                 Bekijk FAQ
               </Link>
             </div>

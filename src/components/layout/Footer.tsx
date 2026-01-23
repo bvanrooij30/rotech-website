@@ -13,11 +13,19 @@ const footerLinks = {
   ],
   bedrijf: [
     { name: "Over Ons", href: "/over-ons" },
+    { name: "Werkwijze", href: "/werkwijze" },
     { name: "Projecten", href: "/projecten" },
     { name: "Prijzen", href: "/prijzen" },
     { name: "Blog", href: "/blog" },
-    { name: "FAQ", href: "/veelgestelde-vragen" },
     { name: "Contact", href: "/contact" },
+  ],
+  regio: [
+    { name: "Veldhoven", href: "/regio/veldhoven" },
+    { name: "Eindhoven", href: "/regio/eindhoven" },
+    { name: "Waalre", href: "/regio/waalre" },
+    { name: "Best", href: "/regio/best" },
+    { name: "Helmond", href: "/regio/helmond" },
+    { name: "Noord-Brabant", href: "/regio/noord-brabant" },
   ],
   juridisch: [
     { name: "Privacy", href: "/privacy" },
@@ -34,7 +42,7 @@ export default function Footer() {
     <footer className="bg-slate-900 text-white">
       {/* Main Footer */}
       <div className="container-custom py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-12">
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block mb-6 group relative">
@@ -101,6 +109,23 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Regio / Werkgebied */}
+          <div>
+            <h3 className="font-semibold text-lg mb-4">Werkgebied</h3>
+            <ul className="space-y-3">
+              {footerLinks.regio.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-slate-400 hover:text-white transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           {/* Juridisch */}
           <div>
             <h3 className="font-semibold text-lg mb-4">Juridisch</h3>
@@ -116,24 +141,6 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-
-            {/* Social Links - Only show if actual links are available */}
-            {/* Uncomment and update when social media profiles are created
-            <div className="mt-8">
-              <h3 className="font-semibold text-lg mb-4">Volg Ons</h3>
-              <div className="flex gap-3">
-                <a
-                  href="https://linkedin.com/company/ro-tech-development"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 bg-white/5 rounded-lg hover:bg-indigo-600 transition-colors"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </a>
-              </div>
-            </div>
-            */}
           </div>
         </div>
       </div>

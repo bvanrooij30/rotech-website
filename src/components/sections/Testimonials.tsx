@@ -5,6 +5,48 @@ import { Star, Quote, ArrowRight } from "lucide-react";
 import { testimonials } from "@/data/testimonials";
 import Link from "next/link";
 
+// Structured Data for Reviews
+function ReviewsStructuredData() {
+  const reviewSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://ro-techdevelopment.dev/#reviews",
+    name: "RoTech Development",
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "5.0",
+      reviewCount: testimonials.length.toString(),
+      bestRating: "5",
+      worstRating: "1",
+    },
+    review: testimonials.map((t) => ({
+      "@type": "Review",
+      author: {
+        "@type": "Person",
+        name: t.author,
+      },
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: t.rating.toString(),
+        bestRating: "5",
+        worstRating: "1",
+      },
+      reviewBody: t.quote,
+      itemReviewed: {
+        "@type": "LocalBusiness",
+        name: "RoTech Development",
+      },
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
+    />
+  );
+}
+
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -29,6 +71,7 @@ export default function Testimonials() {
 
   return (
     <section className="section-padding bg-white">
+      <ReviewsStructuredData />
       <div className="container-custom">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">

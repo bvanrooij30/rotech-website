@@ -22,10 +22,10 @@ const navigation = [
       { name: "API Integraties", href: "/diensten/api-integraties" },
     ],
   },
+  { name: "Werkwijze", href: "/werkwijze" },
   { name: "Projecten", href: "/projecten" },
   { name: "Prijzen", href: "/prijzen" },
   { name: "Over Ons", href: "/over-ons" },
-  { name: "Blog", href: "/blog" },
   { name: "Contact", href: "/contact" },
 ];
 
