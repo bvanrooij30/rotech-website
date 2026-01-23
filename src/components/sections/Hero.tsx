@@ -6,9 +6,9 @@ import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 
 const trustBadges = [
-  "Persoonlijke aanpak",
-  "Snelle communicatie",
-  "100% Maatwerk",
+  "KvK Geregistreerd",
+  "Gratis Adviesgesprek",
+  "Vaste Projectprijs",
 ];
 
 export default function Hero() {
@@ -81,7 +81,7 @@ export default function Hero() {
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur rounded-full border border-indigo-100 shadow-sm">
               <Sparkles className="w-4 h-4 text-amber-500" />
               <span className="text-sm font-medium text-slate-700">
-                Uw visie, vakkundig gebouwd
+                Web Development & Digital Solutions
               </span>
             </div>
           </motion.div>
@@ -93,10 +93,8 @@ export default function Hero() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 mb-6 leading-tight"
           >
-            Professionele{" "}
-            <span className="gradient-text">Websites</span>
-            <br />
-            <span className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl">Die Resultaat Leveren</span>
+            Uw Digitale{" "}
+            <span className="gradient-text">Groeipartner</span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -106,8 +104,10 @@ export default function Hero() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="text-lg sm:text-xl text-slate-600 mb-10 max-w-2xl mx-auto"
           >
-            Wij bouwen moderne websites, webshops en web applicaties die uw bedrijf 
-            laten groeien. Persoonlijke aanpak, transparante prijzen en vakmanschap.
+            Websites en webshops die niet alleen mooi zijn, maar ook{" "}
+            <strong className="text-slate-800">klanten opleveren</strong>. 
+            Gebouwd met moderne technologie, geoptimaliseerd voor zoekmachines 
+            en ontworpen om te converteren.
           </motion.p>
 
           {/* CTA Buttons */}
