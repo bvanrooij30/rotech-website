@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import Link from "next/link";
 import {
   MapPin,
-  Phone,
   Mail,
   CheckCircle,
   ArrowRight,
@@ -87,7 +86,7 @@ const brabantBenefits = [
   },
   {
     icon: Users,
-    title: "Brabantse Mentaliteit",
+    title: "Persoonlijke Aanpak",
     description: "Nuchter, direct en betrouwbaar - zoals het hoort",
   },
   {
@@ -98,7 +97,7 @@ const brabantBenefits = [
   {
     icon: Building2,
     title: "MKB Specialist",
-    description: "Focus op kleine en middelgrote bedrijven in Brabant",
+    description: "Focus op kleine en middelgrote bedrijven",
   },
 ];
 
@@ -135,8 +134,8 @@ export default function NoordBrabantPage() {
             </h1>
 
             <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-              RoTech Development is uw Brabantse partner voor professionele websites. Lokale
-              service met expertise die past bij de no-nonsense mentaliteit van Brabant.
+              RoTech Development is uw lokale partner voor professionele websites. Persoonlijke
+              service met expertise en een no-nonsense aanpak.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -151,8 +150,7 @@ export default function NoordBrabantPage() {
                 href="/contact"
                 className="btn-secondary inline-flex items-center justify-center gap-2 text-lg px-8 py-4"
               >
-                <Phone className="w-5 h-5" />
-                Bel: 06-57235574
+                Neem Contact Op
               </Link>
             </div>
 
@@ -236,9 +234,9 @@ export default function NoordBrabantPage() {
               met professionele websites.
             </p>
 
-            <h3>Websites voor Brabantse Ondernemers</h3>
+            <h3>Websites voor Ondernemers</h3>
             <p>
-              Wij begrijpen de Brabantse ondernemer. Geen poespas, gewoon een goede website die
+              Wij begrijpen de ondernemer. Geen poespas, gewoon een goede website die
               werkt. Direct contact, eerlijke prijzen en resultaat. Dat is waar wij voor staan.
             </p>
 
@@ -261,16 +259,14 @@ export default function NoordBrabantPage() {
               </li>
             </ul>
 
-            <h3>Persoonlijk Contact door Heel Brabant</h3>
+            <h3>Persoonlijk Contact in de Regio</h3>
             <p>
               Hoewel wij gevestigd zijn in Veldhoven, komen we graag naar u toe voor een
-              kennismakingsgesprek. Of u nu in Breda zit of in Oss - we nemen de tijd voor een
-              persoonlijke ontmoeting.
+              kennismakingsgesprek. We nemen de tijd voor een persoonlijke ontmoeting.
             </p>
 
             <p>
-              <strong>Contact:</strong> Bel{" "}
-              <a href="tel:+31657235574">06-57 23 55 74</a> of mail naar{" "}
+              <strong>Contact:</strong> Mail naar{" "}
               <a href="mailto:contact@ro-techdevelopment.dev">contact@ro-techdevelopment.dev</a>
             </p>
           </div>
@@ -282,7 +278,7 @@ export default function NoordBrabantPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-slate-900 mb-4">
-              Eerlijke Brabantse Prijzen
+              Eerlijke en Transparante Prijzen
             </h2>
             <p className="text-lg text-slate-600">
               Geen verborgen kosten - wat we afspreken is wat u betaalt
@@ -324,16 +320,10 @@ export default function NoordBrabantPage() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Klaar om te Starten?</h2>
           <p className="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">
-            Plan een gratis kennismakingsgesprek - in Brabant of online.
+            Plan een gratis kennismakingsgesprek - bij u op locatie of online.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <div className="flex items-center gap-3">
-              <Phone className="w-6 h-6" />
-              <a href="tel:+31657235574" className="text-xl font-bold hover:underline">
-                06-57 23 55 74
-              </a>
-            </div>
+          <div className="flex justify-center items-center">
             <div className="flex items-center gap-3">
               <Mail className="w-6 h-6" />
               <a
