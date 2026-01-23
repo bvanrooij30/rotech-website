@@ -66,14 +66,14 @@ export const metadata: Metadata = {
     locale: "nl_NL",
     url: "https://ro-techdevelopment.dev",
     siteName: "RoTech Development",
-    title: "Website Laten Maken Veldhoven & Eindhoven | RoTech Development",
-    description: "Lokale webdesigner in Veldhoven. Wij bouwen professionele websites, webshops en web applicaties voor ondernemers in de regio Eindhoven en heel Noord-Brabant.",
+    title: "RoTech Development | Professionele Websites & Webshops",
+    description: "Webdesign bureau in regio Eindhoven. Moderne websites, webshops en web applicaties. ✓ Persoonlijke aanpak ✓ Scherpe prijzen ✓ Snelle oplevering",
     // OG image wordt automatisch gegenereerd door opengraph-image.tsx
   },
   twitter: {
     card: "summary_large_image",
-    title: "Website Laten Maken Veldhoven | Lokale Webdesigner",
-    description: "Professionele websites voor ondernemers in Veldhoven, Eindhoven en Noord-Brabant. Persoonlijk contact, eerlijke prijzen.",
+    title: "RoTech Development | Professionele Websites & Webshops",
+    description: "Webdesign bureau in regio Eindhoven. Moderne websites, webshops en web applicaties. ✓ Persoonlijke aanpak ✓ Scherpe prijzen",
     // Twitter image wordt automatisch gegenereerd door twitter-image.tsx
   },
   robots: {
