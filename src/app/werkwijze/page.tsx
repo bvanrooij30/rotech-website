@@ -14,7 +14,6 @@ import {
   Users,
   Shield,
   Zap,
-  Phone,
 } from "lucide-react";
 import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
@@ -204,8 +203,7 @@ export default function WerkwijzePage() {
                 href="/contact"
                 className="btn-secondary inline-flex items-center justify-center gap-2"
               >
-                <Phone className="w-5 h-5" />
-                Bel: 06-57235574
+                Neem Contact Op
               </Link>
             </div>
           </div>
