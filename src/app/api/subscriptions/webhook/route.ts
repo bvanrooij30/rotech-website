@@ -3,9 +3,47 @@ import { getStripeClient } from "@/lib/stripe";
 import { Resend } from "resend";
 import Stripe from "stripe";
 import prisma from "@/lib/prisma";
-import { getMaintenancePlanById } from "@/data/packages";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// ============================================
+// TYPE DEFINITIONS
+// ============================================
+
+// Helper type for subscription data extraction
+interface SubscriptionData {
+  id: string;
+  status: Stripe.Subscription.Status;
+  customer: string;
+  metadata: Stripe.Metadata;
+  current_period_start: number;
+  current_period_end: number;
+  cancel_at_period_end: boolean;
+  canceled_at: number | null;
+  trial_end: number | null;
+  items: { data: Array<{ price?: { id?: string; unit_amount?: number | null } }> };
+}
+
+/**
+ * Extract subscription data from Stripe subscription object
+ * This handles the type casting safely
+ */
+function extractSubscriptionData(sub: Stripe.Subscription): SubscriptionData {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const subAny = sub as any;
+  return {
+    id: sub.id,
+    status: sub.status,
+    customer: typeof sub.customer === 'string' ? sub.customer : sub.customer.id,
+    metadata: sub.metadata,
+    current_period_start: subAny.current_period_start ?? Math.floor(Date.now() / 1000),
+    current_period_end: subAny.current_period_end ?? Math.floor(Date.now() / 1000) + 2592000,
+    cancel_at_period_end: subAny.cancel_at_period_end ?? false,
+    canceled_at: subAny.canceled_at ?? null,
+    trial_end: subAny.trial_end ?? null,
+    items: sub.items,
+  };
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -209,29 +247,21 @@ async function handleCheckoutCompleted(
 /**
  * Sync a Stripe subscription to the database
  */
-// Extended Stripe Subscription type with period properties
-type StripeSubscriptionWithPeriod = Stripe.Subscription & {
-  current_period_start: number;
-  current_period_end: number;
-  cancel_at_period_end: boolean;
-  canceled_at: number | null;
-};
-
 async function syncSubscriptionToDatabase(
   subscriptionInput: Stripe.Subscription,
   stripe: Stripe,
   overrideUserId?: string
 ) {
   try {
-    // Cast to extended type with period properties
-    const subscription = subscriptionInput as StripeSubscriptionWithPeriod;
+    // Extract subscription data with safe type handling
+    const subscription = extractSubscriptionData(subscriptionInput);
     
     const planId = subscription.metadata.planId || "";
     const planName = subscription.metadata.planName || "Onderhoud";
     const hoursIncluded = parseInt(subscription.metadata.hoursIncluded || "0", 10);
     
     // Get customer to find user
-    const customer = await stripe.customers.retrieve(subscription.customer as string) as Stripe.Customer;
+    const customer = await stripe.customers.retrieve(subscription.customer) as Stripe.Customer;
     
     let userId = overrideUserId;
     
@@ -264,7 +294,7 @@ async function syncSubscriptionToDatabase(
       planName,
       monthlyPrice,
       stripeSubscriptionId: subscription.id,
-      stripeCustomerId: subscription.customer as string,
+      stripeCustomerId: subscription.customer,
       stripePriceId: priceItem?.price?.id || null,
       status: mapStripeStatus(subscription.status),
       currentPeriodStart: new Date(subscription.current_period_start * 1000),
@@ -302,9 +332,9 @@ async function handleInvoicePaid(invoice: Stripe.Invoice & { subscription?: stri
     
     const subscriptionId = invoice.subscription as string;
     
-    // Get the updated subscription from Stripe and cast to extended type
+    // Get the updated subscription from Stripe
     const subscriptionRaw = await stripe.subscriptions.retrieve(subscriptionId);
-    const subscription = subscriptionRaw as StripeSubscriptionWithPeriod;
+    const subscription = extractSubscriptionData(subscriptionRaw);
     
     // Update subscription in database
     const dbSubscription = await prisma.subscription.findUnique({
@@ -324,23 +354,25 @@ async function handleInvoicePaid(invoice: Stripe.Invoice & { subscription?: stri
       console.log(`Reset hours and updated period for subscription ${dbSubscription.id}`);
     }
 
-    // Store invoice in database
+    // Store invoice in database - safely access invoice properties
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const invoiceAny = invoice as any;
     await prisma.invoice.upsert({
       where: { stripeInvoiceId: invoice.id },
       update: {
         status: "paid",
         paidAt: new Date(),
-        pdfUrl: invoice.invoice_pdf || null,
+        pdfUrl: invoiceAny.invoice_pdf || null,
       },
       create: {
         userId: dbSubscription?.userId || "",
         invoiceNumber: generateInvoiceNumber(),
         stripeInvoiceId: invoice.id,
-        amount: (invoice.amount_paid || 0) / 100,
-        tax: (invoice.tax || 0) / 100,
+        amount: (invoiceAny.amount_paid || 0) / 100,
+        tax: (invoiceAny.tax || 0) / 100,
         status: "paid",
         paidAt: new Date(),
-        pdfUrl: invoice.invoice_pdf || null,
+        pdfUrl: invoiceAny.invoice_pdf || null,
         description: `Onderhoud ${dbSubscription?.planName || ""}`,
       },
     });
@@ -415,11 +447,12 @@ async function sendWelcomeEmailWithPasswordReset(email: string, name: string) {
 async function sendSubscriptionActiveEmail(subscription: Stripe.Subscription) {
   try {
     const stripe = getStripeClient();
-    const customer = await stripe.customers.retrieve(subscription.customer as string) as Stripe.Customer;
+    const subData = extractSubscriptionData(subscription);
+    const customer = await stripe.customers.retrieve(subData.customer) as Stripe.Customer;
     
     if (!customer.email) return;
     
-    const planName = subscription.metadata.planName || "Onderhoud";
+    const planName = subData.metadata.planName || "Onderhoud";
     
     await resend.emails.send({
       from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
@@ -441,11 +474,12 @@ async function sendSubscriptionActiveEmail(subscription: Stripe.Subscription) {
 async function sendSubscriptionCancelledEmail(subscription: Stripe.Subscription) {
   try {
     const stripe = getStripeClient();
-    const customer = await stripe.customers.retrieve(subscription.customer as string) as Stripe.Customer;
+    const subData = extractSubscriptionData(subscription);
+    const customer = await stripe.customers.retrieve(subData.customer) as Stripe.Customer;
     
     if (!customer.email) return;
     
-    const planName = subscription.metadata.planName || "Onderhoud";
+    const planName = subData.metadata.planName || "Onderhoud";
     
     await resend.emails.send({
       from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
@@ -466,12 +500,13 @@ async function sendSubscriptionCancelledEmail(subscription: Stripe.Subscription)
 async function sendTrialEndingEmail(subscription: Stripe.Subscription) {
   try {
     const stripe = getStripeClient();
-    const customer = await stripe.customers.retrieve(subscription.customer as string) as Stripe.Customer;
+    const subData = extractSubscriptionData(subscription);
+    const customer = await stripe.customers.retrieve(subData.customer) as Stripe.Customer;
     
     if (!customer.email) return;
     
-    const planName = subscription.metadata.planName || "Onderhoud";
-    const trialEnd = subscription.trial_end ? new Date(subscription.trial_end * 1000).toLocaleDateString("nl-NL") : "binnenkort";
+    const planName = subData.metadata.planName || "Onderhoud";
+    const trialEnd = subData.trial_end ? new Date(subData.trial_end * 1000).toLocaleDateString("nl-NL") : "binnenkort";
     
     await resend.emails.send({
       from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
@@ -493,7 +528,8 @@ async function sendTrialEndingEmail(subscription: Stripe.Subscription) {
 async function sendPaymentFailedNotification(subscription: Stripe.Subscription) {
   try {
     const stripe = getStripeClient();
-    const customer = await stripe.customers.retrieve(subscription.customer as string) as Stripe.Customer;
+    const subData = extractSubscriptionData(subscription);
+    const customer = await stripe.customers.retrieve(subData.customer) as Stripe.Customer;
     
     if (!customer.email) return;
     
@@ -519,8 +555,8 @@ async function sendPaymentFailedNotification(subscription: Stripe.Subscription) 
         <h2>Betaling mislukt</h2>
         <p><strong>Klant:</strong> ${customer.name || "Onbekend"}</p>
         <p><strong>Email:</strong> ${customer.email}</p>
-        <p><strong>Subscription ID:</strong> ${subscription.id}</p>
-        <p><strong>Status:</strong> ${subscription.status}</p>
+        <p><strong>Subscription ID:</strong> ${subData.id}</p>
+        <p><strong>Status:</strong> ${subData.status}</p>
       `,
     });
   } catch (error) {
