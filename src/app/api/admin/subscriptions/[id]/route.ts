@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminUser, hasPermission, PERMISSIONS, logAdminAction } from "@/lib/admin";
 import prisma from "@/lib/prisma";
+import { getStripeClient } from "@/lib/stripe";
 
 export async function GET(
   request: NextRequest,
@@ -83,11 +84,21 @@ export async function PATCH(
 
     switch (action) {
       case "cancel":
+        // Cancel in Stripe if connected
+        if (subscription.stripeSubscriptionId && process.env.STRIPE_SECRET_KEY) {
+          try {
+            const stripe = getStripeClient();
+            await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
+              cancel_at_period_end: true,
+            });
+          } catch (stripeError) {
+            console.error("Stripe cancel error:", stripeError);
+          }
+        }
+        
         updatedSubscription = await prisma.subscription.update({
           where: { id },
           data: {
-            status: "cancelled",
-            cancelledAt: new Date(),
             cancelAtPeriodEnd: true,
           },
         });
@@ -98,11 +109,53 @@ export async function PATCH(
           "subscription",
           id,
           { status: subscription.status },
+          { cancelAtPeriodEnd: true }
+        );
+        break;
+
+      case "cancel_immediately":
+        // Immediately cancel in Stripe
+        if (subscription.stripeSubscriptionId && process.env.STRIPE_SECRET_KEY) {
+          try {
+            const stripe = getStripeClient();
+            await stripe.subscriptions.cancel(subscription.stripeSubscriptionId);
+          } catch (stripeError) {
+            console.error("Stripe immediate cancel error:", stripeError);
+          }
+        }
+        
+        updatedSubscription = await prisma.subscription.update({
+          where: { id },
+          data: {
+            status: "cancelled",
+            cancelledAt: new Date(),
+          },
+        });
+        await logAdminAction(
+          admin.id,
+          admin.email,
+          "subscription.cancel_immediately",
+          "subscription",
+          id,
+          { status: subscription.status },
           { status: "cancelled" }
         );
         break;
 
       case "pause":
+        // Stripe doesn't have native pause, so we just update locally
+        // For a real pause, you'd need to pause payment collection
+        if (subscription.stripeSubscriptionId && process.env.STRIPE_SECRET_KEY) {
+          try {
+            const stripe = getStripeClient();
+            await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
+              pause_collection: { behavior: "void" },
+            });
+          } catch (stripeError) {
+            console.error("Stripe pause error:", stripeError);
+          }
+        }
+        
         updatedSubscription = await prisma.subscription.update({
           where: { id },
           data: { status: "paused" },
@@ -117,6 +170,19 @@ export async function PATCH(
         break;
 
       case "resume":
+        // Resume in Stripe
+        if (subscription.stripeSubscriptionId && process.env.STRIPE_SECRET_KEY) {
+          try {
+            const stripe = getStripeClient();
+            await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
+              cancel_at_period_end: false,
+              pause_collection: null,
+            });
+          } catch (stripeError) {
+            console.error("Stripe resume error:", stripeError);
+          }
+        }
+        
         updatedSubscription = await prisma.subscription.update({
           where: { id },
           data: { status: "active", cancelAtPeriodEnd: false },
@@ -231,11 +297,22 @@ export async function DELETE(
 
   const subscription = await prisma.subscription.findUnique({
     where: { id },
-    select: { id: true, userId: true, planName: true },
+    select: { id: true, userId: true, planName: true, stripeSubscriptionId: true },
   });
 
   if (!subscription) {
     return NextResponse.json({ error: "Abonnement niet gevonden" }, { status: 404 });
+  }
+
+  // Cancel in Stripe first
+  if (subscription.stripeSubscriptionId && process.env.STRIPE_SECRET_KEY) {
+    try {
+      const stripe = getStripeClient();
+      await stripe.subscriptions.cancel(subscription.stripeSubscriptionId);
+    } catch (stripeError) {
+      console.error("Stripe delete error:", stripeError);
+      // Continue with local delete even if Stripe fails
+    }
   }
 
   await prisma.subscription.delete({ where: { id } });

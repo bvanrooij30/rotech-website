@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getStripeClient } from "@/lib/stripe";
 import { Resend } from "resend";
 import Stripe from "stripe";
+import prisma from "@/lib/prisma";
+import { getMaintenancePlanById } from "@/data/packages";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -47,10 +49,21 @@ export async function POST(request: NextRequest) {
 
     // Handle subscription events
     switch (event.type) {
+      case "checkout.session.completed": {
+        const session = event.data.object as Stripe.Checkout.Session;
+        
+        // Only handle subscription checkouts
+        if (session.mode === "subscription" && session.subscription) {
+          console.log(`Checkout completed for subscription session: ${session.id}`);
+          await handleCheckoutCompleted(session, stripe);
+        }
+        break;
+      }
+
       case "customer.subscription.created": {
         const subscription = event.data.object as Stripe.Subscription;
         console.log(`Subscription ${subscription.id} created`);
-        // TODO: Store subscription in database
+        await syncSubscriptionToDatabase(subscription, stripe);
         break;
       }
 
@@ -58,12 +71,13 @@ export async function POST(request: NextRequest) {
         const subscription = event.data.object as Stripe.Subscription;
         console.log(`Subscription ${subscription.id} updated to status: ${subscription.status}`);
         
+        // Sync to database
+        await syncSubscriptionToDatabase(subscription, stripe);
+        
         // Handle status changes
         if (subscription.status === "active") {
-          // Subscription is now active
           await sendSubscriptionActiveEmail(subscription);
         } else if (subscription.status === "past_due") {
-          // Payment failed, subscription is past due
           await sendPaymentFailedNotification(subscription);
         }
         break;
@@ -72,6 +86,16 @@ export async function POST(request: NextRequest) {
       case "customer.subscription.deleted": {
         const subscription = event.data.object as Stripe.Subscription;
         console.log(`Subscription ${subscription.id} cancelled/deleted`);
+        
+        // Update database
+        await prisma.subscription.updateMany({
+          where: { stripeSubscriptionId: subscription.id },
+          data: {
+            status: "cancelled",
+            cancelledAt: new Date(),
+          },
+        });
+        
         await sendSubscriptionCancelledEmail(subscription);
         break;
       }
@@ -85,9 +109,9 @@ export async function POST(request: NextRequest) {
 
       case "invoice.paid": {
         const invoice = event.data.object as Stripe.Invoice;
-        const invoiceData = invoice as unknown as { subscription?: string; id: string };
-        if (invoiceData.subscription) {
-          console.log(`Invoice paid for subscription ${invoiceData.subscription}`);
+        if (invoice.subscription) {
+          console.log(`Invoice paid for subscription ${invoice.subscription}`);
+          await handleInvoicePaid(invoice, stripe);
         }
         break;
       }
@@ -95,6 +119,14 @@ export async function POST(request: NextRequest) {
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
         console.log(`Invoice payment failed: ${invoice.id}`);
+        
+        // Update subscription status
+        if (invoice.subscription) {
+          await prisma.subscription.updateMany({
+            where: { stripeSubscriptionId: invoice.subscription as string },
+            data: { status: "past_due" },
+          });
+        }
         break;
       }
     }
@@ -109,6 +141,263 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+// ============================================
+// DATABASE SYNC FUNCTIONS
+// ============================================
+
+/**
+ * Handle completed checkout session - create user if needed and link subscription
+ */
+async function handleCheckoutCompleted(
+  session: Stripe.Checkout.Session,
+  stripe: Stripe
+) {
+  try {
+    const customerEmail = session.customer_email || session.customer_details?.email;
+    const customerName = session.metadata?.customerName || session.customer_details?.name || "";
+    const customerPhone = session.metadata?.customerPhone || session.customer_details?.phone || "";
+    const companyName = session.metadata?.companyName || "";
+    const planId = session.metadata?.planId || "";
+    
+    if (!customerEmail) {
+      console.error("No customer email in checkout session");
+      return;
+    }
+
+    // Find or create user
+    let user = await prisma.user.findUnique({
+      where: { email: customerEmail },
+    });
+
+    if (!user) {
+      // Create new user (they will need to set a password later)
+      const bcrypt = await import("bcryptjs");
+      const tempPassword = await bcrypt.hash(crypto.randomUUID(), 10);
+      
+      user = await prisma.user.create({
+        data: {
+          email: customerEmail,
+          name: customerName,
+          phone: customerPhone || null,
+          companyName: companyName || null,
+          password: tempPassword, // Temporary, user needs to reset
+          emailVerified: new Date(), // Mark as verified since they paid
+        },
+      });
+      
+      console.log(`Created new user ${user.id} for subscription checkout`);
+      
+      // Send welcome email with password reset link
+      await sendWelcomeEmailWithPasswordReset(user.email, user.name);
+    }
+
+    // Get the subscription from Stripe
+    if (session.subscription) {
+      const subscription = await stripe.subscriptions.retrieve(
+        session.subscription as string
+      );
+      
+      // Sync subscription to database
+      await syncSubscriptionToDatabase(subscription, stripe, user.id);
+    }
+  } catch (error) {
+    console.error("Error handling checkout completed:", error);
+  }
+}
+
+/**
+ * Sync a Stripe subscription to the database
+ */
+async function syncSubscriptionToDatabase(
+  subscription: Stripe.Subscription,
+  stripe: Stripe,
+  overrideUserId?: string
+) {
+  try {
+    const planId = subscription.metadata.planId || "";
+    const planName = subscription.metadata.planName || "Onderhoud";
+    const hoursIncluded = parseInt(subscription.metadata.hoursIncluded || "0", 10);
+    
+    // Get customer to find user
+    const customer = await stripe.customers.retrieve(subscription.customer as string) as Stripe.Customer;
+    
+    let userId = overrideUserId;
+    
+    if (!userId && customer.email) {
+      const user = await prisma.user.findUnique({
+        where: { email: customer.email },
+      });
+      userId = user?.id;
+    }
+    
+    if (!userId) {
+      console.warn(`No user found for subscription ${subscription.id}`);
+      return;
+    }
+
+    // Get price info
+    const priceItem = subscription.items.data[0];
+    const monthlyPrice = priceItem?.price?.unit_amount 
+      ? priceItem.price.unit_amount / 100 
+      : 0;
+    
+    // Check if subscription already exists
+    const existingSubscription = await prisma.subscription.findUnique({
+      where: { stripeSubscriptionId: subscription.id },
+    });
+
+    const subscriptionData = {
+      userId,
+      planType: planId || "unknown",
+      planName,
+      monthlyPrice,
+      stripeSubscriptionId: subscription.id,
+      stripeCustomerId: subscription.customer as string,
+      stripePriceId: priceItem?.price?.id || null,
+      status: mapStripeStatus(subscription.status),
+      currentPeriodStart: new Date(subscription.current_period_start * 1000),
+      currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+      cancelAtPeriodEnd: subscription.cancel_at_period_end,
+      hoursIncluded,
+      cancelledAt: subscription.canceled_at 
+        ? new Date(subscription.canceled_at * 1000) 
+        : null,
+    };
+
+    if (existingSubscription) {
+      await prisma.subscription.update({
+        where: { id: existingSubscription.id },
+        data: subscriptionData,
+      });
+      console.log(`Updated subscription ${existingSubscription.id} in database`);
+    } else {
+      const newSub = await prisma.subscription.create({
+        data: subscriptionData,
+      });
+      console.log(`Created subscription ${newSub.id} in database`);
+    }
+  } catch (error) {
+    console.error("Error syncing subscription to database:", error);
+  }
+}
+
+/**
+ * Handle paid invoice - update subscription period and reset hours
+ */
+async function handleInvoicePaid(invoice: Stripe.Invoice, stripe: Stripe) {
+  try {
+    if (!invoice.subscription) return;
+    
+    const subscriptionId = invoice.subscription as string;
+    
+    // Get the updated subscription from Stripe
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+    
+    // Update subscription in database
+    const dbSubscription = await prisma.subscription.findUnique({
+      where: { stripeSubscriptionId: subscriptionId },
+    });
+
+    if (dbSubscription) {
+      await prisma.subscription.update({
+        where: { id: dbSubscription.id },
+        data: {
+          status: "active",
+          currentPeriodStart: new Date(subscription.current_period_start * 1000),
+          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+          hoursUsed: 0, // Reset hours for new period
+        },
+      });
+      console.log(`Reset hours and updated period for subscription ${dbSubscription.id}`);
+    }
+
+    // Store invoice in database
+    await prisma.invoice.upsert({
+      where: { stripeInvoiceId: invoice.id },
+      update: {
+        status: "paid",
+        paidAt: new Date(),
+        pdfUrl: invoice.invoice_pdf || null,
+      },
+      create: {
+        userId: dbSubscription?.userId || "",
+        invoiceNumber: generateInvoiceNumber(),
+        stripeInvoiceId: invoice.id,
+        amount: (invoice.amount_paid || 0) / 100,
+        tax: (invoice.tax || 0) / 100,
+        status: "paid",
+        paidAt: new Date(),
+        pdfUrl: invoice.invoice_pdf || null,
+        description: `Onderhoud ${dbSubscription?.planName || ""}`,
+      },
+    });
+  } catch (error) {
+    console.error("Error handling paid invoice:", error);
+  }
+}
+
+/**
+ * Map Stripe subscription status to our status
+ */
+function mapStripeStatus(stripeStatus: Stripe.Subscription.Status): string {
+  const statusMap: Record<Stripe.Subscription.Status, string> = {
+    active: "active",
+    past_due: "past_due",
+    canceled: "cancelled",
+    unpaid: "past_due",
+    incomplete: "pending",
+    incomplete_expired: "cancelled",
+    trialing: "active",
+    paused: "paused",
+  };
+  return statusMap[stripeStatus] || "unknown";
+}
+
+/**
+ * Generate invoice number in RT-INV-YYYY-NNN format
+ */
+function generateInvoiceNumber(): string {
+  const year = new Date().getFullYear();
+  const random = Math.floor(Math.random() * 1000).toString().padStart(3, "0");
+  return `RT-INV-${year}-${random}`;
+}
+
+/**
+ * Send welcome email with password reset link for new users
+ */
+async function sendWelcomeEmailWithPasswordReset(email: string, name: string) {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ro-techdevelopment.dev";
+    
+    await resend.emails.send({
+      from: process.env.FROM_EMAIL || "noreply@ro-techdevelopment.dev",
+      to: email,
+      subject: "Welkom bij RoTech Development - Stel uw wachtwoord in",
+      html: `
+        <p>Beste ${name || "Klant"},</p>
+        <p>Bedankt voor het afsluiten van een onderhoudsabonnement bij RoTech Development!</p>
+        <p>Uw account is aangemaakt. Om toegang te krijgen tot uw klantenportaal, kunt u een wachtwoord instellen via onderstaande link:</p>
+        <p><a href="${baseUrl}/portal/wachtwoord-vergeten?email=${encodeURIComponent(email)}" style="background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block;">Wachtwoord instellen</a></p>
+        <p>In het portaal kunt u:</p>
+        <ul>
+          <li>Uw abonnement beheren</li>
+          <li>Facturen bekijken</li>
+          <li>Support tickets aanmaken</li>
+          <li>Werkzaamheden inzien</li>
+        </ul>
+        <p>Wij nemen binnenkort contact met u op om alles door te spreken.</p>
+        <p>Met vriendelijke groet,<br>Het RoTech Development Team</p>
+      `,
+    });
+  } catch (error) {
+    console.error("Failed to send welcome email:", error);
+  }
+}
+
+// ============================================
+// EMAIL NOTIFICATION FUNCTIONS
+// ============================================
 
 // Email helper functions
 async function sendSubscriptionActiveEmail(subscription: Stripe.Subscription) {

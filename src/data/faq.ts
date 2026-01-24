@@ -14,12 +14,6 @@ export const faqItems: FAQItem[] = [
     category: "algemeen",
   },
   {
-    id: "2",
-    question: "Waar is RoTech Development gevestigd?",
-    answer: "RoTech Development is gevestigd in Veldhoven, op 5 minuten van Eindhoven. Wij bedienen klanten in heel Noord-Brabant en daarbuiten. Persoonlijk overleg is mogelijk op locatie in Veldhoven of bij u op kantoor in de regio Eindhoven.",
-    category: "algemeen",
-  },
-  {
     id: "3",
     question: "In welke regio zijn jullie actief?",
     answer: "Wij zijn gevestigd in Veldhoven (bij Eindhoven) en werken voor klanten in heel Nederland én België. Onze primaire regio is Noord-Brabant: Veldhoven, Eindhoven, Waalre, Valkenswaard, Best, Son en Breugel. Dankzij online samenwerking kunnen we ook landelijk projecten uitvoeren.",

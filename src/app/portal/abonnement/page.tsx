@@ -11,6 +11,7 @@ import {
   ArrowRight,
   Package,
 } from "lucide-react";
+import { SubscriptionActions } from "@/components/portal/SubscriptionActions";
 
 export const metadata = {
   title: "Mijn Abonnement",
@@ -159,6 +160,16 @@ export default async function SubscriptionPage() {
                   </div>
                 </div>
               )}
+
+              {/* Subscription Actions */}
+              <div className="mt-6 pt-6 border-t border-slate-200">
+                <h3 className="font-medium text-slate-900 mb-4">Abonnement beheren</h3>
+                <SubscriptionActions
+                  subscriptionId={activeSubscription.id}
+                  cancelAtPeriodEnd={activeSubscription.cancelAtPeriodEnd}
+                  status={activeSubscription.status}
+                />
+              </div>
             </div>
           </div>
 
