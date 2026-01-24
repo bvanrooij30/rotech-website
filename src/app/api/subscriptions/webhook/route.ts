@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
       }
 
       case "invoice.paid": {
-        const invoice = event.data.object as Stripe.Invoice;
+        const invoice = event.data.object as Stripe.Invoice & { subscription?: string | null };
         if (invoice.subscription) {
           console.log(`Invoice paid for subscription ${invoice.subscription}`);
           await handleInvoicePaid(invoice, stripe);
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
       }
 
       case "invoice.payment_failed": {
-        const invoice = event.data.object as Stripe.Invoice;
+        const invoice = event.data.object as Stripe.Invoice & { subscription?: string | null };
         console.log(`Invoice payment failed: ${invoice.id}`);
         
         // Update subscription status
@@ -285,7 +285,7 @@ async function syncSubscriptionToDatabase(
 /**
  * Handle paid invoice - update subscription period and reset hours
  */
-async function handleInvoicePaid(invoice: Stripe.Invoice, stripe: Stripe) {
+async function handleInvoicePaid(invoice: Stripe.Invoice & { subscription?: string | null }, stripe: Stripe) {
   try {
     if (!invoice.subscription) return;
     
