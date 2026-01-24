@@ -209,12 +209,23 @@ async function handleCheckoutCompleted(
 /**
  * Sync a Stripe subscription to the database
  */
+// Extended Stripe Subscription type with period properties
+type StripeSubscriptionWithPeriod = Stripe.Subscription & {
+  current_period_start: number;
+  current_period_end: number;
+  cancel_at_period_end: boolean;
+  canceled_at: number | null;
+};
+
 async function syncSubscriptionToDatabase(
-  subscription: Stripe.Subscription,
+  subscriptionInput: Stripe.Subscription,
   stripe: Stripe,
   overrideUserId?: string
 ) {
   try {
+    // Cast to extended type with period properties
+    const subscription = subscriptionInput as StripeSubscriptionWithPeriod;
+    
     const planId = subscription.metadata.planId || "";
     const planName = subscription.metadata.planName || "Onderhoud";
     const hoursIncluded = parseInt(subscription.metadata.hoursIncluded || "0", 10);
@@ -291,8 +302,9 @@ async function handleInvoicePaid(invoice: Stripe.Invoice & { subscription?: stri
     
     const subscriptionId = invoice.subscription as string;
     
-    // Get the updated subscription from Stripe
-    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+    // Get the updated subscription from Stripe and cast to extended type
+    const subscriptionRaw = await stripe.subscriptions.retrieve(subscriptionId);
+    const subscription = subscriptionRaw as StripeSubscriptionWithPeriod;
     
     // Update subscription in database
     const dbSubscription = await prisma.subscription.findUnique({
