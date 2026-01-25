@@ -79,6 +79,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }
     return secret;
   })(),
+  // Trust host for Vercel deployments (required for NextAuth v5)
+  trustHost: true,
   pages: {
     signIn: "/portal/login",
     error: "/portal/login",
