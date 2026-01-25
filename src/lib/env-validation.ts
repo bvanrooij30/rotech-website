@@ -20,6 +20,10 @@ interface EnvConfig {
   STRIPE_SECRET_KEY?: string;
   STRIPE_WEBHOOK_SECRET?: string;
   STRIPE_PUBLISHABLE_KEY?: string;
+  // Admin account (auto-created if not exists)
+  SUPER_ADMIN_EMAIL?: string;
+  SUPER_ADMIN_PASSWORD?: string;
+  SUPER_ADMIN_NAME?: string;
 }
 
 /**
@@ -96,6 +100,14 @@ export function validateEnv(): void {
     console.warn("⚠️  STRIPE_WEBHOOK_SECRET format looks incorrect (should start with 'whsec_')");
   }
   
+  // Super admin auto-creation
+  if (process.env.SUPER_ADMIN_EMAIL && !process.env.SUPER_ADMIN_PASSWORD) {
+    console.warn("⚠️  SUPER_ADMIN_EMAIL set but SUPER_ADMIN_PASSWORD missing - admin will not be created");
+  }
+  if (process.env.SUPER_ADMIN_PASSWORD && process.env.SUPER_ADMIN_PASSWORD.length < 8) {
+    console.warn("⚠️  SUPER_ADMIN_PASSWORD should be at least 8 characters");
+  }
+  
   if (errors.length > 0) {
     throw new Error(`Environment validation failed:\n${errors.join("\n")}`);
   }
@@ -117,6 +129,9 @@ export function getEnvConfig(): EnvConfig {
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
     STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+    SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL,
+    SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD,
+    SUPER_ADMIN_NAME: process.env.SUPER_ADMIN_NAME,
   };
 }
 

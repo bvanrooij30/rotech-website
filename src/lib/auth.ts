@@ -13,6 +13,59 @@ export async function verifyPassword(password: string, hashedPassword: string): 
   return compare(password, hashedPassword);
 }
 
+// Track if admin has been ensured this session
+let adminEnsured = false;
+
+/**
+ * Ensure super admin account exists
+ * Creates admin from environment variables if not present
+ */
+async function ensureSuperAdmin(): Promise<void> {
+  // Only run once per server instance
+  if (adminEnsured) return;
+  
+  const adminEmail = process.env.SUPER_ADMIN_EMAIL;
+  const adminPassword = process.env.SUPER_ADMIN_PASSWORD;
+  const adminName = process.env.SUPER_ADMIN_NAME || "Ro-Tech Admin";
+  
+  // Skip if env vars not configured
+  if (!adminEmail || !adminPassword) {
+    adminEnsured = true;
+    return;
+  }
+  
+  try {
+    // Check if super admin exists
+    const existingAdmin = await prisma.user.findFirst({
+      where: { role: "super_admin" },
+    });
+    
+    if (!existingAdmin) {
+      // Create super admin from env vars
+      const hashedPassword = await hash(adminPassword, 12);
+      
+      await prisma.user.create({
+        data: {
+          email: adminEmail.toLowerCase(),
+          name: adminName,
+          password: hashedPassword,
+          role: "super_admin",
+          isActive: true,
+          emailVerified: new Date(),
+        },
+      });
+      
+      console.log("✅ Super admin created from environment variables:", adminEmail);
+    }
+    
+    adminEnsured = true;
+  } catch (error) {
+    // Log but don't throw - app should still work
+    console.error("Failed to ensure super admin:", error);
+    adminEnsured = true;
+  }
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/portal/login",
@@ -60,6 +113,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const minutes = Math.ceil((rateCheck.retryAfter || 900) / 60);
           throw new Error(`Te veel inlogpogingen. Probeer het over ${minutes} minuten opnieuw.`);
         }
+
+        // Ensure super admin exists on first login attempt
+        await ensureSuperAdmin();
 
         const user = await prisma.user.findUnique({
           where: { email },

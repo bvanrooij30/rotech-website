@@ -71,11 +71,11 @@ ROTECH_WEBHOOK_SECRET="${generateKey(32)}"
 # NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Super Admin Configuration (for database seed)
+# Super Admin Configuration (auto-created on first login attempt)
 # ═══════════════════════════════════════════════════════════════════════════════
-SUPER_ADMIN_EMAIL="your-email@example.com"
-SUPER_ADMIN_NAME="Your Name"
-# SUPER_ADMIN_PASSWORD="" # Leave empty to auto-generate
+SUPER_ADMIN_EMAIL="admin@ro-techdevelopment.dev"
+SUPER_ADMIN_PASSWORD="${generateSecret(16)}"
+SUPER_ADMIN_NAME="Ro-Tech Admin"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Optional: Analytics & Monitoring
@@ -88,12 +88,15 @@ SUPER_ADMIN_NAME="Your Name"
 📋 Quick Start:
 
 1. Copy the variables above to .env.local
-2. Update SUPER_ADMIN_EMAIL with your email
+2. Update SUPER_ADMIN_EMAIL and SUPER_ADMIN_PASSWORD
 3. Run: npx prisma db push
-4. Run: npx prisma db seed
-5. Start: npm run dev
-6. Login at: http://localhost:3000/portal/login
-7. Access admin: http://localhost:3000/admin
+4. Start: npm run dev
+5. Login at: http://localhost:3000/portal/login (admin auto-created on first login)
+6. Access admin: http://localhost:3000/admin
+
+🔐 For Production (Vercel):
+- Add SUPER_ADMIN_EMAIL and SUPER_ADMIN_PASSWORD to Vercel env vars
+- Admin will be automatically created on first login attempt
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 `);
