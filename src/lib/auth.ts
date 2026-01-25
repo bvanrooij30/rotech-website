@@ -67,6 +67,18 @@ async function ensureSuperAdmin(): Promise<void> {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  // Explicit secret configuration (supports both AUTH_SECRET and NEXTAUTH_SECRET)
+  secret: (() => {
+    const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
+    if (!secret) {
+      if (process.env.NODE_ENV === "production") {
+        throw new Error("AUTH_SECRET of NEXTAUTH_SECRET is verplicht in production");
+      }
+      console.warn("⚠️  AUTH_SECRET niet gevonden - gebruik development fallback (NIET voor production!)");
+      return "development-secret-DO-NOT-USE-IN-PRODUCTION";
+    }
+    return secret;
+  })(),
   pages: {
     signIn: "/portal/login",
     error: "/portal/login",
