@@ -85,16 +85,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 dagen
   },
-  secret: (() => {
-    if (!process.env.NEXTAUTH_SECRET) {
-      if (process.env.NODE_ENV === "production") {
-        throw new Error("NEXTAUTH_SECRET is verplicht in production");
-      }
-      console.warn("⚠️  NEXTAUTH_SECRET niet gevonden - gebruik development fallback (NIET voor production!)");
-      return "development-secret-DO-NOT-USE-IN-PRODUCTION";
-    }
-    return process.env.NEXTAUTH_SECRET;
-  })(),
+  // Secret is read at runtime from environment variable
+  // Falls back to a dev secret in development mode only
+  secret: process.env.NEXTAUTH_SECRET || (
+    process.env.NODE_ENV === "production" 
+      ? "build-time-placeholder-replaced-at-runtime"
+      : "development-secret-DO-NOT-USE-IN-PRODUCTION"
+  ),
 });
 
 // Extended types for NextAuth

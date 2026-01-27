@@ -45,12 +45,13 @@ export function validateEnv(): void {
     }
   }
   
-  // Auth.js v5 Configuration (critical for login functionality)
-  if (!process.env.AUTH_SECRET) {
-    console.warn("⚠️  AUTH_SECRET not set - authentication will NOT work!");
+  // NextAuth Configuration (critical for login functionality)
+  const authSecret = process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET;
+  if (!authSecret) {
+    console.warn("⚠️  NEXTAUTH_SECRET not set - authentication will NOT work!");
     console.warn("   Generate one with: openssl rand -base64 32");
-  } else if (process.env.AUTH_SECRET.length < 32) {
-    console.warn("⚠️  AUTH_SECRET should be at least 32 characters for security");
+  } else if (authSecret.length < 32) {
+    console.warn("⚠️  NEXTAUTH_SECRET should be at least 32 characters for security");
   }
   
   // Database
