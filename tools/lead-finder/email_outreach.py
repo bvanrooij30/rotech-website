@@ -162,12 +162,12 @@ class EmailTemplate:
 
 TEMPLATES = {
     # =========================================================================
-    # INITIAL CONTACT - Voor bedrijven MET website
-    # Toon: Zakelijk maar menselijk, open en toegankelijk
+    # INITIAL CONTACT - Voor bedrijven MET website (WARM leads)
+    # GEOPTIMALISEERD: 85 woorden, korte subject line
     # =========================================================================
     "initial": EmailTemplate(
         name="Eerste contact - Met website",
-        subject="Even voorstellen - website $bedrijfsnaam",
+        subject="Idee voor $bedrijfsnaam",
         template_type="initial",
         body_html="""<!DOCTYPE html>
 <html>
@@ -175,80 +175,58 @@ TEMPLATES = {
     <meta charset="utf-8">
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.7; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .signature { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e5e5; }
-        .signature-name { font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
-        .signature-details { font-size: 14px; color: #666; line-height: 1.5; }
-        .signature-details a { color: #4F46E5; text-decoration: none; }
-        .signature-details a:hover { text-decoration: underline; }
-        .footer { margin-top: 30px; padding-top: 16px; font-size: 11px; color: #999; border-top: 1px solid #f0f0f0; }
-        .footer a { color: #999; }
+        .signature { margin-top: 25px; padding-top: 15px; border-top: 1px solid #eee; font-size: 14px; color: #666; }
+        .footer { margin-top: 20px; font-size: 11px; color: #999; }
     </style>
 </head>
 <body>
-    <p>Goedendag,</p>
+    <p>Hoi,</p>
     
-    <p>Ik kwam <strong>$bedrijfsnaam</strong> tegen via Google Maps en zag dat jullie goede reviews hebben in $stad. Mooi om te zien.</p>
+    <p>Via Google Maps zag ik <strong>$bedrijfsnaam</strong> in $stad. Goede reviews!</p>
     
-    <p>Ik ben Bart van Rooij, webontwikkelaar bij Ro-Tech Development. Ik help lokale ondernemers met websites die niet alleen er goed uitzien, maar ook daadwerkelijk klanten opleveren. Denk aan betere vindbaarheid in Google, en bezoekers die ook echt contact opnemen.</p>
+    <p>Ik keek even naar jullie website en zag een paar dingen die beter kunnen. Niet om af te kraken, maar omdat ik denk dat jullie meer klanten uit de website kunnen halen.</p>
     
-    <p>Nu vraag ik me af: levert jullie huidige website voldoende nieuwe klanten op? Veel ondernemers die ik spreek geven aan dat bezoekers wel kijken, maar vervolgens niet de telefoon pakken of een afspraak maken.</p>
+    <p>Ik help ondernemers in $stad met dit soort verbeteringen. Vaak zijn het kleine aanpassingen met groot effect.</p>
     
-    <p>Mocht je hier herkenning in hebben, dan praat ik graag eens vrijblijvend met je over wat er beter kan. Geen verplichtingen, gewoon een open gesprek.</p>
-    
-    <p>Neem gerust een kijkje op mijn website voor voorbeelden van mijn werk: <a href="https://www.ro-techdevelopment.com/projecten" style="color: #4F46E5;">ro-techdevelopment.com/projecten</a></p>
-    
-    <p>Ik hoor het graag.</p>
+    <p>Tijd voor een kort gesprek van 10 minuten? Vrijblijvend.</p>
     
     <div class="signature">
-        <div class="signature-name">Bart van Rooij</div>
-        <div class="signature-details">
-            Ro-Tech Development<br>
-            Webdesign & Development<br><br>
-            <a href="tel:+31657235574">+31 6 57 23 55 74</a><br>
-            <a href="mailto:contact@ro-techdevelopment.com">contact@ro-techdevelopment.com</a><br>
-            <a href="https://www.ro-techdevelopment.com">www.ro-techdevelopment.com</a>
-        </div>
+        <strong>Bart van Rooij</strong><br>
+        Ro-Tech Development<br>
+        06 57 23 55 74
     </div>
     
     <div class="footer">
-        <p>Liever geen emails meer? <a href="mailto:$reply_to?subject=Uitschrijven&body=Graag uitschrijven: $email">Klik hier</a></p>
+        Geen interesse? Reply "stop"
     </div>
 </body>
 </html>""",
-        body_text="""Goedendag,
+        body_text="""Hoi,
 
-Ik kwam $bedrijfsnaam tegen via Google Maps en zag dat jullie goede reviews hebben in $stad. Mooi om te zien.
+Via Google Maps zag ik $bedrijfsnaam in $stad. Goede reviews!
 
-Ik ben Bart van Rooij, webontwikkelaar bij Ro-Tech Development. Ik help lokale ondernemers met websites die niet alleen er goed uitzien, maar ook daadwerkelijk klanten opleveren. Denk aan betere vindbaarheid in Google, en bezoekers die ook echt contact opnemen.
+Ik keek even naar jullie website en zag een paar dingen die beter kunnen. Niet om af te kraken, maar omdat ik denk dat jullie meer klanten uit de website kunnen halen.
 
-Nu vraag ik me af: levert jullie huidige website voldoende nieuwe klanten op? Veel ondernemers die ik spreek geven aan dat bezoekers wel kijken, maar vervolgens niet de telefoon pakken of een afspraak maken.
+Ik help ondernemers in $stad met dit soort verbeteringen. Vaak zijn het kleine aanpassingen met groot effect.
 
-Mocht je hier herkenning in hebben, dan praat ik graag eens vrijblijvend met je over wat er beter kan. Geen verplichtingen, gewoon een open gesprek.
+Tijd voor een kort gesprek van 10 minuten? Vrijblijvend.
 
-Neem gerust een kijkje op mijn website voor voorbeelden: www.ro-techdevelopment.com/projecten
-
-Ik hoor het graag.
-
-Met vriendelijke groet,
-
+Groet,
 Bart van Rooij
 Ro-Tech Development
-
-Tel: +31 6 57 23 55 74
-Email: contact@ro-techdevelopment.com
-Web: www.ro-techdevelopment.com
+06 57 23 55 74
 
 ---
-Liever geen emails? Reply "stop"."""
+Geen interesse? Reply "stop"."""
     ),
     
     # =========================================================================
     # NO WEBSITE - Voor HOT leads zonder website
-    # Toon: Direct maar respectvol, duidelijke waarde
+    # GEOPTIMALISEERD: 95 woorden, korte subject line, sterke CTA
     # =========================================================================
     "no_website": EmailTemplate(
         name="Geen website - Direct",
-        subject="Website voor $bedrijfsnaam?",
+        subject="$bedrijfsnaam website",
         template_type="initial",
         body_html="""<!DOCTYPE html>
 <html>
@@ -256,84 +234,63 @@ Liever geen emails? Reply "stop"."""
     <meta charset="utf-8">
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.7; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .highlight { background: #f8f9fa; border-left: 3px solid #4F46E5; padding: 15px 20px; margin: 20px 0; }
-        .signature { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e5e5; }
-        .signature-name { font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
-        .signature-details { font-size: 14px; color: #666; line-height: 1.5; }
-        .signature-details a { color: #4F46E5; text-decoration: none; }
-        .signature-details a:hover { text-decoration: underline; }
-        .footer { margin-top: 30px; padding-top: 16px; font-size: 11px; color: #999; border-top: 1px solid #f0f0f0; }
-        .footer a { color: #999; }
+        .signature { margin-top: 25px; padding-top: 15px; border-top: 1px solid #eee; font-size: 14px; color: #666; }
+        .ps { margin-top: 20px; font-size: 13px; color: #666; }
+        .footer { margin-top: 20px; font-size: 11px; color: #999; }
     </style>
 </head>
 <body>
     <p>Goedendag,</p>
     
-    <p>Via Google Maps kwam ik <strong>$bedrijfsnaam</strong> in $stad tegen. Jullie reviews zijn uitstekend - duidelijk een bedrijf waar klanten tevreden over zijn.</p>
+    <p>Via Google Maps zag ik dat <strong>$bedrijfsnaam</strong> in $stad goede reviews heeft. Complimenten!</p>
     
-    <p>Wat me opviel: jullie hebben nog geen eigen website. Dat is zonde, want 85% van de mensen zoekt tegenwoordig eerst online voordat ze ergens naartoe gaan. Een goede website kan dus echt het verschil maken.</p>
+    <p>Wat me opviel: jullie hebben nog geen eigen website. Dat is jammer, want 85% van de mensen zoekt eerst online voordat ze ergens naartoe gaan.</p>
     
-    <div class="highlight">
-        <strong>Wat ik doe:</strong><br>
-        Ik bouw professionele websites voor lokale ondernemers. Websites die goed vindbaar zijn in Google, er modern uitzien, en bezoekers omzetten in klanten. Geen standaard templates, maar maatwerk dat bij jullie bedrijf past.
-    </div>
+    <p>Ik ben Bart, en ik bouw websites voor lokale ondernemers. Simpel, professioneel, betaalbaar. Geen standaard template, maar iets dat bij jullie past.</p>
     
-    <p>Benieuwd wat ik voor $bedrijfsnaam zou kunnen betekenen? Ik maak graag tijd vrij voor een vrijblijvend gesprek. Even kennismaken en kijken of het klikt.</p>
-    
-    <p>Bekijk voorbeelden van mijn werk op: <a href="https://www.ro-techdevelopment.com/projecten" style="color: #4F46E5;">ro-techdevelopment.com/projecten</a></p>
-    
-    <p>Laat gerust iets weten!</p>
+    <p>Tijd voor een kort belletje deze week? 10 minuutjes, vrijblijvend.</p>
     
     <div class="signature">
-        <div class="signature-name">Bart van Rooij</div>
-        <div class="signature-details">
-            Ro-Tech Development<br>
-            Webdesign & Development<br><br>
-            <a href="tel:+31657235574">+31 6 57 23 55 74</a><br>
-            <a href="mailto:contact@ro-techdevelopment.com">contact@ro-techdevelopment.com</a><br>
-            <a href="https://www.ro-techdevelopment.com">www.ro-techdevelopment.com</a>
-        </div>
+        <strong>Bart van Rooij</strong><br>
+        Ro-Tech Development<br>
+        06 57 23 55 74
     </div>
     
+    <p class="ps">PS: Bekijk wat ik voor anderen deed: <a href="https://ro-techdevelopment.dev/projecten">ro-techdevelopment.dev/projecten</a></p>
+    
     <div class="footer">
-        <p>Liever geen emails meer? <a href="mailto:$reply_to?subject=Uitschrijven&body=Graag uitschrijven: $email">Klik hier</a></p>
+        Geen interesse? Reply "stop"
     </div>
 </body>
 </html>""",
         body_text="""Goedendag,
 
-Via Google Maps kwam ik $bedrijfsnaam in $stad tegen. Jullie reviews zijn uitstekend - duidelijk een bedrijf waar klanten tevreden over zijn.
+Via Google Maps zag ik dat $bedrijfsnaam in $stad goede reviews heeft. Complimenten!
 
-Wat me opviel: jullie hebben nog geen eigen website. Dat is zonde, want 85% van de mensen zoekt tegenwoordig eerst online voordat ze ergens naartoe gaan. Een goede website kan dus echt het verschil maken.
+Wat me opviel: jullie hebben nog geen eigen website. Dat is jammer, want 85% van de mensen zoekt eerst online voordat ze ergens naartoe gaan.
 
-WAT IK DOE:
-Ik bouw professionele websites voor lokale ondernemers. Websites die goed vindbaar zijn in Google, er modern uitzien, en bezoekers omzetten in klanten. Geen standaard templates, maar maatwerk dat bij jullie bedrijf past.
+Ik ben Bart, en ik bouw websites voor lokale ondernemers. Simpel, professioneel, betaalbaar. Geen standaard template, maar iets dat bij jullie past.
 
-Benieuwd wat ik voor $bedrijfsnaam zou kunnen betekenen? Ik maak graag tijd vrij voor een vrijblijvend gesprek. Even kennismaken en kijken of het klikt.
+Tijd voor een kort belletje deze week? 10 minuutjes, vrijblijvend.
 
-Bekijk voorbeelden van mijn werk op: www.ro-techdevelopment.com/projecten
-
-Laat gerust iets weten!
-
-Met vriendelijke groet,
-
+Groet,
 Bart van Rooij
 Ro-Tech Development
+06 57 23 55 74
 
-Tel: +31 6 57 23 55 74
-Email: contact@ro-techdevelopment.com
-Web: www.ro-techdevelopment.com
+PS: Bekijk wat ik voor anderen deed: ro-techdevelopment.dev/projecten
 
 ---
-Liever geen emails? Reply "stop"."""
+Geen interesse? Reply "stop"."""
     ),
     
     # =========================================================================
     # FOLLOW-UP 1 - Vriendelijke herinnering (Na 5 dagen)
+    # GEOPTIMALISEERD: 55 woorden, makkelijke response opties
     # =========================================================================
     "followup1": EmailTemplate(
         name="Follow-up 1 - Herinnering",
-        subject="Nog even over die website - $bedrijfsnaam",
+        subject="Kort vraagje",
         template_type="followup1",
         body_html="""<!DOCTYPE html>
 <html>
@@ -341,60 +298,53 @@ Liever geen emails? Reply "stop"."""
     <meta charset="utf-8">
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.7; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .signature { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e5e5; }
-        .signature-name { font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
-        .signature-details { font-size: 14px; color: #666; line-height: 1.5; }
-        .signature-details a { color: #4F46E5; text-decoration: none; }
-        .footer { margin-top: 30px; padding-top: 16px; font-size: 11px; color: #999; border-top: 1px solid #f0f0f0; }
-        .footer a { color: #999; }
+        .signature { margin-top: 20px; font-size: 14px; color: #666; }
+        .footer { margin-top: 20px; font-size: 11px; color: #999; }
     </style>
 </head>
 <body>
-    <p>Hallo,</p>
+    <p>Hoi,</p>
     
-    <p>Vorige week stuurde ik een bericht over een website voor $bedrijfsnaam. Ik snap dat je als ondernemer andere dingen aan je hoofd hebt - de inbox kan snel vollopen.</p>
+    <p>Even een reminder op mijn vorige bericht. Ik snap dat je het druk hebt - ondernemers hebben altijd duizend dingen aan hun hoofd.</p>
     
-    <p>Toch wilde ik nog even checken: is een betere online zichtbaarheid iets waar jullie mee bezig zijn? Zo ja, dan spreek ik je graag even. Zo nee, ook prima - dan weet ik dat ook.</p>
+    <p>Kort: ik vroeg of je interesse hebt in een gesprek over jullie online zichtbaarheid. 10 minuten, geen verplichtingen.</p>
     
-    <p>Een korte reactie is voldoende. Of bel me gerust: <a href="tel:+31657235574" style="color: #4F46E5;">+31 6 57 23 55 74</a></p>
+    <p><strong>Interesse?</strong> Reply met "ja" en ik bel je.<br>
+    <strong>Geen interesse?</strong> Reply met "nee" en ik laat je met rust.</p>
     
     <div class="signature">
-        <div class="signature-name">Bart van Rooij</div>
-        <div class="signature-details">
-            Ro-Tech Development<br>
-            <a href="https://www.ro-techdevelopment.com">www.ro-techdevelopment.com</a>
-        </div>
+        Groet,<br>
+        <strong>Bart</strong>
     </div>
     
     <div class="footer">
-        <a href="mailto:$reply_to?subject=Stop&body=Geen interesse: $email">Geen interesse meer</a>
+        Ro-Tech Development | 06 57 23 55 74
     </div>
 </body>
 </html>""",
-        body_text="""Hallo,
+        body_text="""Hoi,
 
-Vorige week stuurde ik een bericht over een website voor $bedrijfsnaam. Ik snap dat je als ondernemer andere dingen aan je hoofd hebt - de inbox kan snel vollopen.
+Even een reminder op mijn vorige bericht. Ik snap dat je het druk hebt - ondernemers hebben altijd duizend dingen aan hun hoofd.
 
-Toch wilde ik nog even checken: is een betere online zichtbaarheid iets waar jullie mee bezig zijn? Zo ja, dan spreek ik je graag even. Zo nee, ook prima - dan weet ik dat ook.
+Kort: ik vroeg of je interesse hebt in een gesprek over jullie online zichtbaarheid. 10 minuten, geen verplichtingen.
 
-Een korte reactie is voldoende. Of bel me gerust: +31 6 57 23 55 74
+Interesse? Reply met "ja" en ik bel je.
+Geen interesse? Reply met "nee" en ik laat je met rust.
 
-Met vriendelijke groet,
-
-Bart van Rooij
-Ro-Tech Development
-www.ro-techdevelopment.com
+Groet,
+Bart
 
 ---
-Reply "stop" om te stoppen."""
+Ro-Tech Development | 06 57 23 55 74"""
     ),
     
     # =========================================================================
     # FOLLOW-UP 2 - Laatste bericht (Respectvol afsluiten)
+    # GEOPTIMALISEERD: 40 woorden, respectvol, deur blijft open
     # =========================================================================
     "followup2": EmailTemplate(
         name="Follow-up 2 - Afsluiting",
-        subject="Laatste berichtje - $bedrijfsnaam",
+        subject="Laatste berichtje",
         template_type="followup2",
         body_html="""<!DOCTYPE html>
 <html>
@@ -402,29 +352,23 @@ Reply "stop" om te stoppen."""
     <meta charset="utf-8">
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.7; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .signature { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e5e5; }
-        .signature-name { font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
-        .signature-details { font-size: 14px; color: #666; line-height: 1.5; }
-        .signature-details a { color: #4F46E5; text-decoration: none; }
-        .footer { margin-top: 30px; padding-top: 16px; font-size: 11px; color: #999; }
+        .signature { margin-top: 20px; font-size: 14px; color: #666; }
+        .footer { margin-top: 15px; font-size: 11px; color: #999; }
     </style>
 </head>
 <body>
-    <p>Hallo,</p>
+    <p>Hoi,</p>
     
-    <p>Ik heb een paar keer geprobeerd contact te leggen over een website voor $bedrijfsnaam. Geen reactie, dus ik neem aan dat dit nu niet speelt - en dat is helemaal oké.</p>
+    <p>Dit is mijn laatste bericht. Geen reactie = geen interesse, en dat is prima.</p>
     
-    <p>Ik stop met mailen, maar mocht je in de toekomst toch eens willen sparren over jullie online zichtbaarheid: mijn deur staat altijd open.</p>
+    <p>Mocht je in de toekomst toch hulp nodig hebben met jullie website, dan weet je me te vinden.</p>
     
-    <p>Veel succes met de zaak!</p>
+    <p>Succes met de zaak!</p>
     
     <div class="signature">
-        <div class="signature-name">Bart van Rooij</div>
-        <div class="signature-details">
-            Ro-Tech Development<br>
-            <a href="tel:+31657235574">+31 6 57 23 55 74</a><br>
-            <a href="https://www.ro-techdevelopment.com">www.ro-techdevelopment.com</a>
-        </div>
+        <strong>Bart van Rooij</strong><br>
+        Ro-Tech Development<br>
+        ro-techdevelopment.dev
     </div>
     
     <div class="footer">
@@ -432,20 +376,17 @@ Reply "stop" om te stoppen."""
     </div>
 </body>
 </html>""",
-        body_text="""Hallo,
+        body_text="""Hoi,
 
-Ik heb een paar keer geprobeerd contact te leggen over een website voor $bedrijfsnaam. Geen reactie, dus ik neem aan dat dit nu niet speelt - en dat is helemaal oké.
+Dit is mijn laatste bericht. Geen reactie = geen interesse, en dat is prima.
 
-Ik stop met mailen, maar mocht je in de toekomst toch eens willen sparren over jullie online zichtbaarheid: mijn deur staat altijd open.
+Mocht je in de toekomst toch hulp nodig hebben met jullie website, dan weet je me te vinden.
 
-Veel succes met de zaak!
-
-Met vriendelijke groet,
+Succes met de zaak!
 
 Bart van Rooij
 Ro-Tech Development
-Tel: +31 6 57 23 55 74
-Web: www.ro-techdevelopment.com
+ro-techdevelopment.dev
 
 ---
 Dit was mijn laatste bericht."""
@@ -869,6 +810,84 @@ class EmailOutreach:
         """Haal email geschiedenis op"""
         lead_id = hashlib.md5(email.lower().encode()).hexdigest()[:12]
         return self.sent_log.get("emails", {}).get(lead_id)
+    
+    def send_plain_text(
+        self,
+        to_email: str,
+        subject: str,
+        body: str
+    ) -> bool:
+        """
+        Verstuur plain text email (betere deliverability)
+        Plain text heeft 21% hogere open rate dan HTML (Litmus 2022)
+        """
+        # Validatie
+        if not to_email or '@' not in to_email:
+            logger.warning(f"Ongeldige email: {to_email}")
+            return False
+        
+        if self.is_blacklisted(to_email):
+            logger.info(f"Overgeslagen (blacklist): {to_email}")
+            return False
+        
+        # Check rate limit
+        can_send, reason = self._can_send_email()
+        if not can_send:
+            logger.warning(f"Rate limit: {reason}")
+            return False
+        
+        # SMTP verbinding
+        if not self.smtp_connection:
+            if not self._connect_smtp():
+                return False
+        
+        # Bouw plain text email (geen HTML!)
+        msg = MIMEText(body, 'plain', 'utf-8')
+        msg['Subject'] = subject
+        msg['From'] = f"{EmailConfig.SENDER_NAME} <{EmailConfig.SENDER_EMAIL}>"
+        msg['To'] = to_email
+        msg['Reply-To'] = EmailConfig.REPLY_TO
+        
+        try:
+            self.smtp_connection.send_message(msg)
+            
+            # Log
+            lead_id = hashlib.md5(to_email.lower().encode()).hexdigest()[:12]
+            if lead_id not in self.sent_log["emails"]:
+                self.sent_log["emails"][lead_id] = {
+                    "email": to_email,
+                    "company": "",
+                    "sent_dates": [],
+                    "templates_used": []
+                }
+            
+            self.sent_log["emails"][lead_id]["sent_dates"].append(
+                datetime.now().isoformat()
+            )
+            self.sent_log["emails"][lead_id]["templates_used"].append("plain_text")
+            
+            self._increment_daily_count()
+            self.stats["total_sent"] += 1
+            
+            self._save_sent_log()
+            self._save_stats()
+            
+            logger.info(f"✅ Plain text email verstuurd naar: {to_email}")
+            return True
+            
+        except smtplib.SMTPRecipientsRefused:
+            logger.warning(f"Email bounced: {to_email}")
+            self.add_to_blacklist(to_email)
+            return False
+        except smtplib.SMTPServerDisconnected:
+            logger.warning("SMTP verbinding verbroken, opnieuw verbinden...")
+            self._disconnect_smtp()
+            if self._connect_smtp():
+                return self.send_plain_text(to_email, subject, body)
+            return False
+        except Exception as e:
+            logger.error(f"Verzenden mislukt naar {to_email}: {e}")
+            return False
     
     def get_next_template(self, lead: EmailLead) -> Optional[EmailTemplate]:
         """Bepaal welke template te gebruiken"""
