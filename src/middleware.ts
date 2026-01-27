@@ -16,6 +16,11 @@ const authRoutes = [
   "/portal/wachtwoord-resetten",
 ];
 
+// Public routes that don't require any auth check
+const publicRoutes = [
+  "/setup",
+];
+
 /**
  * Check if user has a valid session token
  * Uses lightweight cookie check instead of full auth import to stay under Edge Function size limit
@@ -36,6 +41,12 @@ function hasSessionToken(request: NextRequest): boolean {
  */
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  
+  // Check if route is public (setup, etc.) - skip all checks
+  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
+  if (isPublicRoute) {
+    return NextResponse.next();
+  }
   
   // Check if route is protected
   const isProtectedRoute = protectedRoutes.some(
