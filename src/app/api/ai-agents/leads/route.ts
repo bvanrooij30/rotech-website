@@ -1,12 +1,59 @@
 /**
  * AI Agents API - Leads Endpoint
  * GET /api/ai-agents/leads - Get marketing leads
+ * POST /api/ai-agents/leads - Create new lead
+ * 
+ * Dit haalt ECHTE data uit de database
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
+import { prisma } from '@/ai-agents/core/database';
+import { z } from 'zod';
 
-function getLeadsData() {
+// Schema for creating a new lead
+const createLeadSchema = z.object({
+  companyName: z.string().min(1),
+  contactName: z.string().min(1),
+  email: z.string().email(),
+  phone: z.string().optional(),
+  website: z.string().optional(),
+  source: z.string().min(1),
+  interest: z.string().min(1),
+  message: z.string().optional(),
+  budget: z.string().optional(),
+  timeline: z.string().optional(),
+});
+
+async function getLeadsFromDatabase() {
+  // Get all leads from database
+  const leads = await prisma.aILead.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: {
+      activities: {
+        orderBy: { createdAt: 'desc' },
+        take: 3,
+      },
+    },
+  });
+  
+  return leads.map(lead => ({
+    id: lead.id,
+    companyName: lead.companyName,
+    contactName: lead.contactName,
+    email: lead.email,
+    phone: lead.phone,
+    source: lead.source,
+    interest: lead.interest,
+    score: lead.score,
+    status: lead.status,
+    createdAt: lead.createdAt.toISOString(),
+    notes: lead.notes ? JSON.parse(lead.notes) : [],
+  }));
+}
+
+// Fallback demo data if database is empty
+function getDemoLeadsData() {
   const now = new Date();
   
   return [
@@ -123,7 +170,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const leads = getLeadsData();
+    // Try to get leads from database, fall back to demo data
+    let leads = await getLeadsFromDatabase();
+    
+    // If no leads in database, use demo data
+    if (leads.length === 0) {
+      leads = getDemoLeadsData();
+    }
     
     // Calculate stats
     const stats = {
@@ -132,7 +185,9 @@ export async function GET(request: NextRequest) {
       contacted: leads.filter(l => l.status === 'contacted').length,
       qualified: leads.filter(l => l.status === 'qualified').length,
       proposal: leads.filter(l => l.status === 'proposal').length,
-      avgScore: Math.round(leads.reduce((sum, l) => sum + l.score, 0) / leads.length),
+      avgScore: leads.length > 0 
+        ? Math.round(leads.reduce((sum, l) => sum + l.score, 0) / leads.length)
+        : 0,
     };
 
     return NextResponse.json({
@@ -146,6 +201,59 @@ export async function GET(request: NextRequest) {
     console.error('Leads API error:', error);
     return NextResponse.json(
       { success: false, error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+// POST: Create a new lead
+export async function POST(request: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const validated = createLeadSchema.parse(body);
+
+    // Create lead in database
+    const lead = await prisma.aILead.create({
+      data: {
+        companyName: validated.companyName,
+        contactName: validated.contactName,
+        email: validated.email,
+        phone: validated.phone,
+        website: validated.website,
+        source: validated.source,
+        interest: validated.interest,
+        message: validated.message,
+        budget: validated.budget,
+        timeline: validated.timeline,
+        score: 50, // Will be updated by AI scoring
+        status: 'new',
+      },
+    });
+
+    // Log the lead creation
+    await prisma.leadActivity.create({
+      data: {
+        leadId: lead.id,
+        type: 'created',
+        title: 'Lead aangemaakt',
+        details: `Lead van ${validated.source}`,
+        agentId: 'intake-agent',
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: lead,
+    });
+  } catch (error) {
+    console.error('Create lead error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to create lead' },
       { status: 500 }
     );
   }

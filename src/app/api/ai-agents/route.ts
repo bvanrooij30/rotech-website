@@ -1,14 +1,55 @@
 /**
  * AI Agents API - Main Status Endpoint
  * GET /api/ai-agents - Get system status
+ * 
+ * Dit haalt ECHTE data uit de database
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
+import { prisma } from '@/ai-agents/core/database';
 
-// Simulated agent data - In production, this would come from the actual agent system
-function getAgentSystemData() {
+// Get real agent data from database + registry
+async function getAgentSystemData() {
   const now = new Date();
+  
+  // Get today's metrics from database
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const todayMetrics = await prisma.aIAgentMetrics.findMany({
+    where: {
+      date: { gte: today },
+    },
+  });
+  
+  // Get active leads count
+  const activeLeadsCount = await prisma.aILead.count({
+    where: {
+      status: { notIn: ['won', 'lost'] },
+    },
+  });
+  
+  // Get tasks completed today
+  const tasksCompletedToday = await prisma.aIScheduledTask.count({
+    where: {
+      status: 'completed',
+      completedAt: { gte: today },
+    },
+  });
+  
+  // Calculate pipeline value
+  const qualifiedLeads = await prisma.aILead.aggregate({
+    where: {
+      score: { gte: 70 },
+      status: { notIn: ['won', 'lost'] },
+    },
+    _sum: {
+      estimatedValue: true,
+    },
+  });
+  
+  const revenuePipeline = qualifiedLeads._sum.estimatedValue || 0;
   
   const systemAgents = [
     {

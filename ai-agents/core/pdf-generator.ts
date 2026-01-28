@@ -560,7 +560,7 @@ export class PDFGenerator {
     uptime: number;
     updates: string[];
     securityStatus: 'good' | 'warning' | 'critical';
-    backupStatus: { lastBackup: Date; size: string; status: 'success' | 'failed' };
+    backupStatus: { lastBackup: Date; size: string; status: 'success' | 'failed' | 'pending' };
     performance: { avgLoadTime: number; lighthouseScore: number };
     recommendations: string[];
   }): Promise<PDFDocument> {

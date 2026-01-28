@@ -9,6 +9,9 @@ export * from './types';
 // AI Provider - ECHTE AI CONNECTIE
 export { AIProvider, createAIProvider, getGlobalAIProvider } from './ai-provider';
 
+// Database - PERSISTENTIE
+export { AgentDatabase, createAgentDatabase, getGlobalDatabase, prisma } from './database';
+
 // Logger
 export { AgentLogger, createLogger, getGlobalLogStorage, queryAllLogs, subscribeToAllLogs, getLogStats, exportAllLogs, clearAllLogs } from './logger';
 
