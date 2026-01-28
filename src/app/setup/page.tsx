@@ -11,6 +11,7 @@ interface SetupStatus {
     superAdmins: number;
     admins: number;
   };
+  error?: string;
 }
 
 export default function SetupPage() {
@@ -36,9 +37,14 @@ export default function SetupPage() {
     try {
       const res = await fetch("/api/setup/admin");
       const data = await res.json();
-      setStatus(data);
+      
+      if (data.error) {
+        setError(data.error);
+      } else {
+        setStatus(data);
+      }
     } catch {
-      setError("Kon de setup status niet ophalen");
+      setError("Kon de setup status niet ophalen. Controleer de database verbinding.");
     } finally {
       setLoading(false);
     }
@@ -83,9 +89,12 @@ export default function SetupPage() {
     }
   };
 
+  // Fullscreen overlay - covers header/footer with z-[9999]
+  const overlayClass = "fixed inset-0 z-[9999] bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900";
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center">
+      <div className={`${overlayClass} flex items-center justify-center`}>
         <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
       </div>
     );
@@ -93,7 +102,7 @@ export default function SetupPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4">
+      <div className={`${overlayClass} flex items-center justify-center p-4`}>
         <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 text-center">
           <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-8 h-8 text-emerald-600" />
@@ -118,7 +127,7 @@ export default function SetupPage() {
 
   if (status && !status.setupRequired) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4">
+      <div className={`${overlayClass} flex items-center justify-center p-4`}>
         <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 text-center">
           <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <Shield className="w-8 h-8 text-indigo-600" />
@@ -129,7 +138,7 @@ export default function SetupPage() {
           <p className="text-slate-600 mb-6">
             Er bestaat al een admin account. Ga naar de login pagina om in te loggen.
           </p>
-          <div className="text-sm text-slate-500 mb-6 p-4 bg-slate-50 rounded-lg">
+          <div className="text-sm text-slate-500 mb-6 p-4 bg-slate-50 rounded-lg text-left">
             <p><strong>Totaal gebruikers:</strong> {status.stats.totalUsers}</p>
             <p><strong>Super admins:</strong> {status.stats.superAdmins}</p>
             <p><strong>Admins:</strong> {status.stats.admins}</p>
@@ -147,9 +156,9 @@ export default function SetupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4">
+    <div className={`${overlayClass} flex items-center justify-center p-4 overflow-auto`}>
       {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="setupGrid" width="60" height="60" patternUnits="userSpaceOnUse">
@@ -160,7 +169,7 @@ export default function SetupPage() {
         </svg>
       </div>
 
-      <div className="relative max-w-md w-full">
+      <div className="relative max-w-md w-full my-8">
         {/* Logo/Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl mb-4 shadow-lg">

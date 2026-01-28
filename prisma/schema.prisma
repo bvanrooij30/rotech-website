@@ -334,3 +334,288 @@ model SystemSetting {
   updatedAt DateTime @updatedAt
   updatedBy String?  // Admin ID who last updated
 }
+
+// ============================================
+// AI AGENTS SYSTEM
+// ============================================
+
+// Agent activity and status logging
+model AgentLog {
+  id        String   @id @default(cuid())
+  agentId   String   // master-agent, intake-agent, etc.
+  agentType String   // system, service
+  level     String   // debug, info, warn, error, critical
+  message   String
+  data      String?  // JSON additional data
+  projectId String?
+  
+  createdAt DateTime @default(now())
+  
+  @@index([agentId])
+  @@index([level])
+  @@index([createdAt])
+}
+
+// AI-generated leads
+model AILead {
+  id          String   @id @default(cuid())
+  
+  // Contact info
+  companyName String
+  contactName String
+  email       String
+  phone       String?
+  website     String?
+  
+  // Lead details
+  source      String   // linkedin, google, website, referral
+  interest    String
+  message     String?
+  budget      String?
+  timeline    String?
+  
+  // AI scoring
+  score       Int      @default(50)
+  recommendation String @default("warm") // hot, warm, cold, disqualified
+  reasoning   String?
+  
+  // Recommended package
+  suggestedPackage String?
+  estimatedValue   Float?
+  
+  // Status tracking
+  status      String   @default("new") // new, contacted, qualified, proposal, won, lost
+  assignedTo  String?  // agent ID handling this lead
+  
+  // Notes (JSON array)
+  notes       String?
+  
+  // Follow-up
+  nextFollowUp DateTime?
+  lastContact  DateTime?
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  activities  LeadActivity[]
+  
+  @@index([status])
+  @@index([score])
+  @@index([source])
+  @@index([createdAt])
+}
+
+model LeadActivity {
+  id       String   @id @default(cuid())
+  leadId   String
+  lead     AILead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  
+  type     String   // email_sent, call_made, meeting_scheduled, proposal_sent, etc.
+  title    String
+  details  String?
+  agentId  String   // Which AI agent performed this
+  
+  createdAt DateTime @default(now())
+  
+  @@index([leadId])
+  @@index([agentId])
+}
+
+// Marketing campaigns managed by Marketing Agent
+model AICampaign {
+  id          String   @id @default(cuid())
+  
+  name        String
+  type        String   // email, social, content, seo, ppc
+  status      String   @default("draft") // draft, active, paused, completed
+  
+  // Target
+  targetAudience String?
+  targetSegment  String?
+  targetSize     Int?
+  
+  // Budget
+  budgetAllocated Float @default(0)
+  budgetSpent     Float @default(0)
+  
+  // Metrics
+  impressions     Int   @default(0)
+  clicks          Int   @default(0)
+  conversions     Int   @default(0)
+  leads           Int   @default(0)
+  revenue         Float @default(0)
+  
+  // Schedule
+  startDate   DateTime?
+  endDate     DateTime?
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Content (JSON array)
+  content     String?
+  
+  @@index([status])
+  @@index([type])
+}
+
+// Scheduled tasks for agents
+model AIScheduledTask {
+  id          String   @id @default(cuid())
+  
+  type        String   // project, maintenance, marketing, optimization, report
+  agentId     String   // Which agent should execute
+  priority    Int      @default(3) // 1-5, 1 is highest
+  
+  title       String
+  description String?
+  data        String?  // JSON task data
+  
+  // Scheduling
+  scheduledFor DateTime
+  deadline     DateTime?
+  
+  // Execution
+  status       String   @default("scheduled") // scheduled, queued, running, completed, failed, cancelled
+  startedAt    DateTime?
+  completedAt  DateTime?
+  
+  // Results
+  result       String?  // JSON result data
+  errorMessage String?
+  
+  // Duration tracking
+  estimatedMinutes Int?
+  actualMinutes    Int?
+  
+  // Dependencies (JSON array of task IDs)
+  dependencies String?
+  
+  // Recurring
+  isRecurring  Boolean @default(false)
+  cronSchedule String? // cron expression for recurring tasks
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  @@index([agentId])
+  @@index([status])
+  @@index([scheduledFor])
+  @@index([priority])
+}
+
+// Agent decisions and learning
+model AIDecision {
+  id          String   @id @default(cuid())
+  agentId     String   // master-agent typically
+  
+  type        String   // task-assignment, resource-allocation, escalation, optimization, recovery
+  decision    String
+  reasoning   String
+  impact      String
+  
+  // Outcome tracking for learning
+  reversible  Boolean  @default(true)
+  status      String   @default("pending") // pending, executed, reverted, failed
+  wasSuccessful Boolean?
+  feedback    String?  // Human or automated feedback
+  
+  executedAt  DateTime?
+  createdAt   DateTime @default(now())
+  
+  @@index([agentId])
+  @@index([type])
+  @@index([status])
+}
+
+// System alerts
+model AIAlert {
+  id          String   @id @default(cuid())
+  
+  level       String   // info, warning, error, critical
+  source      String   // agent ID or system
+  title       String
+  message     String
+  
+  acknowledged Boolean  @default(false)
+  acknowledgedBy String?
+  acknowledgedAt DateTime?
+  
+  resolved    Boolean  @default(false)
+  resolvedAt  DateTime?
+  resolution  String?
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([level])
+  @@index([resolved])
+  @@index([createdAt])
+}
+
+// Daily briefings generated by Master Agent
+model AIDailyBriefing {
+  id          String   @id @default(cuid())
+  date        DateTime @unique // One per day
+  
+  // Summary
+  healthScore Int
+  healthStatus String // excellent, good, fair, poor, critical
+  highlights   String // JSON array
+  concerns     String // JSON array
+  
+  // Metrics snapshot
+  metrics     String   // JSON metrics object
+  
+  // Tasks summary
+  tasksCompleted Int
+  tasksScheduled Int
+  tasksOverdue   Int
+  
+  // Projects summary
+  projectsActive Int
+  projectsAtRisk Int
+  
+  // Marketing summary
+  newLeads    Int
+  activeCampaigns Int
+  
+  // Recommendations (JSON array)
+  recommendations String
+  
+  // Action items (JSON array)
+  actionItems String
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([date])
+}
+
+// Agent performance history for optimization
+model AIAgentMetrics {
+  id          String   @id @default(cuid())
+  agentId     String
+  date        DateTime
+  
+  // Performance metrics
+  tasksCompleted      Int      @default(0)
+  avgResponseTimeMs   Int      @default(0)
+  errorCount          Int      @default(0)
+  successRate         Float    @default(100)
+  
+  // AI usage
+  promptsGenerated    Int      @default(0)
+  tokensUsed          Int      @default(0)
+  aiCostCents         Int      @default(0)
+  
+  // Reports
+  reportsGenerated    Int      @default(0)
+  
+  createdAt   DateTime @default(now())
+  
+  @@unique([agentId, date])
+  @@index([agentId])
+  @@index([date])
+}
