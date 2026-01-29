@@ -116,7 +116,7 @@ export class MasterAgent extends BaseAgent {
   private mode: SystemStatus['mode'] = 'autonomous';
   private alerts: Map<string, Alert> = new Map();
   private decisions: Map<string, AutonomousDecision> = new Map();
-  private startTime: Date = new Date();
+  private masterStartTime: Date = new Date();
   private masterInterval: NodeJS.Timeout | null = null;
 
   // Sub-agents (when initialized)
@@ -186,7 +186,7 @@ export class MasterAgent extends BaseAgent {
       await this.coordinateAgents();
 
       // 5. Update metrics
-      await this.updateMetrics();
+      await this.updateMasterMetrics();
 
       // 6. Check for human intervention needs
       await this.checkForHumanIntervention(status);
@@ -224,7 +224,7 @@ export class MasterAgent extends BaseAgent {
     const activeAlerts = Array.from(this.alerts.values()).filter(a => !a.resolvedAt);
 
     // Calculate metrics
-    const uptimeHours = (new Date().getTime() - this.startTime.getTime()) / (1000 * 60 * 60);
+    const uptimeHours = (new Date().getTime() - this.masterStartTime.getTime()) / (1000 * 60 * 60);
     const tasksCompletedToday = scheduledTasks.filter(t => {
       if (!t.completedAt) return false;
       const today = new Date();
@@ -486,7 +486,7 @@ export class MasterAgent extends BaseAgent {
     }
   }
 
-  private async updateMetrics(): Promise<void> {
+  private async updateMasterMetrics(): Promise<void> {
     // Metrics are calculated on-demand in getSystemStatus
   }
 

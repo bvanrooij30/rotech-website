@@ -149,8 +149,8 @@ export async function POST(request: Request) {
       "user.create",
       "user",
       user.id,
-      null,
-      JSON.stringify(user)
+      undefined,
+      user as unknown as Record<string, unknown>
     );
 
     return NextResponse.json({
@@ -162,7 +162,7 @@ export async function POST(request: Request) {
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { success: false, error: error.errors[0]?.message || "Validatiefout" },
+        { success: false, error: error.issues[0]?.message || "Validatiefout" },
         { status: 400 }
       );
     }

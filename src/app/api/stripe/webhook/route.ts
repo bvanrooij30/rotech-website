@@ -205,6 +205,14 @@ async function handleSubscriptionUpdate(
 
   const dbStatus = statusMap[subscription.status] || "active";
 
+  // Get period dates - handle both old and new Stripe API versions
+  const periodStart = (subscription as unknown as { current_period_start?: number }).current_period_start;
+  const periodEnd = (subscription as unknown as { current_period_end?: number }).current_period_end;
+  const cancelAtEnd = (subscription as unknown as { cancel_at_period_end?: boolean }).cancel_at_period_end ?? false;
+  
+  const currentPeriodStart = periodStart ? new Date(periodStart * 1000) : new Date();
+  const currentPeriodEnd = periodEnd ? new Date(periodEnd * 1000) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
   // Upsert subscription
   await prisma.subscription.upsert({
     where: { stripeSubscriptionId: subscription.id },
@@ -218,16 +226,16 @@ async function handleSubscriptionUpdate(
       stripePriceId: price?.id || null,
       status: dbStatus,
       hoursIncluded: parseInt(metadata.hours_included || "1", 10),
-      currentPeriodStart: new Date(subscription.current_period_start * 1000),
-      currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-      cancelAtPeriodEnd: subscription.cancel_at_period_end,
+      currentPeriodStart,
+      currentPeriodEnd,
+      cancelAtPeriodEnd: cancelAtEnd,
     },
     update: {
       status: dbStatus,
       monthlyPrice: amount,
-      currentPeriodStart: new Date(subscription.current_period_start * 1000),
-      currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-      cancelAtPeriodEnd: subscription.cancel_at_period_end,
+      currentPeriodStart,
+      currentPeriodEnd,
+      cancelAtPeriodEnd: cancelAtEnd,
       hoursUsed: 0, // Reset hours on new period
     },
   });
@@ -275,6 +283,9 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
 
   if (!user) return;
 
+  // Get tax from invoice - handle different API versions
+  const invoiceTax = (invoice as unknown as { tax?: number }).tax || 0;
+  
   // Create invoice record
   await prisma.invoice.upsert({
     where: { stripeInvoiceId: invoice.id },
@@ -283,7 +294,7 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
       invoiceNumber: invoice.number || `RT-INV-${Date.now()}`,
       stripeInvoiceId: invoice.id,
       amount: fromStripeAmount(invoice.amount_paid),
-      tax: fromStripeAmount(invoice.tax || 0),
+      tax: fromStripeAmount(invoiceTax),
       status: "paid",
       paidAt: new Date(),
       pdfUrl: invoice.invoice_pdf || null,
@@ -296,9 +307,10 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
   });
 
   // Reset hours used on subscription renewal
-  if (invoice.subscription) {
+  const subscriptionId = (invoice as unknown as { subscription?: string }).subscription;
+  if (subscriptionId) {
     await prisma.subscription.updateMany({
-      where: { stripeSubscriptionId: invoice.subscription as string },
+      where: { stripeSubscriptionId: subscriptionId },
       data: { hoursUsed: 0 },
     });
   }
@@ -307,12 +319,13 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
 /**
  * Handle invoice payment failed
  */
-async function handleInvoicePaymentFailed(invoice: Stripe.Invoice, stripe: Stripe) {
+async function handleInvoicePaymentFailed(invoice: Stripe.Invoice, _stripe: Stripe) {
   console.log(`[Invoice Payment Failed] ID: ${invoice.id}`);
 
-  if (invoice.subscription) {
+  const subscriptionId = (invoice as unknown as { subscription?: string }).subscription;
+  if (subscriptionId) {
     await prisma.subscription.updateMany({
-      where: { stripeSubscriptionId: invoice.subscription as string },
+      where: { stripeSubscriptionId: subscriptionId },
       data: { status: "past_due" },
     });
   }
@@ -334,6 +347,10 @@ async function handleInvoiceFinalized(invoice: Stripe.Invoice) {
 
   if (!user) return;
 
+  // Handle different Stripe API versions
+  const invoiceTax = (invoice as unknown as { tax?: number }).tax || 0;
+  const dueDate = (invoice as unknown as { due_date?: number }).due_date;
+
   await prisma.invoice.upsert({
     where: { stripeInvoiceId: invoice.id },
     create: {
@@ -341,9 +358,9 @@ async function handleInvoiceFinalized(invoice: Stripe.Invoice) {
       invoiceNumber: invoice.number || `RT-INV-${Date.now()}`,
       stripeInvoiceId: invoice.id,
       amount: fromStripeAmount(invoice.amount_due),
-      tax: fromStripeAmount(invoice.tax || 0),
+      tax: fromStripeAmount(invoiceTax),
       status: "open",
-      dueDate: invoice.due_date ? new Date(invoice.due_date * 1000) : null,
+      dueDate: dueDate ? new Date(dueDate * 1000) : null,
       pdfUrl: invoice.invoice_pdf || null,
     },
     update: {

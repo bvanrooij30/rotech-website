@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { getStripeClient, isStripeConfigured } from "@/lib/stripe";
 import prisma from "@/lib/prisma";
 
@@ -11,7 +10,7 @@ import prisma from "@/lib/prisma";
 export async function POST(request: Request) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.email) {
       return NextResponse.json(
         { success: false, error: "Niet ingelogd" },
@@ -70,10 +69,11 @@ export async function POST(request: Request) {
       success: true,
       url: portalSession.url,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Customer portal error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Portal sessie aanmaken mislukt";
     return NextResponse.json(
-      { success: false, error: error.message || "Portal sessie aanmaken mislukt" },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
  */
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.email) {
       return NextResponse.json(
         { success: false, error: "Niet ingelogd" },
@@ -152,10 +152,11 @@ export async function GET() {
         hasStripePortal: !!activeSubscription?.stripeCustomerId,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Get subscription error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Onbekende fout";
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
