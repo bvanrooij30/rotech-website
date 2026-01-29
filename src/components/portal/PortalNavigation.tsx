@@ -13,6 +13,14 @@ import {
   HelpCircle,
   Bot,
   Crown,
+  Activity,
+  BarChart3,
+  Users,
+  Mail,
+  LifeBuoy,
+  ShieldCheck,
+  ExternalLink,
+  ScrollText,
 } from "lucide-react";
 
 const navItems = [
@@ -54,8 +62,24 @@ const adminNavItems = [
     label: "AI Agent Team",
     href: "/portal/ai-agents",
     icon: Bot,
-    badge: "NEW",
+    badge: "LIVE",
+    subItems: [
+      { label: "Monitoring", href: "/portal/ai-agents/monitoring", icon: Activity },
+      { label: "Briefing", href: "/portal/ai-agents/briefing", icon: BarChart3 },
+      { label: "Leads", href: "/portal/ai-agents/leads", icon: Users },
+      { label: "Marketing", href: "/portal/ai-agents/marketing", icon: Mail },
+      { label: "Master Prompts", href: "/portal/ai-agents/prompts", icon: FileText },
+    ],
   },
+];
+
+// Admin Dashboard links (separate admin panel)
+const adminDashboardItems = [
+  { label: "Admin Dashboard", href: "/admin", icon: ShieldCheck },
+  { label: "Gebruikers", href: "/admin/users", icon: Users },
+  { label: "Abonnementen", href: "/admin/subscriptions", icon: CreditCard },
+  { label: "Support Tickets", href: "/admin/tickets", icon: LifeBuoy },
+  { label: "Producten", href: "/admin/products", icon: Package },
 ];
 
 export default function PortalNavigation() {
@@ -119,15 +143,69 @@ export default function PortalNavigation() {
                       {item.label}
                     </span>
                     {item.badge && (
-                      <span className="px-1.5 py-0.5 text-[10px] font-bold bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded">
+                      <span className="px-1.5 py-0.5 text-[10px] font-bold bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded animate-pulse">
                         {item.badge}
                       </span>
                     )}
                   </Link>
+                  
+                  {/* Sub-items for AI Agents */}
+                  {isActive && item.subItems && (
+                    <ul className="mt-1 ml-4 pl-4 border-l-2 border-indigo-100 space-y-1">
+                      {item.subItems.map((subItem) => {
+                        const isSubActive = pathname === subItem.href;
+                        const SubIcon = subItem.icon;
+                        return (
+                          <li key={subItem.href}>
+                            <Link
+                              href={subItem.href}
+                              className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-colors ${
+                                isSubActive
+                                  ? "bg-indigo-100 text-indigo-700"
+                                  : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
+                              }`}
+                            >
+                              <SubIcon className="w-3.5 h-3.5" />
+                              {subItem.label}
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
                 </li>
               );
             })}
           </ul>
+          
+          {/* Admin Dashboard Links */}
+          <div className="mt-4 pt-4 border-t border-slate-100">
+            <div className="flex items-center gap-2 px-4 mb-2">
+              <ShieldCheck className="w-4 h-4 text-emerald-500" />
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                Beheer
+              </span>
+            </div>
+            <ul className="space-y-1">
+              {adminDashboardItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className="flex items-center justify-between px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+                    >
+                      <span className="flex items-center gap-3">
+                        <Icon className="w-4 h-4 text-slate-400" />
+                        {item.label}
+                      </span>
+                      <ExternalLink className="w-3 h-3 text-slate-300" />
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
       )}
       

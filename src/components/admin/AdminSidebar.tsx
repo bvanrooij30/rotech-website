@@ -29,6 +29,7 @@ interface AdminSidebarProps {
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Gebruikers", href: "/admin/users", icon: Users },
+  { name: "Billing", href: "/admin/billing", icon: CreditCard },
   { name: "Abonnementen", href: "/admin/subscriptions", icon: CreditCard },
   { name: "Producten", href: "/admin/products", icon: Package },
   { name: "Support Tickets", href: "/admin/tickets", icon: LifeBuoy },

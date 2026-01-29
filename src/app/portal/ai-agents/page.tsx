@@ -47,11 +47,19 @@ interface Metrics {
   revenuePipeline: number;
 }
 
+interface DebugInfo {
+  heartbeatCount: number;
+  lastUpdate: string;
+  dataSource: string;
+  isRealData: boolean;
+}
+
 interface AgentData {
   systemAgents: Agent[];
   serviceAgents: Agent[];
   systemStatus: SystemStatus;
   metrics: Metrics;
+  _debug?: DebugInfo;
 }
 
 const statusColors: Record<string, string> = {
@@ -93,7 +101,11 @@ export default function AIAgentsPage() {
       const result = await response.json();
       
       if (result.success) {
-        setData(result.data);
+        // Include debug info in data
+        setData({
+          ...result.data,
+          _debug: result._debug,
+        });
         setError(null);
       } else {
         setError(result.error);
@@ -242,7 +254,25 @@ export default function AIAgentsPage() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Link
+          href="/portal/ai-agents/monitoring"
+          className="bg-white rounded-xl border border-slate-200 p-5 hover:border-amber-300 hover:shadow-md transition-all group"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-amber-100 rounded-lg group-hover:bg-amber-200 transition-colors">
+                <Activity className="w-5 h-5 text-amber-600" />
+              </div>
+              <div>
+                <div className="font-semibold text-slate-900">Live Monitoring</div>
+                <div className="text-sm text-slate-600">Alle agents real-time</div>
+              </div>
+            </div>
+            <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-amber-600 transition-colors" />
+          </div>
+        </Link>
+
         <Link
           href="/portal/ai-agents/briefing"
           className="bg-white rounded-xl border border-slate-200 p-5 hover:border-indigo-300 hover:shadow-md transition-all group"
@@ -384,6 +414,36 @@ export default function AIAgentsPage() {
         <Clock className="w-4 h-4 inline mr-1" />
         Laatste update: {new Date(data.systemStatus.lastHealthCheck).toLocaleString("nl-NL")}
       </div>
+
+      {/* Data Source Indicator */}
+      {data._debug && (
+        <div className={`mt-4 p-4 rounded-xl border ${
+          data._debug.isRealData 
+            ? "bg-green-50 border-green-200" 
+            : "bg-yellow-50 border-yellow-200"
+        }`}>
+          <div className="flex items-center justify-center gap-2 text-sm">
+            {data._debug.isRealData ? (
+              <>
+                <CheckCircle2 className="w-5 h-5 text-green-600" />
+                <span className="font-medium text-green-800">
+                  Live Data - Heartbeat Systeem Actief
+                </span>
+              </>
+            ) : (
+              <>
+                <AlertCircle className="w-5 h-5 text-yellow-600" />
+                <span className="font-medium text-yellow-800">
+                  Demo Data - Agents niet verbonden
+                </span>
+              </>
+            )}
+          </div>
+          <div className="text-xs text-center mt-1 opacity-75">
+            Bron: {data._debug.dataSource} | Heartbeats: {data._debug.heartbeatCount}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

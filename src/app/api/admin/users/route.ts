@@ -1,126 +1,137 @@
-/**
- * Admin Users API
- * 
- * GET /api/admin/users - List all users (with pagination)
- * POST /api/admin/users - Create new user
- */
-
-import { NextRequest, NextResponse } from "next/server";
-import { auth, hashPassword } from "@/lib/auth";
-import { getAdminUser, hasPermission, PERMISSIONS, logAdminAction } from "@/lib/admin";
+import { NextResponse } from "next/server";
+import { requirePermission, PERMISSIONS, logAdminAction } from "@/lib/admin";
 import prisma from "@/lib/prisma";
+import { hash } from "bcryptjs";
 import { z } from "zod";
 
 const createUserSchema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
-  password: z.string().min(8),
+  email: z.string().email("Ongeldig email adres"),
+  password: z.string().min(8, "Wachtwoord moet minimaal 8 karakters zijn"),
+  name: z.string().min(1, "Naam is verplicht"),
   phone: z.string().optional(),
   companyName: z.string().optional(),
-  role: z.enum(["customer", "admin"]).default("customer"),
+  kvkNumber: z.string().optional(),
+  vatNumber: z.string().optional(),
+  street: z.string().optional(),
+  houseNumber: z.string().optional(),
+  postalCode: z.string().optional(),
+  city: z.string().optional(),
+  role: z.enum(["customer", "admin", "super_admin"]).default("customer"),
 });
 
-export async function GET(request: NextRequest) {
-  const admin = await getAdminUser();
-  
-  if (!admin || !hasPermission(admin.permissions, PERMISSIONS.USERS_READ)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+// GET - List all users (with filters)
+export async function GET(request: Request) {
+  try {
+    await requirePermission(PERMISSIONS.USERS_READ);
 
-  const searchParams = request.nextUrl.searchParams;
-  const page = parseInt(searchParams.get("page") || "1", 10);
-  const limit = parseInt(searchParams.get("limit") || "50", 10);
-  const search = searchParams.get("search") || "";
-  const role = searchParams.get("role") || "";
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "20", 10);
+    const search = searchParams.get("search") || "";
+    const role = searchParams.get("role") || "";
 
-  const where = {
-    AND: [
-      search ? {
-        OR: [
-          { name: { contains: search } },
-          { email: { contains: search } },
-        ],
-      } : {},
-      role ? { role } : {},
-    ],
-  };
+    const skip = (page - 1) * limit;
 
-  const [users, total] = await Promise.all([
-    prisma.user.findMany({
-      where,
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        phone: true,
-        companyName: true,
-        role: true,
-        isActive: true,
-        createdAt: true,
-        lastLoginAt: true,
-        _count: {
-          select: { products: true, subscriptions: true },
+    const where = {
+      AND: [
+        search ? {
+          OR: [
+            { name: { contains: search } },
+            { email: { contains: search } },
+            { companyName: { contains: search } },
+          ],
+        } : {},
+        role ? { role } : {},
+      ],
+    };
+
+    const [users, total] = await Promise.all([
+      prisma.user.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          phone: true,
+          companyName: true,
+          role: true,
+          isActive: true,
+          createdAt: true,
+          lastLoginAt: true,
+          _count: {
+            select: {
+              products: true,
+              subscriptions: true,
+              supportTickets: true,
+            },
+          },
+        },
+      }),
+      prisma.user.count({ where }),
+    ]);
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        users,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
         },
       },
-      orderBy: { createdAt: "desc" },
-      skip: (page - 1) * limit,
-      take: limit,
-    }),
-    prisma.user.count({ where }),
-  ]);
-
-  return NextResponse.json({
-    users,
-    pagination: {
-      page,
-      limit,
-      total,
-      pages: Math.ceil(total / limit),
-    },
-  });
+    });
+  } catch (error: any) {
+    console.error("Error fetching users:", error);
+    return NextResponse.json(
+      { success: false, error: error.message || "Fout bij ophalen gebruikers" },
+      { status: error.message?.includes("Unauthorized") ? 403 : 500 }
+    );
+  }
 }
 
-export async function POST(request: NextRequest) {
-  const admin = await getAdminUser();
-  
-  if (!admin || !hasPermission(admin.permissions, PERMISSIONS.USERS_WRITE)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+// POST - Create new user
+export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const data = createUserSchema.parse(body);
+    const admin = await requirePermission(PERMISSIONS.USERS_WRITE);
 
-    // Check if email exists
-    const existing = await prisma.user.findUnique({
-      where: { email: data.email },
+    const body = await request.json();
+    const validated = createUserSchema.parse(body);
+
+    // Check if email already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email: validated.email },
     });
 
-    if (existing) {
+    if (existingUser) {
       return NextResponse.json(
-        { error: "Er bestaat al een gebruiker met dit e-mailadres" },
+        { success: false, error: "Email is al in gebruik" },
         { status: 400 }
       );
     }
 
-    // Only super_admin can create admins
-    if (data.role === "admin" && admin.role !== "super_admin") {
-      return NextResponse.json(
-        { error: "Alleen super admins kunnen admin accounts aanmaken" },
-        { status: 403 }
-      );
-    }
+    // Hash password
+    const hashedPassword = await hash(validated.password, 12);
 
-    const hashedPassword = await hashPassword(data.password);
-
+    // Create user
     const user = await prisma.user.create({
       data: {
-        name: data.name,
-        email: data.email,
+        email: validated.email,
         password: hashedPassword,
-        phone: data.phone,
-        companyName: data.companyName,
-        role: data.role,
+        name: validated.name,
+        phone: validated.phone || null,
+        companyName: validated.companyName || null,
+        kvkNumber: validated.kvkNumber || null,
+        vatNumber: validated.vatNumber || null,
+        street: validated.street || null,
+        houseNumber: validated.houseNumber || null,
+        postalCode: validated.postalCode || null,
+        city: validated.city || null,
+        role: validated.role,
       },
       select: {
         id: true,
@@ -131,22 +142,34 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Log admin action
     await logAdminAction(
       admin.id,
       admin.email,
       "user.create",
       "user",
       user.id,
-      undefined,
-      { email: user.email, name: user.name, role: user.role }
+      null,
+      JSON.stringify(user)
     );
 
-    return NextResponse.json({ user });
-  } catch (error) {
+    return NextResponse.json({
+      success: true,
+      data: user,
+    });
+  } catch (error: any) {
+    console.error("Error creating user:", error);
+    
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.issues[0].message }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: error.errors[0]?.message || "Validatiefout" },
+        { status: 400 }
+      );
     }
-    console.error("Create user error:", error);
-    return NextResponse.json({ error: "Er is een fout opgetreden" }, { status: 500 });
+
+    return NextResponse.json(
+      { success: false, error: error.message || "Fout bij aanmaken gebruiker" },
+      { status: error.message?.includes("Unauthorized") ? 403 : 500 }
+    );
   }
 }

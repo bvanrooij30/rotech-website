@@ -18,15 +18,163 @@ export function getStripeClient(): Stripe {
   return stripeInstance;
 }
 
+// Check if Stripe is configured
+export function isStripeConfigured(): boolean {
+  return !!process.env.STRIPE_SECRET_KEY && 
+         process.env.STRIPE_SECRET_KEY.startsWith("sk_");
+}
+
 // For backwards compatibility
 const stripeClient = {
   get checkout() { return getStripeClient(); },
   get customers() { return getStripeClient().customers; },
   get subscriptions() { return getStripeClient().subscriptions; },
   get paymentIntents() { return getStripeClient().paymentIntents; },
+  get products() { return getStripeClient().products; },
+  get prices() { return getStripeClient().prices; },
+  get invoices() { return getStripeClient().invoices; },
+  get billingPortal() { return getStripeClient().billingPortal; },
 };
 
 export default stripeClient;
+
+// ============================================
+// STRIPE PRODUCT IDS - Te vullen na Stripe setup
+// ============================================
+
+export const STRIPE_PRODUCTS = {
+  // Onderhoudspakketten (subscriptions)
+  MAINTENANCE_BASIS: process.env.STRIPE_PRODUCT_MAINTENANCE_BASIS || "",
+  MAINTENANCE_BUSINESS: process.env.STRIPE_PRODUCT_MAINTENANCE_BUSINESS || "",
+  MAINTENANCE_PREMIUM: process.env.STRIPE_PRODUCT_MAINTENANCE_PREMIUM || "",
+  
+  // Website pakketten (one-time)
+  WEBSITE_STARTER: process.env.STRIPE_PRODUCT_WEBSITE_STARTER || "",
+  WEBSITE_BUSINESS: process.env.STRIPE_PRODUCT_WEBSITE_BUSINESS || "",
+  WEBSHOP: process.env.STRIPE_PRODUCT_WEBSHOP || "",
+  MAATWERK: process.env.STRIPE_PRODUCT_MAATWERK || "",
+} as const;
+
+// Maintenance plan configuration
+export const MAINTENANCE_PLANS: MaintenancePlan[] = [
+  {
+    id: "basis",
+    name: "Basis Onderhoud",
+    price: 99,
+    interval: "monthly",
+    hoursIncluded: 1,
+    features: [
+      "1 uur onderhoud per maand",
+      "WordPress/Next.js updates",
+      "Plugin/package updates",
+      "Dagelijkse backups",
+      "Uptime monitoring",
+      "Security scans",
+      "Email support (24u respons)",
+    ],
+  },
+  {
+    id: "business",
+    name: "Business Onderhoud",
+    price: 199,
+    interval: "monthly",
+    hoursIncluded: 3,
+    features: [
+      "3 uur onderhoud per maand",
+      "Alles uit Basis",
+      "Performance optimalisatie",
+      "SEO monitoring",
+      "Maandelijks rapport",
+      "Telefoon support",
+      "4 uur responstijd",
+    ],
+  },
+  {
+    id: "premium",
+    name: "Premium Onderhoud",
+    price: 399,
+    interval: "monthly",
+    hoursIncluded: 8,
+    features: [
+      "8 uur onderhoud per maand",
+      "Alles uit Business",
+      "Prioriteit support",
+      "2 uur responstijd",
+      "A/B testing",
+      "Conversie optimalisatie",
+      "Dedicated account manager",
+      "Quarterly strategy call",
+    ],
+  },
+];
+
+// Website package configuration  
+export const WEBSITE_PACKAGES: Package[] = [
+  {
+    id: "starter",
+    name: "Starter Website",
+    description: "Perfect voor ZZP'ers en freelancers",
+    basePrice: 997,
+    deliveryTime: "1-2 weken",
+    freeSupport: 1,
+    features: [
+      "One-page website",
+      "Responsive design",
+      "Contactformulier",
+      "WhatsApp button",
+      "SEO basis",
+      "SSL certificaat",
+    ],
+  },
+  {
+    id: "business",
+    name: "Business Website",
+    description: "Voor professionele bedrijven",
+    basePrice: 2497,
+    deliveryTime: "2-4 weken",
+    freeSupport: 3,
+    features: [
+      "Tot 10 pagina's",
+      "CMS systeem",
+      "Blog functionaliteit",
+      "Uitgebreide SEO",
+      "Google Analytics",
+      "Nieuwsbrief integratie",
+    ],
+  },
+  {
+    id: "webshop",
+    name: "Webshop",
+    description: "Complete e-commerce oplossing",
+    basePrice: 3997,
+    deliveryTime: "4-6 weken",
+    freeSupport: 3,
+    features: [
+      "Onbeperkt producten",
+      "iDEAL / Bancontact",
+      "Voorraadbeheer",
+      "Order management",
+      "Klantaccounts",
+      "Email notificaties",
+    ],
+  },
+  {
+    id: "maatwerk",
+    name: "Maatwerk",
+    description: "Custom web applicaties",
+    basePrice: 7500,
+    deliveryTime: "6-12 weken",
+    freeSupport: 6,
+    features: [
+      "Volledig op maat",
+      "API integraties",
+      "Dashboard/portal",
+      "Gebruikersbeheer",
+      "Uitgebreide documentatie",
+      "Training inbegrepen",
+    ],
+  },
+];
 
 // Payment status types (mapped from Stripe)
 export type PaymentStatus = 
