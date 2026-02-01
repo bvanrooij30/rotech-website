@@ -258,6 +258,43 @@ python email_outreach.py --csv output/file.csv --live
 
 ---
 
+## 🚀 PRE-DEPLOY PROTOCOL
+
+**KRITIEK:** Voordat je naar GitHub/Vercel pushed:
+
+```bash
+# 1. ALTIJD lokaal builden - Vercel's Turbopack is strenger
+npm run build
+
+# 2. Fix ALLE errors voordat je pushed
+# TypeScript errors die lokaal "lijken te werken" falen op Vercel
+```
+
+### Veelvoorkomende Build Failures:
+
+| Error Type | Oorzaak | Quick Fix |
+|------------|---------|-----------|
+| `Module not found` | Import path bestaat niet | Check bestand bestaat |
+| `Export doesn't exist` | Library versie mismatch | Check NextAuth v5, Zod syntax |
+| `Property does not exist` | Stripe/library type changes | Gebruik type assertions |
+
+### Versie-Specifieke Syntax (ONTHOUD):
+
+```typescript
+// NextAuth v5 (dit project) - NIET v4 syntax!
+import { auth } from '@/lib/auth';
+const session = await auth();
+
+// Zod - gebruik .issues, NIET .errors
+if (error instanceof z.ZodError) {
+  return error.issues[0]?.message;
+}
+```
+
+**Zie `lessons-learned.mdc` voor complete referentie van historische fixes.**
+
+---
+
 ## 🎯 KWALITEITSCHECKLIST
 
 Voordat je code als "klaar" beschouwt:
@@ -269,9 +306,11 @@ Voordat je code als "klaar" beschouwt:
 - [ ] Consistent met bestaande patronen
 - [ ] Geen console.log/debugs
 - [ ] Nederlandse teksten correct gespeld
-- [ ] API validatie met Zod
+- [ ] API validatie met Zod (gebruik `.issues` voor errors)
 - [ ] Loading/error states
+- [ ] **Lokale build test passed** (`npm run build`)
 
 ---
 
 *Zie specifieke rules voor gedetailleerde patronen per subproject.*
+*Zie `lessons-learned.mdc` voor historische fixes en veelvoorkomende problemen.*

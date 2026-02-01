@@ -16,7 +16,8 @@ import {
   ChevronDown,
   Menu,
   X,
-  Zap
+  Zap,
+  BarChart3
 } from "lucide-react";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
@@ -28,6 +29,7 @@ interface AdminSidebarProps {
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
   { name: "Gebruikers", href: "/admin/users", icon: Users },
   { name: "Billing", href: "/admin/billing", icon: CreditCard },
   { name: "Abonnementen", href: "/admin/subscriptions", icon: CreditCard },

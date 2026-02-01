@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/chat";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import DevelopmentBanner from "@/components/ui/DevelopmentBanner";
+import { AnalyticsProvider } from "@/components/analytics";
 // Validate environment variables on startup
 import "@/lib/env-validation";
 
@@ -112,6 +114,11 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} antialiased bg-slate-50 text-slate-900`}
       >
+        {/* Google Analytics - Suspense nodig voor useSearchParams */}
+        <Suspense fallback={null}>
+          <AnalyticsProvider />
+        </Suspense>
+        
         <ErrorBoundary>
           {/* 🚧 WERKZAAMHEDEN BANNER - Verwijder deze regel als de site klaar is */}
           <DevelopmentBanner />

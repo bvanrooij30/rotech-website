@@ -1,0 +1,226 @@
+---
+name: lessons-learned
+description: Geleerde lessen en veelvoorkomende problemen uit eerdere sessies
+globs:
+  - "**/*"
+---
+
+# 📚 LESSONS LEARNED - Historische Kennis
+
+Dit bestand bevat geleerde lessen uit eerdere development sessies. Update dit bij nieuwe inzichten.
+
+---
+
+## 🚨 KRITIEKE PRE-DEPLOY CHECKS
+
+### Voordat je pusht naar GitHub/Vercel:
+
+```bash
+# ALTIJD lokaal testen - Vercel gebruikt Turbopack die strenger is
+npm run build
+
+# Als build faalt, fix ALLE errors voordat je pushed
+# TypeScript errors die lokaal "werken" kunnen op Vercel falen
+```
+
+### Veelvoorkomende Vercel Build Failures:
+
+| Symptoom | Oorzaak | Fix |
+|----------|---------|-----|
+| `Module not found: Can't resolve '@/...'` | Import path bestaat niet | Check tsconfig.json paths, verifieer bestand bestaat |
+| `Export X doesn't exist in target module` | Verkeerde import syntax voor library versie | Check library docs voor juiste syntax |
+| `Property X does not exist on type Y` | Type definitions mismatch | Gebruik type assertions of update types |
+| `Type error: Class incorrectly extends base class` | Visibility conflicts (private vs protected) | Rename conflicting properties |
+
+---
+
+## 📦 LIBRARY VERSIE SPECIFIEKE ISSUES
+
+### NextAuth v5 (beta) - NIET v4 syntax gebruiken!
+
+```typescript
+// ❌ FOUT (v4 syntax - werkt NIET in dit project)
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+const session = await getServerSession(authOptions);
+
+// ✅ CORRECT (v5 syntax)
+import { auth } from "@/lib/auth";
+const session = await auth();
+```
+
+### Zod - Nieuwere versies
+
+```typescript
+// ❌ FOUT - .errors bestaat niet meer
+if (error instanceof z.ZodError) {
+  return error.errors[0]?.message;
+}
+
+// ✅ CORRECT - gebruik .issues
+if (error instanceof z.ZodError) {
+  return error.issues[0]?.message;
+}
+```
+
+### Stripe API - Type Changes
+
+Stripe API types veranderen regelmatig. Gebruik type assertions voor backward compatibility:
+
+```typescript
+// ❌ FOUT - Property bestaat mogelijk niet in nieuwere versie
+const periodStart = subscription.current_period_start;
+
+// ✅ CORRECT - Safe type assertion
+const periodStart = (subscription as unknown as { current_period_start?: number }).current_period_start;
+const startDate = periodStart ? new Date(periodStart * 1000) : new Date();
+```
+
+---
+
+## 🔧 TSCONFIG.JSON MANAGEMENT
+
+### Exclude Incomplete Folders
+
+Als een folder TypeScript errors heeft maar nog niet klaar is voor productie:
+
+```json
+{
+  "exclude": [
+    "node_modules",
+    "mobile-app",
+    "tools",
+    "ai-agents"  // <-- Voeg toe als folder niet klaar is
+  ]
+}
+```
+
+### Path Aliases
+
+Alle `@/` imports moeten verwijzen naar bestaande bestanden:
+
+```json
+{
+  "paths": {
+    "@/*": ["./src/*"]
+  }
+}
+```
+
+**Check:** `@/lib/prisma` → `src/lib/prisma.ts` moet bestaan
+
+---
+
+## 🪟 WINDOWS-SPECIFIEKE ISSUES
+
+### Git Lock Files
+
+```powershell
+# Bij "Unable to create index.lock" errors:
+Remove-Item -Force ".git/index.lock" -ErrorAction SilentlyContinue
+git add -A
+```
+
+### PowerShell Syntax
+
+```powershell
+# ❌ FOUT - Bash syntax werkt niet in PowerShell
+git add -A && git commit -m "message"
+
+# ✅ CORRECT - Aparte commands of puntkomma
+git add -A; git commit -m "message"
+# Of gebruik enkele commands
+```
+
+### HEREDOC voor commit messages werkt niet in PowerShell
+
+```powershell
+# ❌ FOUT - HEREDOC syntax
+git commit -m "$(cat <<'EOF'
+Multi-line message
+EOF
+)"
+
+# ✅ CORRECT - Eenvoudige message
+git commit -m "feat: beschrijving in één regel"
+```
+
+---
+
+## 🔍 AUDIT CHECKLIST
+
+Bij build failures, doorloop deze checklist:
+
+1. **Import Errors**
+   ```bash
+   # Zoek naar niet-bestaande imports
+   rg "@/ai-agents" src/
+   rg "from ['\"]@/" src/ | grep -v "from '@/lib\|from '@/components\|from '@/data\|from '@/app"
+   ```
+
+2. **Type Errors**
+   - Check of library versies zijn veranderd (package.json vs docs)
+   - Controleer breaking changes in changelogs
+
+3. **NextAuth Issues**
+   - Altijd `auth()` gebruiken, nooit `getServerSession(authOptions)`
+
+4. **Zod Issues**
+   - Altijd `.issues` gebruiken, nooit `.errors`
+
+5. **Prisma Schema Sync**
+   ```bash
+   npm run db:push  # Sync schema met database
+   ```
+
+---
+
+## 🎯 BEST PRACTICES VOOR TOEKOMST
+
+### Pre-Commit Workflow
+
+```bash
+# 1. Lint check
+npm run lint
+
+# 2. Build test (CRUCIAAL!)
+npm run build
+
+# 3. Dan pas committen
+git add -A
+git commit -m "description"
+git push
+```
+
+### Bij Nieuwe Dependencies
+
+1. Check of het compatible is met Next.js 16+
+2. Check TypeScript support
+3. Lees de breaking changes als je upgradet
+4. Test lokaal met `npm run build`
+
+### Bij Refactoring
+
+1. Zoek ALLE imports van gewijzigde exports
+2. Update alle referenties VOOR de push
+3. Test met `npm run build`
+
+---
+
+## 📝 SESSIE LOG FORMAT
+
+Bij belangrijke fixes, log ze hier voor toekomstige referentie:
+
+### 2026-01-27: Vercel Build Fixes
+- **Issue:** Meerdere TypeScript errors bij Vercel build
+- **Root cause:** Verouderde imports, library versie mismatches
+- **Fixes:**
+  - NextAuth v4 → v5 syntax
+  - Zod .errors → .issues
+  - Stripe type assertions
+  - tsconfig.json ai-agents exclude
+- **Preventie:** Altijd `npm run build` lokaal testen
+
+---
+
+*Update dit bestand bij elk nieuw geleerd patroon of veelvoorkomend probleem.*

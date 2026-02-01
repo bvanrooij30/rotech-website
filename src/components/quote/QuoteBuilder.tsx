@@ -26,6 +26,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { generateQuotePDF, generateQuoteNumber } from "@/lib/quote-pdf";
+import { trackEvent } from "@/lib/analytics";
 import {
   packageDefinitions,
   allFeatures,
@@ -409,6 +410,12 @@ export default function QuoteBuilder() {
         throw new Error(data.error || "Er is een fout opgetreden");
       }
       
+      // Track successful quote submission (CONVERSIE!)
+      const pakketNaam = selectedServiceType === "website" 
+        ? (selectedPackage?.name ?? selectedServiceType)
+        : selectedServiceType;
+      trackEvent.offerteSubmitted(pakketNaam ?? 'unknown', quoteTotal);
+      
       setSubmitSuccess(true);
       setStep(getSuccessStep());
       
@@ -692,7 +699,11 @@ export default function QuoteBuilder() {
                         name="package"
                         value={pkg.id}
                         checked={selectedPackageId === pkg.id}
-                        onChange={() => setSelectedPackageId(pkg.id)}
+                        onChange={() => {
+                          setSelectedPackageId(pkg.id);
+                          // Track pakket selectie (prijs wordt later bepaald door features)
+                          trackEvent.offertePakketSelected(pkg.name, 0);
+                        }}
                         className="mt-1 w-5 h-5 text-indigo-600"
                       />
                       <div className="flex-1">

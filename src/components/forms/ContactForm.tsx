@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Send, Loader2, CheckCircle } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Naam is verplicht (min. 2 karakters)"),
@@ -36,6 +37,8 @@ export default function ContactForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [hasTrackedFocus, setHasTrackedFocus] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -44,6 +47,14 @@ export default function ContactForm() {
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
   });
+
+  // Track wanneer iemand het formulier begint in te vullen
+  const handleFormFocus = () => {
+    if (!hasTrackedFocus) {
+      trackEvent.contactFormFocused();
+      setHasTrackedFocus(true);
+    }
+  };
 
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
@@ -60,6 +71,9 @@ export default function ContactForm() {
         throw new Error("Er is iets misgegaan. Probeer het later opnieuw.");
       }
 
+      // Track successful form submission
+      trackEvent.contactFormSubmitted(data.subject);
+      
       setIsSuccess(true);
       reset();
     } catch (err) {
@@ -92,7 +106,7 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} onFocus={handleFormFocus} className="space-y-6">
       {error && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
           {error}
