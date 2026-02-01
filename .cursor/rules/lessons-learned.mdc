@@ -221,6 +221,40 @@ Bij belangrijke fixes, log ze hier voor toekomstige referentie:
   - tsconfig.json ai-agents exclude
 - **Preventie:** Altijd `npm run build` lokaal testen
 
+### 2026-01-27: Vercel Bouwt Oude Commit
+- **Issue:** Vercel bleef oude commit (a1711b8) bouwen ipv nieuwe (a101ca6)
+- **Root cause:** Push succesvol maar Vercel webhook of cache issue
+- **Diagnose:**
+  ```bash
+  # Check lokale vs remote
+  git log --oneline -1          # Lokale HEAD
+  git fetch origin
+  git log origin/main --oneline -1  # Remote HEAD
+  # Als deze verschillen: push niet doorgekomen
+  # Als gelijk: Vercel webhook/cache issue
+  ```
+- **Fixes:**
+  1. `git push --force-with-lease` (als push niet doorkwam)
+  2. Vercel Dashboard → Deployments → Redeploy (zonder cache)
+  3. Controleer dat juiste commit hash wordt getoond
+- **Preventie:**
+  - Altijd verifieer dat remote is bijgewerkt na push
+  - Na push check: Vercel moet nieuwe build starten binnen 1-2 min
+  - Als geen build: handmatig triggeren
+
+### Vercel Environment Variables Checklist
+Bij "Configuration" errors op login/auth pages:
+```
+VERPLICHT IN VERCEL:
+├── DATABASE_URL          → postgresql://...
+├── NEXTAUTH_SECRET       → Random 32+ char string
+├── NEXTAUTH_URL          → https://ro-techdevelopment.dev
+├── ADMIN_SETUP_KEY       → Voor admin setup API
+└── [API KEYS]            → Stripe, Resend, etc.
+
+NA TOEVOEGEN → REDEPLOY VEREIST!
+```
+
 ---
 
 *Update dit bestand bij elk nieuw geleerd patroon of veelvoorkomend probleem.*

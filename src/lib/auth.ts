@@ -86,12 +86,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     maxAge: 30 * 24 * 60 * 60, // 30 dagen
   },
   // Secret is read at runtime from environment variable
-  // Falls back to a dev secret in development mode only
-  secret: process.env.NEXTAUTH_SECRET || (
-    process.env.NODE_ENV === "production" 
-      ? "build-time-placeholder-replaced-at-runtime"
-      : "development-secret-DO-NOT-USE-IN-PRODUCTION"
-  ),
+  // AUTH_SECRET is the v5 name, NEXTAUTH_SECRET for backwards compatibility
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+  trustHost: true, // Required for Vercel deployments
 });
 
 // Extended types for NextAuth

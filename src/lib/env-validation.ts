@@ -33,15 +33,13 @@ interface EnvConfig {
 export function validateEnv(): void {
   const errors: string[] = [];
   
-  // Required variables
-  if (!process.env.NEXT_PUBLIC_SITE_URL) {
-    errors.push("NEXT_PUBLIC_SITE_URL is required");
-  } else {
-    // Validate URL format
+  // NEXT_PUBLIC_SITE_URL is optional - has default fallback
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    // Validate URL format if provided
     try {
       new URL(process.env.NEXT_PUBLIC_SITE_URL);
     } catch {
-      errors.push("NEXT_PUBLIC_SITE_URL must be a valid URL");
+      console.warn("⚠️  NEXT_PUBLIC_SITE_URL must be a valid URL");
     }
   }
   
