@@ -1,12 +1,12 @@
 // Prisma Schema for Ro-Tech Development Customer Portal
-// Database: SQLite for development, PostgreSQL for production
+// Database: PostgreSQL (Supabase) for production, SQLite for local dev
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
