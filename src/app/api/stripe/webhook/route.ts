@@ -152,10 +152,82 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session, stripe: 
   if (session.mode === "subscription" && session.subscription) {
     // Handle subscription checkout
     const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
-    await handleSubscriptionUpdate(subscription, stripe, user.id);
+    
+    // Check if this is an automation subscription
+    if (metadata.type === "automation") {
+      await handleAutomationSubscription(session, subscription, user.id);
+    } else {
+      await handleSubscriptionUpdate(subscription, stripe, user.id);
+    }
   } else if (session.mode === "payment") {
     // Handle one-time payment
     await createPaymentRecord(session, user.id);
+  }
+}
+
+/**
+ * Handle automation subscription creation
+ */
+async function handleAutomationSubscription(
+  session: Stripe.Checkout.Session,
+  subscription: Stripe.Subscription,
+  userId: string
+) {
+  const metadata = session.metadata || {};
+  const intakeId = metadata.intake_id;
+  
+  console.log(`[Automation Subscription] Creating for intake: ${intakeId}, user: ${userId}`);
+
+  // Get period dates
+  const periodStart = (subscription as unknown as { current_period_start?: number }).current_period_start;
+  const periodEnd = (subscription as unknown as { current_period_end?: number }).current_period_end;
+  
+  const currentPeriodStart = periodStart ? new Date(periodStart * 1000) : new Date();
+  const currentPeriodEnd = periodEnd ? new Date(periodEnd * 1000) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
+  // Get price details
+  const priceItem = subscription.items.data[0];
+  const price = priceItem?.price;
+  const amount = price?.unit_amount ? price.unit_amount / 100 : 0;
+  const interval = price?.recurring?.interval || "month";
+
+  // Create automation subscription
+  const automationSub = await prisma.automationSubscription.create({
+    data: {
+      userId,
+      planType: metadata.plan_id || "starter",
+      planName: metadata.plan_name || "Automation Starter",
+      monthlyPrice: amount,
+      billingPeriod: interval === "year" ? "yearly" : "monthly",
+      maxWorkflows: parseInt(metadata.max_workflows || "3", 10),
+      maxExecutions: parseInt(metadata.max_executions || "5000", 10),
+      supportHoursIncl: parseFloat(metadata.support_hours || "1"),
+      stripeSubscriptionId: subscription.id,
+      stripeCustomerId: subscription.customer as string,
+      status: "active",
+      currentPeriodStart,
+      currentPeriodEnd,
+    },
+  });
+
+  console.log(`[Automation Subscription] Created: ${automationSub.id}`);
+
+  // Update intake record if exists
+  if (intakeId) {
+    try {
+      await prisma.automationIntake.update({
+        where: { id: intakeId },
+        data: {
+          subscriptionId: automationSub.id,
+          paymentStatus: "paid",
+          paidAt: new Date(),
+          status: "approved",
+        },
+      });
+      console.log(`[Automation Subscription] Updated intake: ${intakeId}`);
+    } catch (err) {
+      console.error(`[Automation Subscription] Failed to update intake: ${intakeId}`, err);
+    }
   }
 }
 

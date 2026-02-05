@@ -1,12 +1,12 @@
 /**
- * Automation Intake API
- * POST /api/automation/intake - Submit intake questionnaire
+ * Automation Intake API with Stripe Checkout Integration
+ * POST /api/automation/intake - Submit intake questionnaire and create Stripe checkout
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
-import { automationPlans } from "@/data/automation-subscriptions";
+import { getStripeClient, isStripeConfigured, toStripeAmount, AUTOMATION_PLANS } from "@/lib/stripe";
 
 const intakeSchema = z.object({
   // Contact
@@ -17,7 +17,7 @@ const intakeSchema = z.object({
   website: z.string().optional(),
   
   // Plan
-  planType: z.enum(["starter", "business", "professional", "enterprise"]),
+  planType: z.enum(["starter", "business", "professional"]),
   billingPeriod: z.enum(["monthly", "yearly"]),
   
   // Workflows
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     const data = intakeSchema.parse(body);
 
     // Get plan details
-    const plan = automationPlans.find((p) => p.id === data.planType);
+    const plan = AUTOMATION_PLANS.find((p) => p.id === data.planType);
     if (!plan) {
       return NextResponse.json({ error: "Ongeldig pakket" }, { status: 400 });
     }
@@ -110,6 +110,7 @@ export async function POST(request: NextRequest) {
         termsAccepted: data.termsAccepted,
         dataProcessingAccepted: data.dataProcessingAccepted,
         status: "submitted",
+        paymentStatus: "pending",
         ...workflowDetails,
         customRequirements,
       },
@@ -117,29 +118,130 @@ export async function POST(request: NextRequest) {
 
     console.log(`[AUTOMATION-INTAKE] New intake submitted: ${intake.id} - ${data.email}`);
 
-    // TODO: Create Stripe checkout session for payment
-    // For now, return success without payment
-    // In production, you would:
-    // 1. Create Stripe checkout session
-    // 2. Store session ID in intake record
-    // 3. Return checkout URL
+    // Check if Stripe is configured
+    if (!isStripeConfigured()) {
+      console.warn("[AUTOMATION-INTAKE] Stripe not configured, skipping payment");
+      return NextResponse.json({
+        success: true,
+        message: "Intake succesvol ontvangen. Betaling wordt later afgehandeld.",
+        intakeId: intake.id,
+        nextStep: "contact",
+      });
+    }
+
+    // Create Stripe Checkout Session
+    const stripe = getStripeClient();
+    const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
     
-    // Placeholder response - in production this would be a Stripe checkout URL
+    // Determine price based on billing period
     const price = data.billingPeriod === "yearly" ? plan.yearlyPrice : plan.monthlyPrice;
-    
+    const interval = data.billingPeriod === "yearly" ? "year" : "month";
+
+    // Find or create product
+    const products = await stripe.products.list({ limit: 100 });
+    let product = products.data.find(
+      (p) => p.metadata?.plan_id === data.planType && 
+             p.metadata?.type === "automation" && 
+             p.active
+    );
+
+    if (!product) {
+      product = await stripe.products.create({
+        name: plan.name,
+        description: `Automation subscription: ${plan.maxWorkflows === -1 ? "Onbeperkt" : plan.maxWorkflows} workflows, ${plan.maxExecutions.toLocaleString()} executions/maand`,
+        metadata: {
+          plan_id: data.planType,
+          type: "automation",
+          max_workflows: plan.maxWorkflows.toString(),
+          max_executions: plan.maxExecutions.toString(),
+          support_hours: plan.supportHours.toString(),
+        },
+      });
+      console.log(`[AUTOMATION-INTAKE] Created Stripe product: ${product.id}`);
+    }
+
+    // Find or create price
+    const prices = await stripe.prices.list({
+      product: product.id,
+      active: true,
+    });
+
+    let stripePrice = prices.data.find(
+      (p) =>
+        p.unit_amount === toStripeAmount(price) &&
+        p.recurring?.interval === interval
+    );
+
+    if (!stripePrice) {
+      stripePrice = await stripe.prices.create({
+        product: product.id,
+        unit_amount: toStripeAmount(price),
+        currency: "eur",
+        recurring: { interval },
+        metadata: { 
+          plan_id: data.planType,
+          billing_period: data.billingPeriod,
+        },
+      });
+      console.log(`[AUTOMATION-INTAKE] Created Stripe price: ${stripePrice.id}`);
+    }
+
+    // Create Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      mode: "subscription",
+      payment_method_types: ["card", "ideal"],
+      line_items: [
+        {
+          price: stripePrice.id,
+          quantity: 1,
+        },
+      ],
+      customer_email: data.email.toLowerCase(),
+      metadata: {
+        intake_id: intake.id,
+        plan_id: data.planType,
+        plan_name: plan.name,
+        customer_name: data.contactName,
+        company_name: data.companyName,
+        billing_period: data.billingPeriod,
+        type: "automation",
+        max_workflows: plan.maxWorkflows.toString(),
+        max_executions: plan.maxExecutions.toString(),
+        support_hours: plan.supportHours.toString(),
+      },
+      subscription_data: {
+        metadata: {
+          intake_id: intake.id,
+          plan_id: data.planType,
+          plan_name: plan.name,
+          type: "automation",
+          max_workflows: plan.maxWorkflows.toString(),
+          max_executions: plan.maxExecutions.toString(),
+          support_hours: plan.supportHours.toString(),
+        },
+      },
+      success_url: `${baseUrl}/checkout/automation/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/checkout/automation/${data.planType}?billing=${data.billingPeriod}&cancelled=true`,
+      locale: "nl",
+      billing_address_collection: "required",
+      allow_promotion_codes: true,
+      tax_id_collection: { enabled: true },
+    });
+
+    // Update intake with Stripe session ID
+    await prisma.automationIntake.update({
+      where: { id: intake.id },
+      data: { stripeSessionId: session.id },
+    });
+
+    console.log(`[AUTOMATION-INTAKE] Created Stripe session: ${session.id} for intake: ${intake.id}`);
+
     return NextResponse.json({
       success: true,
       message: "Intake succesvol ontvangen",
       intakeId: intake.id,
-      // In production, uncomment and implement Stripe:
-      // checkoutUrl: stripeSession.url,
-      nextStep: "payment",
-      summary: {
-        plan: plan.name,
-        billingPeriod: data.billingPeriod === "yearly" ? "Jaarlijks" : "Maandelijks",
-        price: price,
-        workflows: data.selectedWorkflows.length,
-      },
+      checkoutUrl: session.url,
+      sessionId: session.id,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

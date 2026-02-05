@@ -220,24 +220,25 @@ export function AutomationIntakeWizard({
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || "Er is iets misgegaan");
-      }
-
       const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Er is iets misgegaan");
+      }
       
       if (onComplete) {
         onComplete(formData);
       }
 
-      // Redirect to payment or confirmation
+      // Redirect to Stripe Checkout
       if (result.checkoutUrl) {
         window.location.href = result.checkoutUrl;
+      } else {
+        // Fallback if no checkout URL (Stripe not configured)
+        window.location.href = `/checkout/automation/success?intake=${result.intakeId}`;
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Er is iets misgegaan");
-    } finally {
       setSubmitting(false);
     }
   };
