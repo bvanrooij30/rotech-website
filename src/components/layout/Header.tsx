@@ -18,7 +18,7 @@ const navigation = [
       { name: "Progressive Web App", href: "/diensten/progressive-web-app" },
       { name: "SEO Optimalisatie", href: "/diensten/seo-optimalisatie" },
       { name: "Website Onderhoud", href: "/diensten/website-onderhoud" },
-      { name: "Digital Process Automation", href: "/diensten/digital-process-automation" },
+      { name: "Automation Services", href: "/diensten/automation" },
       { name: "API Integraties", href: "/diensten/api-integraties" },
     ],
   },

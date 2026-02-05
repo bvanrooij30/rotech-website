@@ -52,6 +52,7 @@ model User {
   supportTickets SupportTicket[]
   invoices      Invoice[]
   sessions      Session[]
+  automationSubscriptions AutomationSubscription[]
   
   @@index([email])
 }
@@ -618,4 +619,156 @@ model AIAgentMetrics {
   @@unique([agentId, date])
   @@index([agentId])
   @@index([date])
+}
+
+// ============================================
+// AUTOMATION SERVICES
+// ============================================
+
+model AutomationSubscription {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Plan details
+  planType        String   // starter, business, professional, enterprise
+  planName        String
+  monthlyPrice    Float
+  billingPeriod   String   @default("monthly") // monthly, yearly
+  
+  // Limits
+  maxWorkflows       Int
+  maxExecutions      Int
+  supportHoursIncl   Float  @default(0)
+  supportHoursUsed   Float  @default(0)
+  
+  // Stripe
+  stripeSubscriptionId String? @unique
+  stripeCustomerId     String?
+  
+  // Status
+  status          String   @default("active") // active, paused, cancelled, past_due
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  workflows       AutomationWorkflow[]
+  executionLogs   AutomationExecutionLog[]
+  supportRequests AutomationSupportRequest[]
+  
+  @@index([userId])
+  @@index([status])
+}
+
+model AutomationWorkflow {
+  id              String   @id @default(cuid())
+  subscriptionId  String
+  subscription    AutomationSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  
+  // n8n reference
+  n8nWorkflowId   String   @unique
+  name            String
+  description     String?
+  
+  // Status
+  isActive        Boolean  @default(false)
+  
+  // Metadata
+  category        String   // lead-capture, content, order, integration, custom
+  complexity      String   // simple, medium, complex
+  
+  // Metrics (updated by monitoring)
+  totalExecutions    Int      @default(0)
+  successfulExecutions Int    @default(0)
+  failedExecutions   Int      @default(0)
+  lastExecutionAt    DateTime?
+  lastErrorAt        DateTime?
+  lastError          String?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([subscriptionId])
+  @@index([n8nWorkflowId])
+}
+
+model AutomationExecutionLog {
+  id              String   @id @default(cuid())
+  subscriptionId  String
+  subscription    AutomationSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  
+  workflowId      String?
+  n8nExecutionId  String
+  
+  status          String   // success, error, running
+  startedAt       DateTime
+  finishedAt      DateTime?
+  durationMs      Int?
+  
+  errorMessage    String?
+  
+  createdAt       DateTime @default(now())
+  
+  @@index([subscriptionId])
+  @@index([workflowId])
+  @@index([status])
+}
+
+model AutomationSupportRequest {
+  id              String   @id @default(cuid())
+  subscriptionId  String
+  subscription    AutomationSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  
+  type            String   // bug, change, new-feature, question
+  priority        String   @default("normal") // low, normal, high, urgent
+  
+  subject         String
+  description     String
+  
+  // Time tracking
+  estimatedHours  Float?
+  actualHours     Float?
+  
+  // Status
+  status          String   @default("open") // open, in-progress, resolved, closed
+  
+  resolution      String?
+  resolvedAt      DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([subscriptionId])
+  @@index([status])
+}
+
+// Automation scan requests (from website form)
+model AutomationScanRequest {
+  id              String   @id @default(cuid())
+  
+  // Contact info
+  naam            String
+  email           String
+  bedrijf         String
+  
+  // Details
+  processen       String   // What they want to automate
+  tijdPerWeek     String   // Time spent per week
+  systemen        String   // JSON array of systems they use
+  
+  // Status
+  status          String   @default("new") // new, contacted, qualified, converted, closed
+  notes           String?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([email])
+  @@index([status])
 }
