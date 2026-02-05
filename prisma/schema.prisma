@@ -772,3 +772,70 @@ model AutomationScanRequest {
   @@index([email])
   @@index([status])
 }
+
+// Automation intake questionnaire for new subscriptions
+model AutomationIntake {
+  id              String   @id @default(cuid())
+  
+  // Link to subscription (optional - filled after payment)
+  subscriptionId  String?  @unique
+  
+  // Contact & Company info
+  contactName     String
+  email           String
+  phone           String?
+  companyName     String
+  website         String?
+  
+  // Selected plan
+  planType        String   // starter, business, professional, enterprise
+  billingPeriod   String   // monthly, yearly
+  
+  // Workflow preferences (JSON arrays)
+  workflowTypes   String   // JSON: ["lead-capture", "content", "e-commerce", etc.]
+  priorityWorkflow String? // Most important workflow to start with
+  
+  // Systems & Integrations
+  currentSystems  String   // JSON: List of systems they use
+  systemCredentials String? // JSON: Encrypted/reference to credentials
+  
+  // Business context
+  teamSize        String?  // 1, 2-5, 6-10, 11-25, 25+
+  monthlyVolume   String?  // Estimated monthly transactions/tasks
+  
+  // Specific workflow requirements (JSON object per workflow type)
+  leadCaptureDetails    String?  // JSON: CRM, lead sources, notification prefs
+  contentDetails        String?  // JSON: Platforms, posting schedule, content types
+  ecommerceDetails      String?  // JSON: Platform, payment provider, shipping
+  invoicingDetails      String?  // JSON: Accounting software, invoice templates
+  customerServiceDetails String? // JSON: Channels, escalation rules
+  customRequirements    String?  // Free text for anything else
+  
+  // Scheduling preferences
+  preferredContactTime  String?  // Morning, Afternoon, Evening
+  timezone              String   @default("Europe/Amsterdam")
+  kickoffDate           DateTime? // Preferred start date
+  
+  // Agreements
+  termsAccepted         Boolean  @default(false)
+  dataProcessingAccepted Boolean @default(false)
+  
+  // Status
+  status          String   @default("draft") // draft, submitted, reviewed, approved, active
+  reviewNotes     String?
+  reviewedAt      DateTime?
+  reviewedBy      String?
+  
+  // Payment
+  stripeSessionId String?  @unique
+  paymentStatus   String   @default("pending") // pending, paid, failed
+  paidAt          DateTime?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([email])
+  @@index([status])
+  @@index([planType])
+}
