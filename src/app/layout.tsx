@@ -120,7 +120,7 @@ export default function RootLayout({
         </Suspense>
         
         <ErrorBoundary>
-          {/* 🚧 WERKZAAMHEDEN BANNER - Verwijder deze regel als de site klaar is */}
+          {/* 🎉 WELKOM BANNER - Kan verwijderd worden of aangepast voor promoties */}
           <DevelopmentBanner />
           <Header />
           <main className="min-h-screen">{children}</main>
