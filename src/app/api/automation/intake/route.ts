@@ -6,7 +6,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
-import { getStripeClient, isStripeConfigured, toStripeAmount, AUTOMATION_PLANS } from "@/lib/stripe";
+import { getStripeClient, isStripeConfigured, toStripeAmount } from "@/lib/stripe";
+import { automationPlans } from "@/data/automation-subscriptions";
+import { auth } from "@/lib/auth";
 
 const intakeSchema = z.object({
   // Contact
@@ -47,11 +49,16 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const data = intakeSchema.parse(body);
 
-    // Get plan details
-    const plan = AUTOMATION_PLANS.find((p) => p.id === data.planType);
+    // Get plan details from unified data source
+    const plan = automationPlans.find((p) => p.id === data.planType);
     if (!plan) {
       return NextResponse.json({ error: "Ongeldig pakket" }, { status: 400 });
     }
+
+    // Extract plan limits
+    const maxWorkflows = typeof plan.limits.maxWorkflows === "number" ? plan.limits.maxWorkflows : -1;
+    const maxExecutions = plan.limits.maxExecutions;
+    const supportHours = plan.limits.supportHours;
 
     // Prepare workflow-specific details as JSON strings
     const workflowDetails: Record<string, string | null> = {
@@ -137,53 +144,64 @@ export async function POST(request: NextRequest) {
     const price = data.billingPeriod === "yearly" ? plan.yearlyPrice : plan.monthlyPrice;
     const interval = data.billingPeriod === "yearly" ? "year" : "month";
 
-    // Find or create product
-    const products = await stripe.products.list({ limit: 100 });
-    let product = products.data.find(
-      (p) => p.metadata?.plan_id === data.planType && 
-             p.metadata?.type === "automation" && 
-             p.active
-    );
+    // Find or create product with error handling
+    let product;
+    let stripePrice;
+    
+    try {
+      const products = await stripe.products.list({ limit: 100 });
+      product = products.data.find(
+        (p) => p.metadata?.plan_id === data.planType && 
+               p.metadata?.type === "automation" && 
+               p.active
+      );
 
-    if (!product) {
-      product = await stripe.products.create({
-        name: plan.name,
-        description: `Automation subscription: ${plan.maxWorkflows === -1 ? "Onbeperkt" : plan.maxWorkflows} workflows, ${plan.maxExecutions.toLocaleString()} executions/maand`,
-        metadata: {
-          plan_id: data.planType,
-          type: "automation",
-          max_workflows: plan.maxWorkflows.toString(),
-          max_executions: plan.maxExecutions.toString(),
-          support_hours: plan.supportHours.toString(),
-        },
-      });
-      console.log(`[AUTOMATION-INTAKE] Created Stripe product: ${product.id}`);
-    }
+      if (!product) {
+        product = await stripe.products.create({
+          name: plan.name,
+          description: `Automation subscription: ${maxWorkflows === -1 ? "Onbeperkt" : maxWorkflows} workflows, ${maxExecutions.toLocaleString()} executions/maand`,
+          metadata: {
+            plan_id: data.planType,
+            type: "automation",
+            max_workflows: maxWorkflows.toString(),
+            max_executions: maxExecutions.toString(),
+            support_hours: supportHours.toString(),
+          },
+        });
+        console.log(`[AUTOMATION-INTAKE] Created Stripe product: ${product.id}`);
+      }
 
-    // Find or create price
-    const prices = await stripe.prices.list({
-      product: product.id,
-      active: true,
-    });
-
-    let stripePrice = prices.data.find(
-      (p) =>
-        p.unit_amount === toStripeAmount(price) &&
-        p.recurring?.interval === interval
-    );
-
-    if (!stripePrice) {
-      stripePrice = await stripe.prices.create({
+      // Find or create price
+      const prices = await stripe.prices.list({
         product: product.id,
-        unit_amount: toStripeAmount(price),
-        currency: "eur",
-        recurring: { interval },
-        metadata: { 
-          plan_id: data.planType,
-          billing_period: data.billingPeriod,
-        },
+        active: true,
       });
-      console.log(`[AUTOMATION-INTAKE] Created Stripe price: ${stripePrice.id}`);
+
+      stripePrice = prices.data.find(
+        (p) =>
+          p.unit_amount === toStripeAmount(price) &&
+          p.recurring?.interval === interval
+      );
+
+      if (!stripePrice) {
+        stripePrice = await stripe.prices.create({
+          product: product.id,
+          unit_amount: toStripeAmount(price),
+          currency: "eur",
+          recurring: { interval },
+          metadata: { 
+            plan_id: data.planType,
+            billing_period: data.billingPeriod,
+          },
+        });
+        console.log(`[AUTOMATION-INTAKE] Created Stripe price: ${stripePrice.id}`);
+      }
+    } catch (stripeError) {
+      console.error("[AUTOMATION-INTAKE] Stripe setup failed:", stripeError);
+      return NextResponse.json(
+        { error: "Betaling setup mislukt. Neem contact op met support." },
+        { status: 500 }
+      );
     }
 
     // Create Checkout Session
@@ -205,9 +223,9 @@ export async function POST(request: NextRequest) {
         company_name: data.companyName,
         billing_period: data.billingPeriod,
         type: "automation",
-        max_workflows: plan.maxWorkflows.toString(),
-        max_executions: plan.maxExecutions.toString(),
-        support_hours: plan.supportHours.toString(),
+        max_workflows: maxWorkflows.toString(),
+        max_executions: maxExecutions.toString(),
+        support_hours: supportHours.toString(),
       },
       subscription_data: {
         metadata: {
@@ -215,9 +233,9 @@ export async function POST(request: NextRequest) {
           plan_id: data.planType,
           plan_name: plan.name,
           type: "automation",
-          max_workflows: plan.maxWorkflows.toString(),
-          max_executions: plan.maxExecutions.toString(),
-          support_hours: plan.supportHours.toString(),
+          max_workflows: maxWorkflows.toString(),
+          max_executions: maxExecutions.toString(),
+          support_hours: supportHours.toString(),
         },
       },
       success_url: `${baseUrl}/checkout/automation/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -262,11 +280,27 @@ export async function POST(request: NextRequest) {
 // GET: Retrieve intake by ID (for admin/review)
 export async function GET(request: NextRequest) {
   try {
+    // Auth check - only admins can access intake data
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json({ error: "Niet ingelogd" }, { status: 401 });
+    }
+
+    // Check if user is admin
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true },
+    });
+
+    if (user?.role !== "admin") {
+      return NextResponse.json({ error: "Geen toegang" }, { status: 403 });
+    }
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 
     if (!id) {
-      // List all intakes (admin only - add auth check in production)
+      // List all intakes
       const intakes = await prisma.automationIntake.findMany({
         orderBy: { createdAt: "desc" },
         take: 50,

@@ -54,52 +54,14 @@ export const STRIPE_PRODUCTS = {
   WEBSHOP: process.env.STRIPE_PRODUCT_WEBSHOP || "",
   MAATWERK: process.env.STRIPE_PRODUCT_MAATWERK || "",
   
-  // Automation subscriptions
+  // Automation subscriptions (products created dynamically via checkout)
   AUTOMATION_STARTER: process.env.STRIPE_PRODUCT_AUTOMATION_STARTER || "",
   AUTOMATION_BUSINESS: process.env.STRIPE_PRODUCT_AUTOMATION_BUSINESS || "",
   AUTOMATION_PROFESSIONAL: process.env.STRIPE_PRODUCT_AUTOMATION_PROFESSIONAL || "",
 } as const;
 
-// Automation subscription plans
-export const AUTOMATION_PLANS: AutomationPlanConfig[] = [
-  {
-    id: "starter",
-    name: "Automation Starter",
-    monthlyPrice: 99,
-    yearlyPrice: 990,
-    maxWorkflows: 3,
-    maxExecutions: 5000,
-    supportHours: 1,
-  },
-  {
-    id: "business",
-    name: "Automation Business",
-    monthlyPrice: 249,
-    yearlyPrice: 2490,
-    maxWorkflows: 10,
-    maxExecutions: 25000,
-    supportHours: 3,
-  },
-  {
-    id: "professional",
-    name: "Automation Professional",
-    monthlyPrice: 499,
-    yearlyPrice: 4990,
-    maxWorkflows: -1, // unlimited
-    maxExecutions: 100000,
-    supportHours: 8,
-  },
-];
-
-export interface AutomationPlanConfig {
-  id: string;
-  name: string;
-  monthlyPrice: number;
-  yearlyPrice: number;
-  maxWorkflows: number;
-  maxExecutions: number;
-  supportHours: number;
-}
+// Note: Automation plans are defined in src/data/automation-subscriptions.ts
+// Use automationPlans from that file for plan data
 
 // Maintenance plan configuration
 export const MAINTENANCE_PLANS: MaintenancePlan[] = [
