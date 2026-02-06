@@ -5,9 +5,9 @@ import { projects } from "@/data/portfolio";
 import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
 export const metadata: Metadata = {
-  title: "Projecten | Voorbeelden van Websites, Webshops & Apps",
-  description: "Bekijk voorbeelden van websites, webshops en web applicaties die we kunnen bouwen. Ontdek de mogelijkheden voor uw bedrijf.",
-  keywords: ["projecten", "voorbeelden", "websites", "webshops", "web applicaties", "demo"],
+  title: "Projecten | Voorbeelden van Websites, Webshops, Apps & Automatisering",
+  description: "Bekijk voorbeelden van websites, webshops, web applicaties, PWA's, SEO trajecten, automatisering en API integraties. Ontdek wat wij voor uw bedrijf kunnen betekenen.",
+  keywords: ["projecten", "voorbeelden", "websites", "webshops", "web applicaties", "PWA", "SEO", "automatisering", "API integraties"],
   alternates: {
     canonical: "/projecten",
   },
@@ -18,7 +18,12 @@ const categories = [
   { id: "website", label: "Websites" },
   { id: "webshop", label: "Webshops" },
   { id: "webapp", label: "Web Apps" },
+  { id: "pwa", label: "PWA" },
   { id: "mobile", label: "Mobile" },
+  { id: "seo", label: "SEO" },
+  { id: "automation", label: "Automation" },
+  { id: "api", label: "Integraties" },
+  { id: "maintenance", label: "Onderhoud" },
 ];
 
 export default function PortfolioPage() {
