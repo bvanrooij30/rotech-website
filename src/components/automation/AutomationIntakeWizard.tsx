@@ -246,7 +246,7 @@ export function AutomationIntakeWizard({
   const renderQuestion = (question: IntakeQuestion, workflowType?: string) => {
     const value = workflowType
       ? formData.workflowAnswers[workflowType]?.[question.id]
-      : (formData as Record<string, unknown>)[question.id];
+      : (formData as unknown as Record<string, unknown>)[question.id];
 
     switch (question.type) {
       case "text":
