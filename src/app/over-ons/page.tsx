@@ -14,23 +14,23 @@ export const metadata: Metadata = {
 const values = [
   {
     icon: Heart,
-    title: "Passie voor Kwaliteit",
-    description: "Wij leveren alleen werk waar we trots op zijn. Geen haastwerk, geen shortcuts.",
+    title: "Kwaliteit Zonder Compromis",
+    description: "Elke regel code wordt met zorg geschreven. Wij leveren alleen werk waar we volledig achter staan.",
   },
   {
     icon: Users,
-    title: "Persoonlijk Contact",
-    description: "U werkt direct met Bart, uw developer. Geen tussenlagen, snelle en goede communicatie.",
+    title: "Directe Lijnen",
+    description: "U werkt rechtstreeks met Bart, uw developer. Geen accountmanagers, geen wachtrijen — direct contact.",
   },
   {
     icon: Zap,
-    title: "Snelle Communicatie",
-    description: "Vragen? U krijgt snel antwoord. Via WhatsApp, email of telefoon - altijd bereikbaar.",
+    title: "Reactie Binnen 24 Uur",
+    description: "Vragen of problemen? U krijgt altijd binnen één werkdag antwoord. Via WhatsApp, email of telefoon.",
   },
   {
     icon: Target,
-    title: "Resultaatgericht",
-    description: "Een mooie website is niet genoeg. Het moet resultaat opleveren voor uw bedrijf.",
+    title: "Meetbaar Resultaat",
+    description: "Wij bouwen geen websites om het mooi te hebben. Alles is gericht op concrete resultaten voor uw bedrijf.",
   },
 ];
 
