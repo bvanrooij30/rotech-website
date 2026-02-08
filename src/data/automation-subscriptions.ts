@@ -176,8 +176,8 @@ export interface OneTimeService {
 export const oneTimeServices: OneTimeService[] = [
   {
     id: "quick-wins",
-    name: "Quick Win Automaties",
-    description: "Simpele, snelle automaties die direct resultaat opleveren",
+    name: "Quick Win Automations",
+    description: "Simpele, snelle automations die direct resultaat opleveren",
     priceRange: { min: 150, max: 500 },
     deliveryDays: { min: 1, max: 3 },
     complexity: "low",
@@ -192,7 +192,7 @@ export const oneTimeServices: OneTimeService[] = [
   },
   {
     id: "business-automation",
-    name: "Business Automaties",
+    name: "Business Automations",
     description: "Complexere workflows voor bedrijfskritische processen",
     priceRange: { min: 500, max: 1500 },
     deliveryDays: { min: 5, max: 14 },
@@ -208,7 +208,7 @@ export const oneTimeServices: OneTimeService[] = [
   },
   {
     id: "advanced-automation",
-    name: "Geavanceerde Automaties",
+    name: "Geavanceerde Automations",
     description: "Complexe, multi-system integraties met AI",
     priceRange: { min: 1500, max: 5000 },
     deliveryDays: { min: 14, max: 28 },

@@ -18,7 +18,7 @@ import {
 import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
 export const metadata: Metadata = {
-  title: "Werkwijze | Hoe Wij Uw Website Bouwen | RoTech Development",
+  title: "Werkwijze | Hoe wij uw website bouwen | RoTech Development",
   description:
     "Ontdek hoe RoTech Development uw website bouwt. Van kennismaking tot lancering in 6 stappen. ✓ Persoonlijk contact ✓ Transparant proces ✓ Snelle oplevering. Bekijk onze werkwijze.",
   keywords: [
@@ -43,7 +43,7 @@ const processSteps = [
     subtitle: "Gratis en vrijblijvend",
     duration: "30-60 minuten",
     description:
-      "We beginnen met een persoonlijk gesprek om uw wensen, doelen en uitdagingen te begrijpen. Dit kan telefonisch, via video call of persoonlijk in Veldhoven of bij u op locatie.",
+      "We beginnen met een persoonlijk gesprek om uw wensen, doelen en uitdagingen te begrijpen. Dit kan telefonisch, via video call of persoonlijk bij u op locatie.",
     details: [
       "Wat is het doel van uw website?",
       "Wie is uw doelgroep?",
@@ -185,7 +185,7 @@ export default function WerkwijzePage() {
               Onze Werkwijze
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Hoe Wij Uw Website Bouwen
+              Hoe wij uw website bouwen
             </h1>
             <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
               Van eerste gesprek tot lancering in 6 heldere stappen. 

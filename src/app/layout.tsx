@@ -6,7 +6,6 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/chat";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import DevelopmentBanner from "@/components/ui/DevelopmentBanner";
 import { AnalyticsProvider } from "@/components/analytics";
 // Validate environment variables on startup
 import "@/lib/env-validation";
@@ -120,8 +119,6 @@ export default function RootLayout({
         </Suspense>
         
         <ErrorBoundary>
-          {/* 🎉 WELKOM BANNER - Kan verwijderd worden of aangepast voor promoties */}
-          <DevelopmentBanner />
           <Header />
           <main className="min-h-screen">{children}</main>
           <Footer />

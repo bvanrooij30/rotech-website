@@ -104,10 +104,10 @@ export default function Hero() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="text-lg sm:text-xl text-slate-600 mb-10 max-w-2xl mx-auto"
           >
-            Websites en webshops die niet alleen mooi zijn, maar ook{" "}
-            <strong className="text-slate-800">klanten opleveren</strong>. 
-            Gebouwd met moderne technologie, geoptimaliseerd voor zoekmachines 
-            en ontworpen om te converteren.
+            Van professionele websites en webshops tot slimme automatiseringen en 
+            maatwerk applicaties. Wij bouwen digitale oplossingen die{" "}
+            <strong className="text-slate-800">daadwerkelijk resultaat opleveren</strong>{" "}
+            — technisch sterk, vindbaar in Google en ontworpen met uw klant in gedachten.
           </motion.p>
 
           {/* CTA Buttons */}

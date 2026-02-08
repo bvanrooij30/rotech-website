@@ -20,11 +20,9 @@ const footerLinks = {
     { name: "Contact", href: "/contact" },
   ],
   regio: [
-    { name: "Veldhoven", href: "/regio/veldhoven" },
+    { name: "Nederland", href: "/regio/noord-brabant" },
+    { name: "België", href: "/contact" },
     { name: "Eindhoven", href: "/regio/eindhoven" },
-    { name: "Waalre", href: "/regio/waalre" },
-    { name: "Best", href: "/regio/best" },
-    { name: "Helmond", href: "/regio/helmond" },
     { name: "Noord-Brabant", href: "/regio/noord-brabant" },
   ],
   juridisch: [
