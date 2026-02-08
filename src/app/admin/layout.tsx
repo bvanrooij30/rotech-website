@@ -1,6 +1,9 @@
 import { requireAdmin } from "@/lib/admin";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
+// Force dynamic rendering - requireAdmin() uses auth() which needs headers/cookies
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Admin Dashboard | RoTech Development",
   robots: "noindex, nofollow",

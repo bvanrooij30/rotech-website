@@ -1,9 +1,11 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import PortalNavigation from "@/components/portal/PortalNavigation";
 import { SessionProvider } from "@/components/providers/SessionProvider";
+
+// Force dynamic rendering - auth() uses headers/cookies
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: {
