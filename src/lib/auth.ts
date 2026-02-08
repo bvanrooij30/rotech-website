@@ -22,42 +22,43 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Vul je e-mailadres en wachtwoord in");
+          return null;
         }
 
-        const email = (credentials.email as string).toLowerCase();
+        const email = (credentials.email as string).toLowerCase().trim();
         const password = credentials.password as string;
 
-        const user = await prisma.user.findUnique({
-          where: { email },
-        });
+        try {
+          const user = await prisma.user.findUnique({
+            where: { email },
+          });
 
-        if (!user) {
-          throw new Error("Geen account gevonden met dit e-mailadres");
+          if (!user || !user.isActive) {
+            return null;
+          }
+
+          const isPasswordValid = await bcrypt.compare(password, user.password);
+
+          if (!isPasswordValid) {
+            return null;
+          }
+
+          // Update last login (non-blocking)
+          prisma.user.update({
+            where: { id: user.id },
+            data: { lastLoginAt: new Date() },
+          }).catch(() => {});
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
+        } catch {
+          // Database connection error - return null instead of throwing
+          return null;
         }
-
-        if (!user.isActive) {
-          throw new Error("Je account is gedeactiveerd. Neem contact op met support.");
-        }
-
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-
-        if (!isPasswordValid) {
-          throw new Error("Onjuist wachtwoord");
-        }
-
-        // Update last login
-        await prisma.user.update({
-          where: { id: user.id },
-          data: { lastLoginAt: new Date() },
-        });
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        };
       },
     }),
   ],
@@ -79,14 +80,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   pages: {
     signIn: "/portal/login",
-    error: "/portal/login",
   },
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 dagen
   },
-  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
-  trustHost: true, // Required for Vercel deployments
+  trustHost: true,
 });
 
 // Extended types for NextAuth

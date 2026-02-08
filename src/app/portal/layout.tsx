@@ -28,14 +28,10 @@ export default async function PortalLayout({
   
   try {
     session = await auth();
-  } catch (error) {
+  } catch {
     // Auth configuration error - continue without session
-    // This allows the login page to still render
-    console.error("[PortalLayout] Auth error:", error);
+    // Login page will still render correctly
   }
-  
-  // Check if on login/register page
-  const isAuthPage = false; // This will be handled per-page
   
   return (
     <SessionProvider>

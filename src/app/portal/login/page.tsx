@@ -4,30 +4,19 @@ import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle, Mail } from "lucide-react";
+import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle } from "lucide-react";
 
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/portal";
-  const error = searchParams.get("error");
   const verified = searchParams.get("verified");
-  const expiredToken = searchParams.get("error") === "expired_token";
-  const invalidToken = searchParams.get("error") === "invalid_token";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(
-    error === "CredentialsSignin" 
-      ? "Onjuiste inloggegevens" 
-      : expiredToken 
-        ? "Verificatie link verlopen. Vraag een nieuwe aan." 
-        : invalidToken 
-          ? "Ongeldige verificatie link." 
-          : ""
-  );
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,17 +25,25 @@ function LoginContent() {
 
     try {
       const result = await signIn("credentials", {
-        email,
+        email: email.toLowerCase().trim(),
         password,
         redirect: false,
       });
 
       if (result?.error) {
-        setErrorMessage(result.error);
+        // Map NextAuth errors to user-friendly messages
+        if (result.error === "CredentialsSignin" || result.error === "Configuration") {
+          setErrorMessage("Onjuiste inloggegevens. Controleer je e-mailadres en wachtwoord.");
+        } else {
+          setErrorMessage("Er is een fout opgetreden. Probeer het later opnieuw.");
+        }
         setLoading(false);
-      } else {
+      } else if (result?.ok) {
         router.push(callbackUrl);
         router.refresh();
+      } else {
+        setErrorMessage("Inloggen mislukt. Probeer het opnieuw.");
+        setLoading(false);
       }
     } catch {
       setErrorMessage("Er is een fout opgetreden. Probeer het later opnieuw.");
@@ -77,21 +74,7 @@ function LoginContent() {
         {errorMessage && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-            <div className="flex-1">
-              <p className="text-sm text-red-700">{errorMessage}</p>
-              {(expiredToken || invalidToken) && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    // Would trigger resend verification email
-                  }}
-                  className="mt-2 text-sm text-indigo-600 hover:underline flex items-center gap-1"
-                >
-                  <Mail className="w-4 h-4" />
-                  Nieuwe verificatie e-mail versturen
-                </button>
-              )}
-            </div>
+            <p className="text-sm text-red-700">{errorMessage}</p>
           </div>
         )}
 
