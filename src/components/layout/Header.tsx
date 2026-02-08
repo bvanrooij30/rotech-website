@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSession, signOut } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, Mail, Clock, User } from "lucide-react";
+import { Menu, X, ChevronDown, Mail, Clock, User, Shield, LogOut, LayoutDashboard } from "lucide-react";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -30,9 +31,15 @@ const navigation = [
 ];
 
 export default function Header() {
+  const { data: session } = useSession();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
+  const isLoggedIn = !!session?.user;
+  const isAdmin = session?.user?.role === "admin" || session?.user?.role === "super_admin";
+  const userName = session?.user?.name || "Gebruiker";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -140,13 +147,79 @@ export default function Header() {
 
             {/* CTA Buttons */}
             <div className="hidden lg:flex items-center gap-3">
-              <Link
-                href="/portal/login"
-                className="inline-flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-indigo-600 font-medium transition-colors"
-              >
-                <User className="w-4 h-4" />
-                Inloggen
-              </Link>
+              {isLoggedIn ? (
+                <div
+                  className="relative"
+                  onMouseEnter={() => setIsUserMenuOpen(true)}
+                  onMouseLeave={() => setIsUserMenuOpen(false)}
+                >
+                  <button
+                    className="inline-flex items-center gap-2 px-4 py-2 text-slate-700 hover:text-indigo-600 font-medium transition-colors rounded-lg hover:bg-indigo-50"
+                  >
+                    <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                      <span className="text-sm font-bold text-indigo-600">
+                        {userName.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    {userName.split(" ")[0]}
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isUserMenuOpen ? "rotate-180" : ""}`} />
+                  </button>
+
+                  <AnimatePresence>
+                    {isUserMenuOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute top-full right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 py-2 overflow-hidden"
+                      >
+                        <div className="px-4 py-2 border-b border-slate-100">
+                          <p className="text-sm font-medium text-slate-900">{userName}</p>
+                          <p className="text-xs text-slate-500">{session.user?.email}</p>
+                          {isAdmin && (
+                            <span className="inline-block mt-1 text-xs font-medium px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full">
+                              {session.user?.role === "super_admin" ? "Super Admin" : "Admin"}
+                            </span>
+                          )}
+                        </div>
+
+                        {isAdmin && (
+                          <Link
+                            href="/admin"
+                            className="flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+                          >
+                            <Shield className="w-4 h-4" />
+                            Admin Panel
+                          </Link>
+                        )}
+                        <Link
+                          href="/portal"
+                          className="flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+                        >
+                          <LayoutDashboard className="w-4 h-4" />
+                          Klantenportaal
+                        </Link>
+                        <button
+                          onClick={() => signOut({ callbackUrl: "/" })}
+                          className="flex items-center gap-3 w-full px-4 py-2.5 text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          Uitloggen
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <Link
+                  href="/portal/login"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-indigo-600 font-medium transition-colors"
+                >
+                  <User className="w-4 h-4" />
+                  Inloggen
+                </Link>
+              )}
               <Link
                 href="/offerte"
                 className="btn-primary inline-flex items-center gap-2"
@@ -210,14 +283,48 @@ export default function Header() {
                 </nav>
 
                 <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
-                  <Link
-                    href="/portal/login"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center justify-center gap-2 w-full py-3 px-4 border border-slate-200 rounded-lg text-slate-700 font-medium hover:bg-slate-50 transition-colors"
-                  >
-                    <User className="w-4 h-4" />
-                    Klantenportaal
-                  </Link>
+                  {isLoggedIn ? (
+                    <>
+                      <div className="px-4 py-2 bg-slate-50 rounded-lg">
+                        <p className="text-sm font-medium text-slate-900">{userName}</p>
+                        <p className="text-xs text-slate-500">{session?.user?.email}</p>
+                      </div>
+                      {isAdmin && (
+                        <Link
+                          href="/admin"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+                        >
+                          <Shield className="w-4 h-4" />
+                          Admin Panel
+                        </Link>
+                      )}
+                      <Link
+                        href="/portal"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex items-center justify-center gap-2 w-full py-3 px-4 border border-slate-200 rounded-lg text-slate-700 font-medium hover:bg-slate-50 transition-colors"
+                      >
+                        <LayoutDashboard className="w-4 h-4" />
+                        Klantenportaal
+                      </Link>
+                      <button
+                        onClick={() => { signOut({ callbackUrl: "/" }); setIsMobileMenuOpen(false); }}
+                        className="flex items-center justify-center gap-2 w-full py-3 px-4 border border-red-200 rounded-lg text-red-600 font-medium hover:bg-red-50 transition-colors"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Uitloggen
+                      </button>
+                    </>
+                  ) : (
+                    <Link
+                      href="/portal/login"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center justify-center gap-2 w-full py-3 px-4 border border-slate-200 rounded-lg text-slate-700 font-medium hover:bg-slate-50 transition-colors"
+                    >
+                      <User className="w-4 h-4" />
+                      Klantenportaal
+                    </Link>
+                  )}
                   <Link
                     href="/offerte"
                     onClick={() => setIsMobileMenuOpen(false)}
