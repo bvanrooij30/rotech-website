@@ -22,7 +22,15 @@ export default async function PortalLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  let session = null;
+  
+  try {
+    session = await auth();
+  } catch (error) {
+    // Auth configuration error - continue without session
+    // This allows the login page to still render
+    console.error("[PortalLayout] Auth error:", error);
+  }
   
   // Check if on login/register page
   const isAuthPage = false; // This will be handled per-page
