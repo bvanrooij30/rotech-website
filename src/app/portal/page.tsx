@@ -24,27 +24,57 @@ export default async function PortalDashboardPage() {
     redirect("/portal/login");
   }
 
-  // Fetch user data with relations
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    include: {
-      subscriptions: {
-        where: { status: "active" },
-        include: { product: true },
-        take: 1,
+  // Fetch user data - try by id first, then by email as fallback
+  let user = null;
+  try {
+    user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      include: {
+        subscriptions: {
+          where: { status: "active" },
+          include: { product: true },
+          take: 1,
+        },
+        products: {
+          where: { status: { not: "archived" } },
+          orderBy: { updatedAt: "desc" },
+          take: 3,
+        },
+        supportTickets: {
+          where: { status: { not: "closed" } },
+          orderBy: { createdAt: "desc" },
+          take: 5,
+        },
       },
-      products: {
-        where: { status: { not: "archived" } },
-        orderBy: { updatedAt: "desc" },
-        take: 3,
-      },
-      supportTickets: {
-        where: { status: { not: "closed" } },
-        orderBy: { createdAt: "desc" },
-        take: 5,
-      },
-    },
-  });
+    });
+
+    // Fallback: find by email if id lookup fails
+    if (!user && session.user.email) {
+      user = await prisma.user.findUnique({
+        where: { email: session.user.email },
+        include: {
+          subscriptions: {
+            where: { status: "active" },
+            include: { product: true },
+            take: 1,
+          },
+          products: {
+            where: { status: { not: "archived" } },
+            orderBy: { updatedAt: "desc" },
+            take: 3,
+          },
+          supportTickets: {
+            where: { status: { not: "closed" } },
+            orderBy: { createdAt: "desc" },
+            take: 5,
+          },
+        },
+      });
+    }
+  } catch {
+    // Database error - redirect to login
+    redirect("/portal/login");
+  }
 
   if (!user) {
     redirect("/portal/login");
