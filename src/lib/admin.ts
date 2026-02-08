@@ -133,34 +133,52 @@ export function hasAnyPermission(permissions: Permission[], required: Permission
  * Get current admin user with permissions - for server components
  */
 export async function getAdminUser(): Promise<AdminUser | null> {
-  const session = await auth();
-  
-  if (!session?.user) {
+  try {
+    const session = await auth();
+    
+    if (!session?.user) {
+      return null;
+    }
+    
+    // Try by id first, then fallback to email
+    let user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        permissions: true,
+      },
+    });
+    
+    if (!user && session.user.email) {
+      user = await prisma.user.findUnique({
+        where: { email: session.user.email },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          role: true,
+          permissions: true,
+        },
+      });
+    }
+    
+    if (!user || !isAdmin(user.role)) {
+      return null;
+    }
+    
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      permissions: getUserPermissions(user.role, user.permissions),
+    };
+  } catch {
     return null;
   }
-  
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      role: true,
-      permissions: true,
-    },
-  });
-  
-  if (!user || !isAdmin(user.role)) {
-    return null;
-  }
-  
-  return {
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    role: user.role,
-    permissions: getUserPermissions(user.role, user.permissions),
-  };
 }
 
 /**
@@ -225,41 +243,52 @@ export async function logAdminAction(
  * Get admin stats for dashboard
  */
 export async function getAdminStats() {
-  const [
-    totalUsers,
-    activeSubscriptions,
-    openTickets,
-    totalProducts,
-    monthlyRevenue,
-    recentUsers,
-  ] = await Promise.all([
-    prisma.user.count(),
-    prisma.subscription.count({ where: { status: "active" } }),
-    prisma.supportTicket.count({ where: { status: { notIn: ["closed", "resolved"] } } }),
-    prisma.product.count(),
-    prisma.subscription.aggregate({
-      where: { status: "active" },
-      _sum: { monthlyPrice: true },
-    }),
-    prisma.user.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 5,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true,
-        role: true,
-      },
-    }),
-  ]);
+  try {
+    const [
+      totalUsers,
+      activeSubscriptions,
+      openTickets,
+      totalProducts,
+      monthlyRevenue,
+      recentUsers,
+    ] = await Promise.all([
+      prisma.user.count(),
+      prisma.subscription.count({ where: { status: "active" } }),
+      prisma.supportTicket.count({ where: { status: { notIn: ["closed", "resolved"] } } }),
+      prisma.product.count(),
+      prisma.subscription.aggregate({
+        where: { status: "active" },
+        _sum: { monthlyPrice: true },
+      }),
+      prisma.user.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
+          role: true,
+        },
+      }),
+    ]);
 
-  return {
-    totalUsers,
-    activeSubscriptions,
-    openTickets,
-    totalProducts,
-    monthlyRevenue: monthlyRevenue._sum.monthlyPrice || 0,
-    recentUsers,
-  };
+    return {
+      totalUsers,
+      activeSubscriptions,
+      openTickets,
+      totalProducts,
+      monthlyRevenue: monthlyRevenue._sum.monthlyPrice || 0,
+      recentUsers,
+    };
+  } catch {
+    return {
+      totalUsers: 0,
+      activeSubscriptions: 0,
+      openTickets: 0,
+      totalProducts: 0,
+      monthlyRevenue: 0,
+      recentUsers: [] as { id: string; name: string; email: string; createdAt: Date; role: string }[],
+    };
+  }
 }

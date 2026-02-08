@@ -16,24 +16,30 @@ export default async function AdminDashboard() {
   const admin = await requireAdmin();
   const stats = await getAdminStats();
 
-  // Get urgent tickets
-  const urgentTickets = await prisma.supportTicket.findMany({
-    where: {
-      status: { notIn: ["closed", "resolved"] },
-      priority: { in: ["high", "urgent"] },
-    },
-    include: {
-      user: { select: { name: true, email: true } },
-    },
-    orderBy: { createdAt: "desc" },
-    take: 5,
-  });
+  // Get urgent tickets (with error handling for PgBouncer)
+  let urgentTickets: Awaited<ReturnType<typeof prisma.supportTicket.findMany>> = [];
+  try {
+    urgentTickets = await prisma.supportTicket.findMany({
+      where: {
+        status: { notIn: ["closed", "resolved"] },
+        priority: { in: ["high", "urgent"] },
+      },
+      include: {
+        user: { select: { name: true, email: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+    });
+  } catch {}
 
   // Get recent activity (audit log)
-  const recentActivity = await prisma.adminAuditLog.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 10,
-  });
+  let recentActivity: Awaited<ReturnType<typeof prisma.adminAuditLog.findMany>> = [];
+  try {
+    recentActivity = await prisma.adminAuditLog.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 10,
+    });
+  } catch {}
 
   const canManageUsers = hasPermission(admin.permissions, PERMISSIONS.USERS_READ);
   const canManageSubscriptions = hasPermission(admin.permissions, PERMISSIONS.SUBSCRIPTIONS_READ);
