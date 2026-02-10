@@ -1,6 +1,6 @@
-import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
+import { getAuthenticatedUserId } from "@/lib/get-user";
 import Link from "next/link";
 import {
   MessageCircle,
@@ -17,25 +17,26 @@ export const metadata = {
 };
 
 export default async function SupportPage() {
-  const session = await auth();
-  
-  if (!session?.user) {
-    redirect("/portal/login");
-  }
+  const userId = await getAuthenticatedUserId();
+  if (!userId) redirect("/portal/login");
 
-  const tickets = await prisma.supportTicket.findMany({
-    where: { userId: session.user.id },
-    include: {
-      product: {
-        select: { name: true },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let tickets: any[] = [];
+  try {
+    tickets = await prisma.supportTicket.findMany({
+      where: { userId },
+      include: {
+        product: {
+          select: { name: true },
+        },
+        messages: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+        },
       },
-      messages: {
-        orderBy: { createdAt: "desc" },
-        take: 1,
-      },
-    },
-    orderBy: { updatedAt: "desc" },
-  });
+      orderBy: { updatedAt: "desc" },
+    });
+  } catch {}
 
   const openTickets = tickets.filter(t => t.status !== "closed" && t.status !== "resolved");
   const closedTickets = tickets.filter(t => t.status === "closed" || t.status === "resolved");

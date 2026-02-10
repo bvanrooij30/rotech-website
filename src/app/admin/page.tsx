@@ -17,9 +17,12 @@ export default async function AdminDashboard() {
   const stats = await getAdminStats();
 
   // Get urgent tickets (with error handling for PgBouncer)
-  let urgentTickets: Awaited<ReturnType<typeof prisma.supportTicket.findMany>> = [];
+  type TicketWithUser = Awaited<ReturnType<typeof prisma.supportTicket.findMany>>[number] & {
+    user: { name: string; email: string };
+  };
+  let urgentTickets: TicketWithUser[] = [];
   try {
-    urgentTickets = await prisma.supportTicket.findMany({
+    const tickets = await prisma.supportTicket.findMany({
       where: {
         status: { notIn: ["closed", "resolved"] },
         priority: { in: ["high", "urgent"] },
@@ -30,6 +33,7 @@ export default async function AdminDashboard() {
       orderBy: { createdAt: "desc" },
       take: 5,
     });
+    urgentTickets = tickets as TicketWithUser[];
   } catch {}
 
   // Get recent activity (audit log)

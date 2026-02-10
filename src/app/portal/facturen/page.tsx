@@ -1,6 +1,6 @@
-import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
+import { getAuthenticatedUserId } from "@/lib/get-user";
 import Link from "next/link";
 import {
   FileText,
@@ -16,16 +16,16 @@ export const metadata = {
 };
 
 export default async function InvoicesPage() {
-  const session = await auth();
-  
-  if (!session?.user) {
-    redirect("/portal/login");
-  }
+  const userId = await getAuthenticatedUserId();
+  if (!userId) redirect("/portal/login");
 
-  const invoices = await prisma.invoice.findMany({
-    where: { userId: session.user.id },
-    orderBy: { createdAt: "desc" },
-  });
+  let invoices: Awaited<ReturnType<typeof prisma.invoice.findMany>> = [];
+  try {
+    invoices = await prisma.invoice.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+    });
+  } catch {}
 
   const getStatusColor = (status: string) => {
     switch (status) {

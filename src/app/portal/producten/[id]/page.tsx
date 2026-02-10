@@ -1,6 +1,6 @@
-import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
+import { getAuthenticatedUserId } from "@/lib/get-user";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -21,44 +21,45 @@ import {
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const product = await prisma.product.findUnique({
-    where: { id },
-    select: { name: true },
-  });
-  
-  return {
-    title: product ? product.name : "Product",
-  };
+  try {
+    const product = await prisma.product.findUnique({
+      where: { id },
+      select: { name: true },
+    });
+    return { title: product ? product.name : "Product" };
+  } catch {
+    return { title: "Product" };
+  }
 }
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const session = await auth();
-  
-  if (!session?.user) {
-    redirect("/portal/login");
-  }
+  const userId = await getAuthenticatedUserId();
+  if (!userId) redirect("/portal/login");
 
   const { id } = await params;
 
-  const product = await prisma.product.findUnique({
-    where: { id },
-    include: {
-      subscriptions: {
-        orderBy: { createdAt: "desc" },
+  let product = null;
+  try {
+    product = await prisma.product.findUnique({
+      where: { id },
+      include: {
+        subscriptions: {
+          orderBy: { createdAt: "desc" },
+        },
+        statusUpdates: {
+          orderBy: { createdAt: "desc" },
+          where: { isPublic: true },
+          take: 10,
+        },
+        supportTickets: {
+          orderBy: { createdAt: "desc" },
+          take: 5,
+        },
       },
-      statusUpdates: {
-        orderBy: { createdAt: "desc" },
-        where: { isPublic: true },
-        take: 10,
-      },
-      supportTickets: {
-        orderBy: { createdAt: "desc" },
-        take: 5,
-      },
-    },
-  });
+    });
+  } catch { notFound(); }
 
-  if (!product || product.userId !== session.user.id) {
+  if (!product || product.userId !== userId) {
     notFound();
   }
 

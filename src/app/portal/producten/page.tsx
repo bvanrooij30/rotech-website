@@ -1,6 +1,6 @@
-import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
+import { getAuthenticatedUserId } from "@/lib/get-user";
 import Link from "next/link";
 import {
   Package,
@@ -17,27 +17,28 @@ export const metadata = {
 };
 
 export default async function ProductsPage() {
-  const session = await auth();
-  
-  if (!session?.user) {
-    redirect("/portal/login");
-  }
+  const userId = await getAuthenticatedUserId();
+  if (!userId) redirect("/portal/login");
 
-  const products = await prisma.product.findMany({
-    where: { userId: session.user.id },
-    include: {
-      subscriptions: {
-        where: { status: "active" },
-        take: 1,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let products: any[] = [];
+  try {
+    products = await prisma.product.findMany({
+      where: { userId },
+      include: {
+        subscriptions: {
+          where: { status: "active" },
+          take: 1,
+        },
+        statusUpdates: {
+          orderBy: { createdAt: "desc" },
+          take: 3,
+          where: { isPublic: true },
+        },
       },
-      statusUpdates: {
-        orderBy: { createdAt: "desc" },
-        take: 3,
-        where: { isPublic: true },
-      },
-    },
-    orderBy: { updatedAt: "desc" },
-  });
+      orderBy: { updatedAt: "desc" },
+    });
+  } catch {}
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -171,7 +172,7 @@ export default async function ProductsPage() {
                       Recente updates
                     </p>
                     <div className="space-y-2">
-                      {product.statusUpdates.map((update) => (
+                      {product.statusUpdates.map((update: { id: string; createdAt: Date; title: string }) => (
                         <div key={update.id} className="flex items-start gap-2 text-sm">
                           <span className="text-slate-400">
                             {formatDate(update.createdAt)}:

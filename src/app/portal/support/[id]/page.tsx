@@ -1,6 +1,6 @@
-import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
+import { getAuthenticatedUserId } from "@/lib/get-user";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -15,36 +15,37 @@ import TicketReplyForm from "@/components/portal/TicketReplyForm";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const ticket = await prisma.supportTicket.findUnique({
-    where: { id },
-    select: { ticketNumber: true, subject: true },
-  });
-  
-  return {
-    title: ticket ? `${ticket.ticketNumber} - ${ticket.subject}` : "Ticket",
-  };
+  try {
+    const ticket = await prisma.supportTicket.findUnique({
+      where: { id },
+      select: { ticketNumber: true, subject: true },
+    });
+    return { title: ticket ? `${ticket.ticketNumber} - ${ticket.subject}` : "Ticket" };
+  } catch {
+    return { title: "Ticket" };
+  }
 }
 
 export default async function TicketDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const session = await auth();
-  
-  if (!session?.user) {
-    redirect("/portal/login");
-  }
+  const userId = await getAuthenticatedUserId();
+  if (!userId) redirect("/portal/login");
 
   const { id } = await params;
 
-  const ticket = await prisma.supportTicket.findUnique({
-    where: { id },
-    include: {
-      product: { select: { name: true } },
-      messages: {
-        orderBy: { createdAt: "asc" },
+  let ticket = null;
+  try {
+    ticket = await prisma.supportTicket.findUnique({
+      where: { id },
+      include: {
+        product: { select: { name: true } },
+        messages: {
+          orderBy: { createdAt: "asc" },
+        },
       },
-    },
-  });
+    });
+  } catch { notFound(); }
 
-  if (!ticket || ticket.userId !== session.user.id) {
+  if (!ticket || ticket.userId !== userId) {
     notFound();
   }
 

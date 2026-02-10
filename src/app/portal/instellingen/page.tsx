@@ -1,6 +1,6 @@
-import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
+import { getAuthenticatedUserId } from "@/lib/get-user";
 import AccountForm from "@/components/portal/AccountForm";
 import PasswordForm from "@/components/portal/PasswordForm";
 
@@ -9,35 +9,33 @@ export const metadata = {
 };
 
 export default async function SettingsPage() {
-  const session = await auth();
-  
-  if (!session?.user) {
-    redirect("/portal/login");
-  }
+  const userId = await getAuthenticatedUserId();
+  if (!userId) redirect("/portal/login");
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      phone: true,
-      companyName: true,
-      kvkNumber: true,
-      vatNumber: true,
-      street: true,
-      houseNumber: true,
-      postalCode: true,
-      city: true,
-      country: true,
-      createdAt: true,
-      lastLoginAt: true,
-    },
-  });
+  let user = null;
+  try {
+    user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        companyName: true,
+        kvkNumber: true,
+        vatNumber: true,
+        street: true,
+        houseNumber: true,
+        postalCode: true,
+        city: true,
+        country: true,
+        createdAt: true,
+        lastLoginAt: true,
+      },
+    });
+  } catch { redirect("/portal/login"); }
 
-  if (!user) {
-    redirect("/portal/login");
-  }
+  if (!user) redirect("/portal/login");
 
   return (
     <div className="space-y-6">
