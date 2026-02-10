@@ -257,4 +257,33 @@ NA TOEVOEGEN → REDEPLOY VEREIST!
 
 ---
 
+### 2026-01-22: Supabase + Vercel Database Connection
+- **Issue:** "Can't reach database server" en "prepared statement s1 already exists"
+- **Root cause:** Meerdere factoren:
+  1. Supabase Dedicated Pooler is NIET IPv4 compatibel - Vercel vereist IPv4
+  2. Wachtwoorden met speciale tekens (`!@#$%`) in DATABASE_URL breken URL parsing
+  3. PgBouncer Transaction Pooling conflicteert met Prisma prepared statements
+- **Fixes:**
+  - Gebruik ALTIJD de **Shared Pooler** URL (met "IPv4 COMPATIBLE" label in Supabase)
+  - Gebruik wachtwoorden ZONDER speciale tekens, of URL-encode ze (`!` = `%21`)
+  - Voeg `?pgbouncer=true` toe aan DATABASE_URL
+  - Prisma client forceert pgbouncer parameter via `datasourceUrl`
+  - Voeg `directUrl` toe aan prisma schema voor migraties
+- **Preventie:**
+  - Check altijd de Supabase "Connect" dialog voor correcte URLs
+  - Test database connectie via `/api/setup/admin` (GET) na elke URL wijziging
+  - Gebruik NOOIT de Dedicated Pooler voor Vercel deployments
+
+### 2026-01-22: NextAuth v5 User ID Mismatch
+- **Issue:** Portal/Admin crashed met "user not found" na login
+- **Root cause:** NextAuth genereert een session user ID die niet matcht met het database ID (bijv. SQL INSERT gebruikt `admin-001` maar NextAuth genereert een cuid)
+- **Fix:** Altijd een email-gebaseerde fallback lookup implementeren:
+  ```typescript
+  let user = await prisma.user.findUnique({ where: { id: session.user.id } });
+  if (!user && session.user.email) {
+    user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  }
+  ```
+- **Preventie:** Gebruik altijd email als fallback bij user lookups in server components
+
 *Update dit bestand bij elk nieuw geleerd patroon of veelvoorkomend probleem.*

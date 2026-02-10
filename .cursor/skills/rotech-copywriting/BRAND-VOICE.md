@@ -7,7 +7,7 @@
 | **Bedrijfsnaam** | RoTech Development (handelsnaam BVR Services) |
 | **Eigenaar** | Bart van Rooij |
 | **Locatie** | Veldhoven, Noord-Brabant, Nederland |
-| **Doelgroep** | MKB & ZZP in Nederland |
+| **Doelgroep** | MKB & ZZP in Nederland en België |
 | **Positionering** | Professionele web development partner met persoonlijke aanpak |
 
 ## Core Messaging
@@ -43,14 +43,21 @@
 - **Behoefte**: Meer leads, efficiëntere processen, groei ondersteunen
 - **Pijnpunten**: Verouderde website, handmatige processen, concurrentie
 - **Toon**: Zakelijk, resultaatgericht, adviserend
-- **Producten**: Business Website, Webshop, Automatisering
+- **Producten**: Business Website, Webshop, Automatisering, Onderhoudspakketten
 
 ### Scale-up / Groeiend Bedrijf
 
 - **Behoefte**: Maatwerk systemen, integraties, schaalbaarheid
 - **Pijnpunten**: Bestaande systemen voldoen niet, technische schuld
 - **Toon**: Technisch vakkundig, strategisch, partnership
-- **Producten**: Maatwerk Web Applicatie, API Integraties
+- **Producten**: Maatwerk Web Applicatie, API Integraties, Automation Abonnementen
+
+### Belgische Ondernemer
+
+- **Behoefte**: Nederlandse-talige partner voor digitale oplossingen
+- **Pijnpunten**: Lokale bureaus duur, taalbarriere met internationale partijen
+- **Toon**: Professioneel, servicegericht, begrip voor Belgische markt
+- **Producten**: Alle diensten, met aandacht voor Bancontact/Belgische betalingen
 
 ## Woorden en Zinnen
 
