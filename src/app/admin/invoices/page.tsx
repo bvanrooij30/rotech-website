@@ -27,23 +27,18 @@ export default async function AdminInvoicesPage({
 
   const where = statusFilter ? { status: statusFilter } : {};
 
-  const [invoices, total, stats] = await Promise.all([
-    prisma.invoice.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: limit,
-      include: {
-        user: { select: { name: true, email: true, companyName: true } },
-      },
-    }),
-    prisma.invoice.count({ where }),
-    prisma.invoice.groupBy({
-      by: ["status"],
-      _sum: { amount: true },
-      _count: true,
-    }),
-  ]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let invoices: any[] = [], total = 0, stats: any[] = [];
+  try {
+    [invoices, total, stats] = await Promise.all([
+      prisma.invoice.findMany({
+        where, orderBy: { createdAt: "desc" }, skip, take: limit,
+        include: { user: { select: { name: true, email: true, companyName: true } } },
+      }),
+      prisma.invoice.count({ where }),
+      prisma.invoice.groupBy({ by: ["status"], _sum: { amount: true }, _count: true }),
+    ]);
+  } catch {}
 
   const totalPages = Math.ceil(total / limit);
 

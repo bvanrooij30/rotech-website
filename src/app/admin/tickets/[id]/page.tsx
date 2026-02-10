@@ -33,24 +33,17 @@ export default async function AdminTicketDetailPage({ params }: { params: Promis
   const admin = await requirePermission(PERMISSIONS.TICKETS_READ);
   const { id } = await params;
 
-  const ticket = await prisma.supportTicket.findUnique({
-    where: { id },
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          phone: true,
-          companyName: true,
-        },
+  let ticket = null;
+  try {
+    ticket = await prisma.supportTicket.findUnique({
+      where: { id },
+      include: {
+        user: { select: { id: true, name: true, email: true, phone: true, companyName: true } },
+        product: { select: { id: true, name: true, domain: true } },
+        messages: { orderBy: { createdAt: "asc" } },
       },
-      product: { select: { id: true, name: true, domain: true } },
-      messages: {
-        orderBy: { createdAt: "asc" },
-      },
-    },
-  });
+    });
+  } catch { notFound(); }
 
   if (!ticket) {
     notFound();

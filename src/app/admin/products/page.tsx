@@ -41,23 +41,18 @@ export default async function AdminProductsPage({
     where.type = params.type;
   }
 
-  const products = await prisma.product.findMany({
-    where,
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let products: any[] = [];
+  try {
+    products = await prisma.product.findMany({
+      where,
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        subscriptions: { where: { status: "active" }, take: 1 },
       },
-      subscriptions: {
-        where: { status: "active" },
-        take: 1,
-      },
-    },
-    orderBy: { updatedAt: "desc" },
-  });
+      orderBy: { updatedAt: "desc" },
+    });
+  } catch {}
 
   const getStatusColor = (status: string) => {
     switch (status) {

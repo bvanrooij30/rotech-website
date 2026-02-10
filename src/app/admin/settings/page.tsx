@@ -16,11 +16,14 @@ export default async function AdminSettingsPage() {
   const admin = await requireAdmin();
 
   // Get current settings
-  const settings = await prisma.systemSetting.findMany();
-  const settingsMap = settings.reduce((acc, s) => {
-    acc[s.key] = s.value;
-    return acc;
-  }, {} as Record<string, string>);
+  let settingsMap: Record<string, string> = {};
+  try {
+    const settings = await prisma.systemSetting.findMany();
+    settingsMap = settings.reduce((acc, s) => {
+      acc[s.key] = s.value;
+      return acc;
+    }, {} as Record<string, string>);
+  } catch {}
 
   return (
     <div className="space-y-6 pt-16 lg:pt-0">

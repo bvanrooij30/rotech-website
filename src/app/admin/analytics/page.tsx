@@ -30,52 +30,20 @@ export default async function AnalyticsPage() {
   startOfWeek.setDate(now.getDate() - 7);
 
   // Fetch analytics data from database and files
-  const [
-    totalUsers,
-    usersThisMonth,
-    usersLastMonth,
-    openTickets,
-    resolvedTicketsThisMonth,
-    formSubmissions,
-    workOrders,
-  ] = await Promise.all([
-    // Total users
-    prisma.user.count(),
-    
-    // Users this month
-    prisma.user.count({
-      where: { createdAt: { gte: startOfMonth } }
-    }),
-    
-    // Users last month
-    prisma.user.count({
-      where: { 
-        createdAt: { 
-          gte: startOfLastMonth,
-          lte: endOfLastMonth
-        } 
-      }
-    }),
-    
-    // Open tickets
-    prisma.supportTicket.count({
-      where: { status: { notIn: ['closed', 'resolved'] } }
-    }),
-    
-    // Resolved tickets this month
-    prisma.supportTicket.count({
-      where: { 
-        status: { in: ['closed', 'resolved'] },
-        updatedAt: { gte: startOfMonth }
-      }
-    }),
-    
-    // Form submissions (contact forms)
-    getFormSubmissions().catch(() => []),
-    
-    // Work orders (quote requests)
-    getWorkOrders().catch(() => []),
-  ]);
+  let totalUsers = 0, usersThisMonth = 0, usersLastMonth = 0, openTickets = 0, resolvedTicketsThisMonth = 0;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let formSubmissions: any[] = [], workOrders: any[] = [];
+  try {
+    [totalUsers, usersThisMonth, usersLastMonth, openTickets, resolvedTicketsThisMonth, formSubmissions, workOrders] = await Promise.all([
+      prisma.user.count(),
+      prisma.user.count({ where: { createdAt: { gte: startOfMonth } } }),
+      prisma.user.count({ where: { createdAt: { gte: startOfLastMonth, lte: endOfLastMonth } } }),
+      prisma.supportTicket.count({ where: { status: { notIn: ['closed', 'resolved'] } } }),
+      prisma.supportTicket.count({ where: { status: { in: ['closed', 'resolved'] }, updatedAt: { gte: startOfMonth } } }),
+      getFormSubmissions().catch(() => []),
+      getWorkOrders().catch(() => []),
+    ]);
+  } catch {}
 
   // Calculate lead stats from form submissions and work orders
   const allLeads = [

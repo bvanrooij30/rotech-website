@@ -20,31 +20,25 @@ export default async function AdminBillingPage() {
   await requireAdmin();
 
   // Get subscription stats
-  const [subscriptionStats, revenueData, recentSubscriptions] = await Promise.all([
-    prisma.subscription.groupBy({
-      by: ["status"],
-      _count: true,
-    }),
-    prisma.subscription.aggregate({
-      where: { status: "active" },
-      _sum: { monthlyPrice: true },
-      _count: true,
-    }),
-    prisma.subscription.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 10,
-      include: {
-        user: { select: { name: true, email: true, companyName: true } },
-      },
-    }),
-  ]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let subscriptionStats: any[] = [], revenueData: any = { _sum: { monthlyPrice: 0 }, _count: 0 }, recentSubscriptions: any[] = [];
+  try {
+    [subscriptionStats, revenueData, recentSubscriptions] = await Promise.all([
+      prisma.subscription.groupBy({ by: ["status"], _count: true }),
+      prisma.subscription.aggregate({ where: { status: "active" }, _sum: { monthlyPrice: true }, _count: true }),
+      prisma.subscription.findMany({
+        orderBy: { createdAt: "desc" }, take: 10,
+        include: { user: { select: { name: true, email: true, companyName: true } } },
+      }),
+    ]);
+  } catch {}
 
-  const activeCount = subscriptionStats.find(s => s.status === "active")?._count || 0;
-  const trialingCount = subscriptionStats.find(s => s.status === "trialing")?._count || 0;
-  const cancelledCount = subscriptionStats.find(s => s.status === "cancelled")?._count || 0;
-  const pastDueCount = subscriptionStats.find(s => s.status === "past_due")?._count || 0;
+  const activeCount = subscriptionStats.find((s: { status: string }) => s.status === "active")?._count || 0;
+  const trialingCount = subscriptionStats.find((s: { status: string }) => s.status === "trialing")?._count || 0;
+  const cancelledCount = subscriptionStats.find((s: { status: string }) => s.status === "cancelled")?._count || 0;
+  const pastDueCount = subscriptionStats.find((s: { status: string }) => s.status === "past_due")?._count || 0;
 
-  const mrr = revenueData._sum.monthlyPrice || 0;
+  const mrr = revenueData._sum?.monthlyPrice || 0;
   const arr = mrr * 12;
 
   const stripeConfigured = isStripeConfigured();

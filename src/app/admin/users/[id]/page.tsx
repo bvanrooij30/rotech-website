@@ -25,54 +25,18 @@ export default async function AdminUserDetailPage({
   const admin = await requirePermission(PERMISSIONS.USERS_READ);
   const { id } = await params;
 
-  const user = await prisma.user.findUnique({
-    where: { id },
-    include: {
-      products: {
-        select: {
-          id: true,
-          name: true,
-          type: true,
-          status: true,
-          domain: true,
-        },
+  let user = null;
+  try {
+    user = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        products: { select: { id: true, name: true, type: true, status: true, domain: true } },
+        subscriptions: { select: { id: true, planName: true, status: true, monthlyPrice: true, hoursUsed: true, hoursIncluded: true, currentPeriodEnd: true } },
+        supportTickets: { select: { id: true, ticketNumber: true, subject: true, status: true, priority: true, createdAt: true }, orderBy: { createdAt: "desc" }, take: 5 },
+        invoices: { select: { id: true, invoiceNumber: true, amount: true, status: true, createdAt: true }, orderBy: { createdAt: "desc" }, take: 5 },
       },
-      subscriptions: {
-        select: {
-          id: true,
-          planName: true,
-          status: true,
-          monthlyPrice: true,
-          hoursUsed: true,
-          hoursIncluded: true,
-          currentPeriodEnd: true,
-        },
-      },
-      supportTickets: {
-        select: {
-          id: true,
-          ticketNumber: true,
-          subject: true,
-          status: true,
-          priority: true,
-          createdAt: true,
-        },
-        orderBy: { createdAt: "desc" },
-        take: 5,
-      },
-      invoices: {
-        select: {
-          id: true,
-          invoiceNumber: true,
-          amount: true,
-          status: true,
-          createdAt: true,
-        },
-        orderBy: { createdAt: "desc" },
-        take: 5,
-      },
-    },
-  });
+    });
+  } catch { notFound(); }
 
   if (!user) {
     notFound();

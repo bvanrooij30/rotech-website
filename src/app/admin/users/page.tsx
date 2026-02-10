@@ -44,24 +44,17 @@ export default async function AdminUsersPage({
     ],
   };
 
-  const [users, total] = await Promise.all([
-    prisma.user.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: limit,
-      include: {
-        _count: {
-          select: {
-            products: true,
-            subscriptions: true,
-            supportTickets: true,
-          },
-        },
-      },
-    }),
-    prisma.user.count({ where }),
-  ]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let users: any[] = [], total = 0;
+  try {
+    [users, total] = await Promise.all([
+      prisma.user.findMany({
+        where, orderBy: { createdAt: "desc" }, skip, take: limit,
+        include: { _count: { select: { products: true, subscriptions: true, supportTickets: true } } },
+      }),
+      prisma.user.count({ where }),
+    ]);
+  } catch {}
 
   const totalPages = Math.ceil(total / limit);
 

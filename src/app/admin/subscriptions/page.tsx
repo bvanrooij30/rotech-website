@@ -40,31 +40,26 @@ export default async function AdminSubscriptionsPage({
     ],
   };
 
-  const [subscriptions, total, stats] = await Promise.all([
-    prisma.subscription.findMany({
-      where,
-      include: {
-        user: {
-          select: { id: true, name: true, email: true, companyName: true },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let subscriptions: any[] = [], total = 0, stats: any[] = [];
+  try {
+    [subscriptions, total, stats] = await Promise.all([
+      prisma.subscription.findMany({
+        where,
+        include: {
+          user: { select: { id: true, name: true, email: true, companyName: true } },
+          product: { select: { id: true, name: true, domain: true } },
         },
-        product: {
-          select: { id: true, name: true, domain: true },
-        },
-      },
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: limit,
-    }),
-    prisma.subscription.count({ where }),
-    prisma.subscription.groupBy({
-      by: ["status"],
-      _count: true,
-    }),
-  ]);
+        orderBy: { createdAt: "desc" }, skip, take: limit,
+      }),
+      prisma.subscription.count({ where }),
+      prisma.subscription.groupBy({ by: ["status"], _count: true }),
+    ]);
+  } catch {}
 
   const totalPages = Math.ceil(total / limit);
   
-  const statusCounts = stats.reduce((acc, s) => {
+  const statusCounts = stats.reduce((acc: Record<string, number>, s: { status: string; _count: number }) => {
     acc[s.status] = s._count;
     return acc;
   }, {} as Record<string, number>);

@@ -25,15 +25,14 @@ export default async function AdminAuditPage({
 
   const where = actionFilter ? { action: { startsWith: actionFilter } } : {};
 
-  const [logs, total] = await Promise.all([
-    prisma.adminAuditLog.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: limit,
-    }),
-    prisma.adminAuditLog.count({ where }),
-  ]);
+  let logs: Awaited<ReturnType<typeof prisma.adminAuditLog.findMany>> = [];
+  let total = 0;
+  try {
+    [logs, total] = await Promise.all([
+      prisma.adminAuditLog.findMany({ where, orderBy: { createdAt: "desc" }, skip, take: limit }),
+      prisma.adminAuditLog.count({ where }),
+    ]);
+  } catch {}
 
   const totalPages = Math.ceil(total / limit);
 

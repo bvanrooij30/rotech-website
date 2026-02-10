@@ -33,29 +33,23 @@ export default async function AdminTicketsPage({
     ],
   };
 
-  const [tickets, total] = await Promise.all([
-    prisma.supportTicket.findMany({
-      where,
-      include: {
-        user: {
-          select: { id: true, name: true, email: true },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let tickets: any[] = [], total = 0;
+  try {
+    [tickets, total] = await Promise.all([
+      prisma.supportTicket.findMany({
+        where,
+        include: {
+          user: { select: { id: true, name: true, email: true } },
+          product: { select: { name: true } },
+          _count: { select: { messages: true } },
         },
-        product: {
-          select: { name: true },
-        },
-        _count: {
-          select: { messages: true },
-        },
-      },
-      orderBy: [
-        { priority: "desc" },
-        { updatedAt: "desc" },
-      ],
-      skip,
-      take: limit,
-    }),
-    prisma.supportTicket.count({ where }),
-  ]);
+        orderBy: [{ priority: "desc" }, { updatedAt: "desc" }],
+        skip, take: limit,
+      }),
+      prisma.supportTicket.count({ where }),
+    ]);
+  } catch {}
 
   const totalPages = Math.ceil(total / limit);
 

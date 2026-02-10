@@ -16,7 +16,11 @@
  * - subscription.cancelled - Subscription cancelled
  */
 
-import { generateSignature } from "./api-auth";
+import { createHmac } from "crypto";
+
+function generateSignature(payload: string, secret: string): string {
+  return createHmac("sha256", secret).update(payload).digest("hex");
+}
 
 const PORTAL_WEBHOOK_URL = process.env.ROTECH_PORTAL_WEBHOOK_URL;
 const WEBHOOK_SECRET = process.env.ROTECH_WEBHOOK_SECRET || "dev-webhook-secret";
