@@ -36,13 +36,13 @@ export const faqItems: FAQItem[] = [
   {
     id: "6",
     question: "Wat kost een website laten maken in Veldhoven?",
-    answer: "Bij RoTech Development in Veldhoven start een eenvoudige website vanaf €500. Een professionele bedrijfswebsite kost €1.500 - €5.000, afhankelijk van de gewenste functies. Een webshop begint vanaf €3.500. U bepaalt zelf welke functies u nodig heeft en ziet direct de prijs.",
+    answer: "Bij RoTech Development in Veldhoven start een eenvoudige website vanaf €1.295. Een professionele bedrijfswebsite kost €2.995 - €5.000, afhankelijk van de gewenste functies. Een webshop begint vanaf €4.995. U bepaalt zelf welke functies u nodig heeft en ziet direct de prijs.",
     category: "prijzen",
   },
   {
     id: "7",
     question: "Wat kost een webshop laten maken?",
-    answer: "Een professionele webshop met iDEAL betaling, voorraad- en orderbeheer kost bij ons vanaf €3.500. De exacte prijs hangt af van het aantal producten en gewenste functionaliteit. U krijgt altijd vooraf een duidelijke offerte.",
+    answer: "Een professionele webshop met iDEAL betaling, voorraad- en orderbeheer kost bij ons vanaf €4.995. De exacte prijs hangt af van het aantal producten en gewenste functionaliteit. U krijgt altijd vooraf een duidelijke offerte.",
     category: "prijzen",
   },
   {

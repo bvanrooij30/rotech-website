@@ -3,7 +3,7 @@
 ## Dienst Informatie
 - **Dienst:** API Integraties & Koppelingen
 - **Type:** Standalone dienst OF onderdeel van groter project
-- **Prijsrange:** Vanaf €750 per integratie (simpel) / €2.500+ (complex)
+- **Prijsrange:** Vanaf €1.495 per integratie (simpel) / €3.000+ (complex)
 - **Doorlooptijd:** 1-4 weken per integratie
 
 ---

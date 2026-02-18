@@ -3,7 +3,7 @@
 ## Dienst Informatie
 - **Dienst:** Progressive Web App
 - **Type:** Toevoeging aan bestaand project OF standalone
-- **Prijsrange:** Vanaf €1.500 (add-on) / Vanaf €4.500 (standalone)
+- **Prijsrange:** Vanaf €2.995 (add-on) / Vanaf €5.000 (standalone)
 - **Doorlooptijd:** 1-3 weken extra
 
 ---

@@ -99,8 +99,8 @@ export const SERVICES = [
 export const ADDITIONAL_SERVICES = [
   {
     name: "SEO Optimalisatie",
-    priceFrom: 995,
-    priceText: "Vanaf €995 (eenmalig) of €495/maand",
+    priceFrom: 695,
+    priceText: "Vanaf €695 (eenmalig) of €495/maand",
     description: "Technische en on-page SEO verbetering",
   },
   {

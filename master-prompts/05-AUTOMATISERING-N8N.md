@@ -2,7 +2,7 @@
 
 ## Dienst Informatie
 - **Dienst:** Digital Process Automation
-- **Prijsrange:** Op maat (vanaf €500 voor simpele workflow)
+- **Prijsrange:** Op maat (vanaf €695 voor simpele workflow)
 - **Doorlooptijd:** 1-4 weken afhankelijk van complexiteit
 - **Tools:** n8n (self-hosted of cloud), Make.com, Zapier
 

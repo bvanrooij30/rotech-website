@@ -102,7 +102,7 @@ export default function AnnuleringsbeleidPage() {
                   </div>
                   <p className="text-slate-600 mb-0">
 Wanneer de technische ontwikkeling is gestart. Naast het basispercentage worden 
-                extra gemaakte uren tegen het geldende uurtarief (€95/uur) in rekening gebracht.
+                extra gemaakte uren tegen het geldende uurtarief (€90/uur) in rekening gebracht.
                   </p>
                 </div>
 
@@ -225,12 +225,12 @@ Wanneer de technische ontwikkeling is gestart. Naast het basispercentage worden
                       <td className="py-2 text-right">Tijdens ontwikkeling (50%)</td>
                     </tr>
                     <tr className="border-b border-slate-200">
-                      <td className="py-2">Extra uren (10 uur × €95)</td>
-                      <td className="py-2 text-right">€950</td>
+                      <td className="py-2">Extra uren (10 uur × €90)</td>
+                      <td className="py-2 text-right">€900</td>
                     </tr>
                     <tr className="border-b border-slate-200">
                       <td className="py-2">Annuleringskosten (50% + uren)</td>
-                      <td className="py-2 text-right font-medium">€2.450</td>
+                      <td className="py-2 text-right font-medium">€2.400</td>
                     </tr>
                     <tr className="border-b border-slate-200">
                       <td className="py-2">Reeds betaald (50%)</td>
@@ -238,7 +238,7 @@ Wanneer de technische ontwikkeling is gestart. Naast het basispercentage worden
                     </tr>
                     <tr>
                       <td className="py-2 font-medium">Nog te betalen</td>
-                      <td className="py-2 text-right font-bold text-red-600">€950</td>
+                      <td className="py-2 text-right font-bold text-red-600">€900</td>
                     </tr>
                   </tbody>
                 </table>

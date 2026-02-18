@@ -188,7 +188,7 @@ FAQ - FREQUENTLY ASKED QUESTIONS
 ================================================================================
 
 Q: How much does a website cost?
-A: Prices depend on the features you need. A simple one-page website starts around €500-1000, while a full business website with CMS typically ranges from €2000-4000. Webshops start around €3000.
+A: Prices depend on the features you need. A starter website starts at €1.295, while a full business website with CMS starts at €2.995. Webshops start at €4.995.
 
 Q: How long does it take to build a website?
 A: Delivery times range from 1-2 weeks for simple websites to 6-12 weeks for complex applications. Most business websites are delivered within 2-4 weeks.

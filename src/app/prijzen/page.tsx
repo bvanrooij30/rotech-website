@@ -22,7 +22,7 @@ const serviceCategories = [
     icon: Globe,
     color: "indigo",
     ctaLink: "/offerte?dienst=website",
-    priceRange: "Vanaf €800",
+    priceRange: "Vanaf €1.295",
   },
   {
     id: "seo",
@@ -31,7 +31,7 @@ const serviceCategories = [
     icon: Search,
     color: "emerald",
     ctaLink: "/offerte?dienst=seo",
-    priceRange: "Vanaf €495",
+    priceRange: "Vanaf €495/maand",
   },
   {
     id: "automation",
@@ -40,7 +40,7 @@ const serviceCategories = [
     icon: Workflow,
     color: "violet",
     ctaLink: "/offerte?dienst=automation",
-    priceRange: "Vanaf €495",
+    priceRange: "Vanaf €395",
   },
   {
     id: "maintenance",
@@ -467,28 +467,28 @@ export default function PrijzenPage() {
               {[
                 {
                   name: "SEO Audit",
-                  price: "495",
+                  price: "695",
                   description: "Complete analyse van uw huidige SEO status",
                   features: ["Technische analyse", "Content analyse", "Concurrentie onderzoek", "Prioriteiten rapport"],
                   oneTime: true,
                 },
                 {
                   name: "Technische SEO",
-                  price: "695",
+                  price: "995",
                   description: "Technische optimalisatie van uw website",
                   features: ["Snelheidsoptimalisatie", "Core Web Vitals", "Structured data", "Indexering fixen"],
                   oneTime: true,
                 },
                 {
                   name: "Content SEO",
-                  price: "595",
+                  price: "795",
                   description: "Content en on-page optimalisatie",
                   features: ["Keyword research", "Meta tags optimalisatie", "Content herschrijven", "Interne linking"],
                   oneTime: true,
                 },
                 {
                   name: "Doorlopende SEO",
-                  price: "395",
+                  price: "495",
                   description: "Maandelijkse optimalisatie en rapportage",
                   features: ["Maandelijkse updates", "Ranking monitoring", "Content advies", "Maandrapportage"],
                   oneTime: false,
@@ -552,40 +552,40 @@ export default function PrijzenPage() {
               {[
                 {
                   name: "Consultatie",
-                  price: "295",
+                  price: "395",
                   description: "Analyse van uw processen en mogelijkheden",
                   features: ["2-3 uur analyse", "Automatiseringsplan", "Prioriteiten overzicht", "Kosten/baten schatting"],
                 },
                 {
                   name: "Eenvoudige Workflow",
-                  price: "495",
+                  price: "695",
                   description: "Automatisering van één proces",
                   features: ["1 workflow", "Tot 5 stappen", "Documentatie", "1 maand support"],
                 },
                 {
                   name: "Medium Workflow",
-                  price: "995",
+                  price: "1.495",
                   description: "Complexere automatisering",
                   features: ["1-2 workflows", "Condities & filters", "Error handling", "3 maanden support"],
                 },
                 {
                   name: "Complexe Workflow",
-                  price: "1.995",
+                  price: "2.995",
                   description: "Geavanceerde automatisering met AI",
                   features: ["Meerdere workflows", "AI integratie", "Meerdere systemen", "6 maanden support"],
                 },
                 {
                   name: "n8n Hosting",
-                  price: "149",
+                  price: "179",
                   description: "Zelf-gehoste n8n met onderhoud",
                   features: ["Eigen n8n instantie", "Dagelijkse backups", "Updates & onderhoud", "Onbeperkte workflows"],
                   monthly: true,
                 },
                 {
                   name: "Training",
-                  price: "595",
+                  price: "795",
                   description: "Leer zelf workflows bouwen",
-                  features: ["4 uur training", "Hands-on oefeningen", "Documentatie", "1 maand Q&A support"],
+                  features: ["4-6 uur training", "Hands-on oefeningen", "Documentatie", "1 maand Q&A support"],
                 },
               ].map((pkg) => (
                 <div
@@ -706,7 +706,7 @@ export default function PrijzenPage() {
 
             <div className="mt-8 p-4 bg-indigo-50 rounded-xl border border-indigo-100 text-center">
               <p className="text-slate-700">
-                <strong>Meerwerk tarief:</strong> €95/uur voor extra werk buiten de scope. 
+                <strong>Meerwerk tarief:</strong> €90/uur voor extra werk buiten de scope. 
                 Dit wordt altijd vooraf besproken en goedgekeurd.
               </p>
             </div>

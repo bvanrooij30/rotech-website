@@ -3,7 +3,7 @@
 ## Dienst Informatie
 - **Dienst:** AI Chatbot voor Klantenservice
 - **Type:** Add-on voor bestaande website OF onderdeel van nieuw project
-- **Prijsrange:** Vanaf €1.500 (basis) / €3.500+ (geavanceerd met RAG)
+- **Prijsrange:** Vanaf €2.995 (basis) / €5.000+ (geavanceerd met RAG)
 - **Doorlooptijd:** 1-3 weken
 - **Maandelijkse kosten:** API kosten (OpenAI/Anthropic) ≈ €20-100/maand afhankelijk van volume
 

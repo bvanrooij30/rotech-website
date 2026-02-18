@@ -23,15 +23,15 @@ MKB, ZZP'ers en lokale ondernemers in de regio Eindhoven en heel Nederland.
 
 ### Website Ontwikkeling
 - Professionele bedrijfswebsites op maat
-- One-page websites voor ZZP'ers vanaf €500
-- Business websites met CMS vanaf €1.500
+- One-page websites voor ZZP'ers vanaf €1.295
+- Business websites met CMS vanaf €2.995
 - Responsive design (mobiel, tablet, desktop)
 - SEO-geoptimaliseerd voor Google
 
 ### Webshop Laten Maken
 - Complete webshops met iDEAL betaling
 - Voorraad- en orderbeheer
-- Vanaf €3.500
+- Vanaf €4.995
 - Koppeling met boekhouding mogelijk
 
 ### Web Applicaties
@@ -47,9 +47,9 @@ MKB, ZZP'ers en lokale ondernemers in de regio Eindhoven en heel Nederland.
 - Progressive Web Apps (PWA)
 
 ## Prijsindicatie 2026
-- Simpele website: €500 - €2.500
-- Professionele zakelijke website: €1.500 - €5.000
-- Webshop: €3.500 - €10.000
+- Simpele website: €1.295 - €2.500
+- Professionele zakelijke website: €2.995 - €5.000
+- Webshop: €4.995 - €10.000
 - Maatwerk web applicatie: vanaf €9.995
 
 ## Werkgebied
@@ -83,7 +83,7 @@ Voor een gratis en vrijblijvende offerte:
 ## Veelgestelde Vragen
 
 **Wat kost een website laten maken in Veldhoven?**
-Bij Ro-Tech Development start een eenvoudige website vanaf €500. Een professionele bedrijfswebsite kost €1.500-€5.000, afhankelijk van de gewenste functies.
+Bij Ro-Tech Development start een eenvoudige website vanaf €1.295. Een professionele bedrijfswebsite kost €2.995-€5.000, afhankelijk van de gewenste functies.
 
 **Hoe lang duurt het om een website te bouwen?**
 Een eenvoudige website is binnen 1-2 weken klaar. Een professionele bedrijfswebsite duurt 2-4 weken.

@@ -267,7 +267,7 @@ Een webshop starten is spannend maar ook complex. Met deze checklist bent u voor
 
 ### Hoeveel kost een webshop?
 
-Een professionele webshop begint vanaf €3.500. Dit is inclusief design, iDEAL betalingen en voorraadbeheer.
+Een professionele webshop begint vanaf €4.995. Dit is inclusief design, iDEAL betalingen en voorraadbeheer.
     `,
     category: "E-commerce",
     author: {
@@ -369,7 +369,7 @@ AI's trainen op webcontent en indexeren websites. Ze zoeken naar:
 ### Praktische tips
 
 **1. Wees specifiek en feitelijk**
-Schrijf concrete informatie. "Wij maken websites vanaf €1.500" is beter dan "Wij maken betaalbare websites".
+Schrijf concrete informatie. "Wij maken websites vanaf €1.295" is beter dan "Wij maken betaalbare websites".
 
 **2. Gebruik structured data**
 Schema.org markup helpt AI's uw content begrijpen.
@@ -440,7 +440,7 @@ Automatisering verbindt uw systemen en voert taken automatisch uit. Denk aan:
 
 ### Kosten en ROI
 
-Een automatisering kost vanaf €1.500 eenmalig. Als u 5 uur per week bespaart tegen €50/uur, verdient u dit in 6 weken terug.
+Een automatisering kost vanaf €695 eenmalig. Als u 5 uur per week bespaart tegen €50/uur, verdient u dit in 3 weken terug.
 
 ### Hulp nodig?
 

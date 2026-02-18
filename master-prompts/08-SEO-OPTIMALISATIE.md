@@ -3,7 +3,7 @@
 ## Dienst Informatie
 - **Dienst:** SEO Optimalisatie
 - **Type:** Eenmalige optimalisatie OF doorlopend abonnement
-- **Prijsrange:** Eenmalig vanaf €750 / Maandelijks vanaf €250
+- **Prijsrange:** Eenmalig vanaf €695 / Maandelijks vanaf €495
 - **Doorlooptijd:** 2-4 weken (eenmalig)
 
 ---

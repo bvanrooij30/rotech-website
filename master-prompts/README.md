@@ -16,11 +16,11 @@ Deze map bevat uitgebreide masterprompts voor elk pakket en elke dienst die RoTe
 | 03 | `03-WEBSHOP.md` | Webshop / E-commerce | Vanaf €4.995 |
 | 04 | `04-MAATWERK-WEB-APPLICATIE.md` | Maatwerk Web Applicatie | Vanaf €9.995 |
 | 05 | `05-AUTOMATISERING-N8N.md` | Digital Process Automation | Op maat |
-| 06 | `06-PWA-PROGRESSIVE-WEB-APP.md` | Progressive Web App | Vanaf €1.500 |
-| 07 | `07-API-INTEGRATIES.md` | API Integraties | Vanaf €750 |
-| 08 | `08-SEO-OPTIMALISATIE.md` | SEO Optimalisatie | Vanaf €750 |
+| 06 | `06-PWA-PROGRESSIVE-WEB-APP.md` | Progressive Web App | Vanaf €2.995 |
+| 07 | `07-API-INTEGRATIES.md` | API Integraties | Vanaf €1.495 |
+| 08 | `08-SEO-OPTIMALISATIE.md` | SEO Optimalisatie | Vanaf €695 |
 | 09 | `09-WEBSITE-ONDERHOUD.md` | Website Onderhoud (Abonnement) | Vanaf €129/maand |
-| 10 | `10-AI-CHATBOT.md` | AI Chatbot Klantenservice | Vanaf €1.500 |
+| 10 | `10-AI-CHATBOT.md` | AI Chatbot Klantenservice | Vanaf €2.995 |
 
 ---
 

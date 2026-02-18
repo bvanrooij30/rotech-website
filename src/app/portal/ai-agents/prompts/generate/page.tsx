@@ -55,12 +55,12 @@ const projectTypes = [
   { id: "business", name: "Business Website", price: "€2.995+" },
   { id: "webshop", name: "Webshop", price: "€4.995+" },
   { id: "maatwerk", name: "Maatwerk", price: "€9.995+" },
-  { id: "automatisering", name: "Automatisering", price: "€500+" },
-  { id: "pwa", name: "PWA", price: "€1.500+" },
-  { id: "api-integratie", name: "API Integratie", price: "€750+" },
-  { id: "seo", name: "SEO", price: "€750+" },
+  { id: "automatisering", name: "Automatisering", price: "€695+" },
+  { id: "pwa", name: "PWA", price: "€2.995+" },
+  { id: "api-integratie", name: "API Integratie", price: "€1.495+" },
+  { id: "seo", name: "SEO", price: "€695+" },
   { id: "onderhoud", name: "Onderhoud", price: "€129+/maand" },
-  { id: "chatbot", name: "AI Chatbot", price: "€1.500+" },
+  { id: "chatbot", name: "AI Chatbot", price: "€2.995+" },
 ];
 
 const goalOptions = [

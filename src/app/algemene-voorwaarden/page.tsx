@@ -116,7 +116,7 @@ export default function AlgemeneVoorwaardenPage() {
                 <li>Wijzigingen in de oorspronkelijk gesloten overeenkomst die leiden tot meerwerk worden door Opdrachtnemer vooraf schriftelijk aan Opdrachtgever geoffreerd.</li>
                 <li>Meerwerk wordt pas uitgevoerd na schriftelijke goedkeuring door Opdrachtgever.</li>
                 <li>Kleine aanpassingen die minder dan 30 minuten werk vergen, worden gedurende de looptijd van het project kosteloos uitgevoerd.</li>
-                <li>Het uurtarief voor meerwerk bedraagt €95,- exclusief BTW, tenzij schriftelijk anders is overeengekomen.</li>
+                <li>Het uurtarief voor meerwerk bedraagt €90,- exclusief BTW, tenzij schriftelijk anders is overeengekomen.</li>
               </ol>
 
               <h2>Artikel 7A – Aard van de Dienstverlening</h2>

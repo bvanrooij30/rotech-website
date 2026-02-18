@@ -141,7 +141,7 @@ const PROJECT_TEMPLATES: Record<string, {
   },
   automatisering: {
     name: 'Digital Process Automation',
-    basePrice: 500,
+    basePrice: 695,
     estimatedHours: { min: 8, max: 24 },
     defaultFeatures: [
       'Workflow design',
@@ -153,7 +153,7 @@ const PROJECT_TEMPLATES: Record<string, {
   },
   pwa: {
     name: 'Progressive Web App',
-    basePrice: 1500,
+    basePrice: 2995,
     estimatedHours: { min: 16, max: 32 },
     defaultFeatures: [
       'Offline functionaliteit',
@@ -165,7 +165,7 @@ const PROJECT_TEMPLATES: Record<string, {
   },
   'api-integratie': {
     name: 'API Integratie',
-    basePrice: 750,
+    basePrice: 1495,
     estimatedHours: { min: 8, max: 24 },
     defaultFeatures: [
       'API design',
@@ -177,7 +177,7 @@ const PROJECT_TEMPLATES: Record<string, {
   },
   seo: {
     name: 'SEO Optimalisatie',
-    basePrice: 750,
+    basePrice: 695,
     estimatedHours: { min: 8, max: 16 },
     defaultFeatures: [
       'SEO audit',
@@ -189,7 +189,7 @@ const PROJECT_TEMPLATES: Record<string, {
   },
   onderhoud: {
     name: 'Website Onderhoud',
-    basePrice: 99,
+    basePrice: 129,
     estimatedHours: { min: 1, max: 8 },
     defaultFeatures: [
       'Updates & security patches',
@@ -201,7 +201,7 @@ const PROJECT_TEMPLATES: Record<string, {
   },
   chatbot: {
     name: 'AI Chatbot',
-    basePrice: 1500,
+    basePrice: 2995,
     estimatedHours: { min: 16, max: 40 },
     defaultFeatures: [
       'AI-powered responses',
