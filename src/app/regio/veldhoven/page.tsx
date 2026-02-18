@@ -18,7 +18,7 @@ import { BreadcrumbSchema, StructuredData } from "@/components/seo/StructuredDat
 export const metadata: Metadata = {
   title: "Website Laten Maken Veldhoven | Lokale Webdesigner | RoTech",
   description:
-    "Website laten maken in Veldhoven? RoTech Development is uw lokale webdesigner. ✓ Persoonlijk contact ✓ Moderne websites ✓ Vanaf €997. Vraag gratis offerte aan!",
+    "Website laten maken in Veldhoven? RoTech Development is uw lokale webdesigner. ✓ Persoonlijk contact ✓ Moderne websites ✓ Vanaf €1.295. Vraag gratis offerte aan!",
   keywords: [
     "website laten maken veldhoven",
     "webdesign veldhoven",
@@ -110,19 +110,19 @@ const services = [
   {
     name: "Starter Website",
     description: "Perfect voor ZZP'ers en starters in Veldhoven",
-    price: "Vanaf €997",
+    price: "Vanaf €1.295",
     features: ["One-page website", "Mobiel-vriendelijk", "SEO basis", "Contactformulier"],
   },
   {
     name: "Business Website",
     description: "Voor MKB bedrijven in Veldhoven en omgeving",
-    price: "Vanaf €2.497",
+    price: "Vanaf €2.995",
     features: ["Meerdere pagina's", "CMS systeem", "Geavanceerde SEO", "Blog module"],
   },
   {
     name: "Webshop",
     description: "Online verkopen vanuit Veldhoven",
-    price: "Vanaf €3.997",
+    price: "Vanaf €4.995",
     features: ["iDEAL & Bancontact", "Voorraadbeheer", "Automatische emails", "Product filters"],
   },
 ];

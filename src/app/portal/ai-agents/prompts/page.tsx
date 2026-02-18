@@ -37,7 +37,7 @@ const masterPrompts = [
     filename: "01-STARTER-WEBSITE.md",
     description: "One-page website voor ZZP'ers en freelancers. Inclusief contactformulier, WhatsApp button, SEO basis.",
     category: "website",
-    price: "€997+",
+    price: "€1.295+",
     estimatedHours: "8-16",
     icon: "🚀",
     tags: ["one-page", "zzp", "basic"],
@@ -49,7 +49,7 @@ const masterPrompts = [
     filename: "02-BUSINESS-WEBSITE.md",
     description: "Professionele bedrijfswebsite met meerdere pagina's, CMS, blog en uitgebreide SEO.",
     category: "website",
-    price: "€2.497+",
+    price: "€2.995+",
     estimatedHours: "20-40",
     icon: "🏢",
     tags: ["multi-page", "cms", "blog", "seo"],
@@ -61,7 +61,7 @@ const masterPrompts = [
     filename: "03-WEBSHOP.md",
     description: "Complete e-commerce oplossing met iDEAL, productbeheer, orderbeheer en voorraadbeheer.",
     category: "e-commerce",
-    price: "€3.997+",
+    price: "€4.995+",
     estimatedHours: "40-80",
     icon: "🛒",
     tags: ["e-commerce", "ideal", "products", "orders"],
@@ -73,7 +73,7 @@ const masterPrompts = [
     filename: "04-MAATWERK-WEB-APPLICATIE.md",
     description: "Custom web applicaties, portals, dashboards. Volledige technische specificatie en architectuur.",
     category: "development",
-    price: "€7.500+",
+    price: "€9.995+",
     estimatedHours: "80-200",
     icon: "⚙️",
     tags: ["custom", "portal", "dashboard", "api"],
@@ -133,7 +133,7 @@ const masterPrompts = [
     filename: "09-WEBSITE-ONDERHOUD.md",
     description: "Maandelijks onderhoud: updates, backups, monitoring, support.",
     category: "maintenance",
-    price: "€99-399/maand",
+    price: "€129-495/maand",
     estimatedHours: "1-8/maand",
     icon: "🛠️",
     tags: ["onderhoud", "updates", "backup", "support"],
@@ -237,7 +237,7 @@ export default function PromptsPage() {
         </div>
         <div className="bg-white rounded-xl border border-slate-200 p-4">
           <div className="text-sm text-slate-600 mb-1">Prijs Range</div>
-          <div className="text-2xl font-bold text-slate-900">€99 - €7.500+</div>
+          <div className="text-2xl font-bold text-slate-900">€129 - €9.995+</div>
         </div>
         <div className="bg-white rounded-xl border border-slate-200 p-4">
           <div className="text-sm text-slate-600 mb-1">Gemiddelde Uren</div>

@@ -49,7 +49,7 @@ const serviceCategories = [
     icon: Settings,
     color: "amber",
     ctaLink: "#onderhoud",
-    priceRange: "Vanaf €99/maand",
+    priceRange: "Vanaf €129/maand",
   },
   {
     id: "integration",
@@ -58,7 +58,7 @@ const serviceCategories = [
     icon: Link2,
     color: "rose",
     ctaLink: "/offerte?dienst=integration",
-    priceRange: "Vanaf €695",
+    priceRange: "Vanaf €1.495",
   },
 ];
 
@@ -168,17 +168,17 @@ const packages = [
 const maintenancePackages = [
   {
     name: "Basis",
-    price: "99",
+    price: "129",
     features: ["Maandelijkse updates", "Dagelijkse backups", "Uptime monitoring", "Email support"],
   },
   {
     name: "Business",
-    price: "199",
+    price: "249",
     features: ["Alles van Basis", "2 uur content wijzigingen", "Priority support", "Maandelijkse rapportage"],
   },
   {
     name: "Premium",
-    price: "399",
+    price: "495",
     features: ["Alles van Business", "5 uur content wijzigingen", "SEO optimalisatie", "Performance monitoring"],
   },
 ];

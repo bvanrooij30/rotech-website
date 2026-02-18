@@ -594,14 +594,14 @@ export class IntakeAgent extends BaseAgent {
       case 'webshop':
         recommended = 'Webshop';
         alternatives = ['Webshop + Maatwerk'];
-        estimatedBudget = { min: 3997, max: 6000 };
+        estimatedBudget = { min: 4995, max: 6000 };
         reasoning = 'E-commerce project met iDEAL en productbeheer.';
         break;
 
       case 'maatwerk-webapp':
         recommended = 'Maatwerk';
         alternatives = ['Business + Maatwerk modules'];
-        estimatedBudget = { min: 7500, max: 25000 };
+        estimatedBudget = { min: 9995, max: 25000 };
         reasoning = 'Complexe applicatie vereist maatwerk ontwikkeling.';
         break;
 
@@ -622,7 +622,7 @@ export class IntakeAgent extends BaseAgent {
       case 'business-website':
         recommended = 'Business Website';
         alternatives = ['Starter (budget)', 'Business + E-commerce add-on'];
-        estimatedBudget = { min: 2497, max: 4500 };
+        estimatedBudget = { min: 2995, max: 4500 };
         reasoning = 'Professionele bedrijfswebsite met CMS.';
         break;
 
@@ -650,14 +650,14 @@ export class IntakeAgent extends BaseAgent {
       case 'onderhoud':
         recommended = 'Website Onderhoud Business';
         alternatives = ['Onderhoud Basis', 'Onderhoud Premium'];
-        estimatedBudget = { min: 99, max: 399 }; // monthly
+        estimatedBudget = { min: 129, max: 495 }; // monthly
         reasoning = 'Maandelijks onderhoud en beheer. Prijzen per maand.';
         break;
 
       default:
         recommended = 'Starter Website';
         alternatives = ['Business Website'];
-        estimatedBudget = { min: 997, max: 2000 };
+        estimatedBudget = { min: 1295, max: 2000 };
         reasoning = 'One-page website voor basis online aanwezigheid.';
     }
 

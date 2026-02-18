@@ -286,15 +286,15 @@ export function BreadcrumbSchema({ items }: { items: { name: string; url: string
 - Website onderhoud: Updates, beveiliging en support
 
 ## Prijzen
-- Starter website: vanaf €997
-- Business website: vanaf €2.497
-- Webshop: vanaf €3.997
-- Maatwerk: vanaf €7.500
+- Starter website: vanaf €1.295
+- Business website: vanaf €2.995
+- Webshop: vanaf €4.995
+- Maatwerk: vanaf €9.995
 
 ## Onderhoud
-- Basis: €99/maand (1 uur support)
-- Business: €199/maand (3 uur support)
-- Premium: €399/maand (8 uur support)
+- Basis: €129/maand (1 uur support)
+- Business: €249/maand (3 uur support)
+- Premium: €495/maand (8 uur support)
 
 ## Waarom Ro-Tech?
 - Persoonlijke aanpak: Direct contact met de ontwikkelaar

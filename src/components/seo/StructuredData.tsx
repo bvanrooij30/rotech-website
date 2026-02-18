@@ -132,9 +132,9 @@ const localBusinessSchema = {
         },
         priceSpecification: {
           "@type": "PriceSpecification",
-          price: "997",
+          price: "1295",
           priceCurrency: "EUR",
-          minPrice: "997",
+          minPrice: "1295",
         },
       },
       {
@@ -146,9 +146,9 @@ const localBusinessSchema = {
         },
         priceSpecification: {
           "@type": "PriceSpecification",
-          price: "2497",
+          price: "2995",
           priceCurrency: "EUR",
-          minPrice: "2497",
+          minPrice: "2995",
         },
       },
       {
@@ -160,9 +160,9 @@ const localBusinessSchema = {
         },
         priceSpecification: {
           "@type": "PriceSpecification",
-          price: "3997",
+          price: "4995",
           priceCurrency: "EUR",
-          minPrice: "3997",
+          minPrice: "4995",
         },
       },
     ],

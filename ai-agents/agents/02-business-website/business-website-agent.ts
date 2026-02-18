@@ -1,6 +1,6 @@
 /**
  * RoTech AI Agents - Business Website Agent
- * Agent voor professionele bedrijfswebsites (€2.497+)
+ * Agent voor professionele bedrijfswebsites (€2.995+)
  * 
  * STATUS: Template - Nog te implementeren
  */
@@ -12,7 +12,7 @@ export class BusinessWebsiteAgent extends BaseAgent {
   readonly agentName = 'Business Website Agent';
   readonly agentType: AgentType = 'business-website';
   readonly version = '0.1.0';
-  readonly description = 'Professionele bedrijfswebsites beheren (€2.497+)';
+  readonly description = 'Professionele bedrijfswebsites beheren (€2.995+)';
 
   constructor() {
     super();

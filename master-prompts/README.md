@@ -11,15 +11,15 @@ Deze map bevat uitgebreide masterprompts voor elk pakket en elke dienst die RoTe
 | # | Bestand | Pakket/Dienst | Prijsrange |
 |---|---------|---------------|------------|
 | 00 | `00-KLANT-INTAKE.md` | Klant Intake Template | - |
-| 01 | `01-STARTER-WEBSITE.md` | Starter Website (One-page) | Vanaf €997 |
-| 02 | `02-BUSINESS-WEBSITE.md` | Business Website | Vanaf €2.497 |
-| 03 | `03-WEBSHOP.md` | Webshop / E-commerce | Vanaf €3.997 |
-| 04 | `04-MAATWERK-WEB-APPLICATIE.md` | Maatwerk Web Applicatie | Vanaf €7.500 |
+| 01 | `01-STARTER-WEBSITE.md` | Starter Website (One-page) | Vanaf €1.295 |
+| 02 | `02-BUSINESS-WEBSITE.md` | Business Website | Vanaf €2.995 |
+| 03 | `03-WEBSHOP.md` | Webshop / E-commerce | Vanaf €4.995 |
+| 04 | `04-MAATWERK-WEB-APPLICATIE.md` | Maatwerk Web Applicatie | Vanaf €9.995 |
 | 05 | `05-AUTOMATISERING-N8N.md` | Digital Process Automation | Op maat |
 | 06 | `06-PWA-PROGRESSIVE-WEB-APP.md` | Progressive Web App | Vanaf €1.500 |
 | 07 | `07-API-INTEGRATIES.md` | API Integraties | Vanaf €750 |
 | 08 | `08-SEO-OPTIMALISATIE.md` | SEO Optimalisatie | Vanaf €750 |
-| 09 | `09-WEBSITE-ONDERHOUD.md` | Website Onderhoud (Abonnement) | Vanaf €99/maand |
+| 09 | `09-WEBSITE-ONDERHOUD.md` | Website Onderhoud (Abonnement) | Vanaf €129/maand |
 | 10 | `10-AI-CHATBOT.md` | AI Chatbot Klantenservice | Vanaf €1.500 |
 
 ---
@@ -101,7 +101,7 @@ Deze map bevat uitgebreide masterprompts voor elk pakket en elke dienst die RoTe
 ### Website Onderhoud
 - **Ideaal voor:** Zorgeloos beheer
 - **Type:** Maandelijks abonnement
-- **Pakketten:** Basis €99 / Standaard €199 / Premium €349
+- **Pakketten:** Basis €129 / Standaard €249 / Premium €495
 - **Features:** Updates, monitoring, backups, support
 
 ### AI Chatbot

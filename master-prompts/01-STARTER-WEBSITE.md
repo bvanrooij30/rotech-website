@@ -2,7 +2,7 @@
 
 ## Pakket Informatie
 - **Pakket:** Starter Website (One-page / Kleine Website)
-- **Prijsrange:** Vanaf €997
+- **Prijsrange:** Vanaf €1.295
 - **Doorlooptijd:** 1-2 weken
 - **Pagina's:** 1-3 pagina's
 

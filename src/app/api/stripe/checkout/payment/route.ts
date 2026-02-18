@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 
     // Calculate amount based on payment type
     const totalAmount = data.customAmount || pkg.basePrice;
-    const isLargeProject = totalAmount >= 7500;
+    const isLargeProject = totalAmount >= 9995;
     const { depositAmount, remainingAmount } = calculateDeposit(totalAmount, isLargeProject);
 
     let paymentAmount: number;

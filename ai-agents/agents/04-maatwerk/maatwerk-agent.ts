@@ -1,6 +1,6 @@
 /**
  * RoTech AI Agents - Maatwerk Agent
- * Agent voor complexe web applicaties (€7.500+)
+ * Agent voor complexe web applicaties (€9.995+)
  * 
  * STATUS: Template - Nog te implementeren
  */
@@ -12,7 +12,7 @@ export class MaatwerkAgent extends BaseAgent {
   readonly agentName = 'Maatwerk Agent';
   readonly agentType: AgentType = 'maatwerk';
   readonly version = '0.1.0';
-  readonly description = 'Complexe web applicaties beheren (€7.500+)';
+  readonly description = 'Complexe web applicaties beheren (€9.995+)';
 
   constructor() {
     super();

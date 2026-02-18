@@ -51,15 +51,15 @@ interface FormData {
 }
 
 const projectTypes = [
-  { id: "starter", name: "Starter Website", price: "€997+" },
-  { id: "business", name: "Business Website", price: "€2.497+" },
-  { id: "webshop", name: "Webshop", price: "€3.997+" },
-  { id: "maatwerk", name: "Maatwerk", price: "€7.500+" },
+  { id: "starter", name: "Starter Website", price: "€1.295+" },
+  { id: "business", name: "Business Website", price: "€2.995+" },
+  { id: "webshop", name: "Webshop", price: "€4.995+" },
+  { id: "maatwerk", name: "Maatwerk", price: "€9.995+" },
   { id: "automatisering", name: "Automatisering", price: "€500+" },
   { id: "pwa", name: "PWA", price: "€1.500+" },
   { id: "api-integratie", name: "API Integratie", price: "€750+" },
   { id: "seo", name: "SEO", price: "€750+" },
-  { id: "onderhoud", name: "Onderhoud", price: "€99+/maand" },
+  { id: "onderhoud", name: "Onderhoud", price: "€129+/maand" },
   { id: "chatbot", name: "AI Chatbot", price: "€1.500+" },
 ];
 
@@ -113,7 +113,7 @@ export default function GeneratePromptPage() {
     hasPhotos: false,
     hasBrandColors: false,
     inspirationSites: "",
-    budgetMin: 2497,
+    budgetMin: 2995,
     budgetMax: 5000,
     timeline: "4-6 weken",
     specificWishes: "",

@@ -96,7 +96,7 @@ export default function AlgemeneVoorwaardenPage() {
                     <li>50% van de totale projectwaarde bij oplevering van het project.</li>
                   </ul>
                 </li>
-                <li>Voor projecten met een waarde hoger dan €7.500,- kan een alternatief betalingsschema worden afgesproken:
+                <li>Voor projecten met een waarde hoger dan €9.995,- kan een alternatief betalingsschema worden afgesproken:
                   <ul>
                     <li>30% bij akkoord op de offerte;</li>
                     <li>40% bij oplevering van het concept;</li>

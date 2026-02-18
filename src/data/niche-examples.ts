@@ -131,7 +131,7 @@ export const nicheExamples: NicheExample[] = [
       accent: "#FBBF24",
     },
     category: "webshop",
-    priceRange: "€3.500 - €7.500",
+    priceRange: "€4.500 - €9.995",
     deliveryTime: "4-8 weken",
   },
   {

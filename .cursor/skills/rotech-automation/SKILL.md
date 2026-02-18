@@ -29,7 +29,7 @@ description: Enterprise automation engineering standaard voor n8n workflows, API
 
 | Plan | Prijs/mnd | Workflows | Executions | Support |
 |------|-----------|-----------|------------|---------|
-| Starter | €99 | 3 | 5.000 | Email |
+| Starter | €129 | 3 | 5.000 | Email |
 | Business | €249 | 10 | 25.000 | Prioriteit |
 | Professional | €499 | Onbeperkt | 100.000 | Dedicated |
 | Enterprise | Op maat | Onbeperkt | Onbeperkt | Full-service |

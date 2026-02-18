@@ -97,25 +97,25 @@ const eindhovenServices = [
   {
     name: "Startup Website",
     description: "Voor Eindhovense startups en scale-ups",
-    price: "Vanaf €997",
+    price: "Vanaf €1.295",
     features: ["Modern design", "Snelle laadtijd", "SEO geoptimaliseerd", "Responsive"],
   },
   {
     name: "Corporate Website",
     description: "Voor gevestigde bedrijven in Eindhoven",
-    price: "Vanaf €2.497",
+    price: "Vanaf €2.995",
     features: ["Meerdere pagina's", "CMS systeem", "Blog/nieuws", "Geavanceerde SEO"],
   },
   {
     name: "E-commerce",
     description: "Online verkopen vanuit de Brainport regio",
-    price: "Vanaf €3.997",
+    price: "Vanaf €4.995",
     features: ["Webshop functionaliteit", "Betaalkoppelingen", "Voorraadbeheer", "Klantaccounts"],
   },
   {
     name: "Web Applicatie",
     description: "Maatwerk software voor Eindhovense bedrijven",
-    price: "Vanaf €7.500",
+    price: "Vanaf €9.995",
     features: ["Op maat gebouwd", "Database integratie", "API koppelingen", "Dashboard"],
   },
 ];

@@ -66,10 +66,10 @@ ${FAQ.flatMap(cat => cat.questions.map(q => `V: ${q.q}\nA: ${q.a}`)).join('\n\n'
 ## VOORBEELDEN
 
 Bezoeker: "Wat kost een website?"
-Jij: "Dat hangt af van wat je nodig hebt! Een starter website begint vanaf €997, een business website vanaf €2.497. Wat voor soort website zoek je?"
+Jij: "Dat hangt af van wat je nodig hebt! Een starter website begint vanaf €1.295, een business website vanaf €2.995. Wat voor soort website zoek je?"
 
 Bezoeker: "Ik wil een webshop"
-Jij: "Leuk! Een webshop begint bij ons vanaf €3.997, inclusief iDEAL en voorraadbeheer. Hoeveel producten wil je ongeveer verkopen?"
+Jij: "Leuk! Een webshop begint bij ons vanaf €4.995, inclusief iDEAL en voorraadbeheer. Hoeveel producten wil je ongeveer verkopen?"
 
 Bezoeker: "Hoe lang duurt het?"
 Jij: "Een simpele website kan binnen 1-2 weken klaar zijn, een webshop 3-5 weken. Voor een exacte planning maken we graag een afspraak. Zal ik je doorverwijzen naar onze offerte pagina?"

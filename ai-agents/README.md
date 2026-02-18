@@ -248,10 +248,10 @@ Agents die direct waarde leveren aan klanten.
 | Agent | Type | Status | Beschrijving |
 |-------|------|--------|-------------|
 | **Intake Agent** | `intake` | ✅ Live | Client intake, analyse & aanbevelingen |
-| **Starter Website Agent** | `starter-website` | 📋 Template | One-page websites (€997+) |
-| **Business Website Agent** | `business-website` | 📋 Template | Multi-page websites (€2.497+) |
-| **Webshop Agent** | `webshop` | 📋 Template | E-commerce (€3.997+) |
-| **Maatwerk Agent** | `maatwerk` | 📋 Template | Custom applications (€7.500+) |
+| **Starter Website Agent** | `starter-website` | 📋 Template | One-page websites (€1.295+) |
+| **Business Website Agent** | `business-website` | 📋 Template | Multi-page websites (€2.995+) |
+| **Webshop Agent** | `webshop` | 📋 Template | E-commerce (€4.995+) |
+| **Maatwerk Agent** | `maatwerk` | 📋 Template | Custom applications (€9.995+) |
 | **Automatisering Agent** | `automatisering` | 📋 Template | n8n/Make.com workflows |
 | **PWA Agent** | `pwa` | 📋 Template | Progressive Web Apps |
 | **API Integratie Agent** | `api-integratie` | 📋 Template | System integrations |
@@ -299,7 +299,7 @@ const result = await intakeAgent.processIntake({
 });
 
 console.log(result.recommendedPackage);  // 'Business'
-console.log(result.estimatedBudget);     // 2497
+console.log(result.estimatedBudget);     // 2995
 ```
 
 ---

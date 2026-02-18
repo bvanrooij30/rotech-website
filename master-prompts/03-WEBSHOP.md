@@ -2,7 +2,7 @@
 
 ## Pakket Informatie
 - **Pakket:** Webshop (E-commerce Platform)
-- **Prijsrange:** Vanaf €3.997
+- **Prijsrange:** Vanaf €4.995
 - **Doorlooptijd:** 3-5 weken
 - **Producten:** Tot 100 producten (meer op aanvraag)
 - **Inclusief:** Betalingen, voorraadbeheer, orderbeheer

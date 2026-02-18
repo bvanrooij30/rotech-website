@@ -6,7 +6,7 @@ import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 export const metadata: Metadata = {
   title: "Website Laten Maken Best | Lokale Webdesigner | RoTech",
   description:
-    "Website laten maken in Best? RoTech Development is uw webdesigner in de regio. ✓ Persoonlijk contact ✓ Moderne websites ✓ Vanaf €997. Vraag gratis offerte aan!",
+    "Website laten maken in Best? RoTech Development is uw webdesigner in de regio. ✓ Persoonlijk contact ✓ Moderne websites ✓ Vanaf €1.295. Vraag gratis offerte aan!",
   keywords: [
     "website laten maken best",
     "webdesign best",
@@ -114,10 +114,10 @@ export default function BestPage() {
             </p>
             <h3>Website Pakketten</h3>
             <ul>
-              <li><strong>Starter Website</strong> - Vanaf €997 voor ZZP'ers en starters</li>
-              <li><strong>Business Website</strong> - Vanaf €2.497 voor gevestigde bedrijven</li>
-              <li><strong>Webshop</strong> - Vanaf €3.997 met betaalintegraties</li>
-              <li><strong>Maatwerk</strong> - Vanaf €7.500 voor complexe projecten</li>
+              <li><strong>Starter Website</strong> - Vanaf €1.295 voor ZZP'ers en starters</li>
+              <li><strong>Business Website</strong> - Vanaf €2.995 voor gevestigde bedrijven</li>
+              <li><strong>Webshop</strong> - Vanaf €4.995 met betaalintegraties</li>
+              <li><strong>Maatwerk</strong> - Vanaf €9.995 voor complexe projecten</li>
             </ul>
             <p>
               <Link href="/offerte">Vraag een vrijblijvende offerte aan</Link> of bel:{" "}

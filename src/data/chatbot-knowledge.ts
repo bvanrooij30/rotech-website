@@ -24,8 +24,8 @@ export const SERVICES = [
     id: "starter",
     name: "Starter Website",
     shortDescription: "One-page website voor starters en ZZP'ers",
-    priceFrom: 997,
-    priceText: "Vanaf €997",
+    priceFrom: 1295,
+    priceText: "Vanaf €1.295",
     duration: "1-2 weken",
     pages: "1-3 pagina's",
     idealFor: ["ZZP'ers", "Freelancers", "Starters", "Kleine bedrijven"],
@@ -42,8 +42,8 @@ export const SERVICES = [
     id: "business",
     name: "Business Website",
     shortDescription: "Professionele bedrijfswebsite met CMS en blog",
-    priceFrom: 2497,
-    priceText: "Vanaf €2.497",
+    priceFrom: 2995,
+    priceText: "Vanaf €2.995",
     duration: "2-4 weken",
     pages: "5-10 pagina's",
     idealFor: ["MKB", "Dienstverleners", "Consultants", "Adviesbureaus"],
@@ -61,8 +61,8 @@ export const SERVICES = [
     id: "webshop",
     name: "Webshop",
     shortDescription: "Complete e-commerce oplossing",
-    priceFrom: 3997,
-    priceText: "Vanaf €3.997",
+    priceFrom: 4995,
+    priceText: "Vanaf €4.995",
     duration: "3-5 weken",
     pages: "Onbeperkt productpagina's",
     idealFor: ["Retailers", "Productverkoop", "B2C", "DTC merken"],
@@ -80,8 +80,8 @@ export const SERVICES = [
     id: "maatwerk",
     name: "Maatwerk Web Applicatie",
     shortDescription: "Custom applicatie volledig op specificatie",
-    priceFrom: 7500,
-    priceText: "Vanaf €7.500",
+    priceFrom: 9995,
+    priceText: "Vanaf €9.995",
     duration: "6-12+ weken",
     pages: "N.v.t.",
     idealFor: ["Bedrijven met specifieke processen", "SaaS", "Interne tools", "Portals"],
@@ -99,26 +99,26 @@ export const SERVICES = [
 export const ADDITIONAL_SERVICES = [
   {
     name: "SEO Optimalisatie",
-    priceFrom: 750,
-    priceText: "Vanaf €750 (eenmalig) of €250/maand",
+    priceFrom: 995,
+    priceText: "Vanaf €995 (eenmalig) of €495/maand",
     description: "Technische en on-page SEO verbetering",
   },
   {
     name: "Website Onderhoud",
-    priceFrom: 99,
-    priceText: "Vanaf €99/maand",
+    priceFrom: 129,
+    priceText: "Vanaf €129/maand",
     description: "Updates, backups, monitoring en kleine aanpassingen",
   },
   {
     name: "API Integraties",
-    priceFrom: 750,
-    priceText: "Vanaf €750 per integratie",
+    priceFrom: 1495,
+    priceText: "Vanaf €1.495 per integratie",
     description: "Koppelingen met externe systemen",
   },
   {
     name: "Automatisering",
-    priceFrom: 500,
-    priceText: "Op maat",
+    priceFrom: 695,
+    priceText: "Vanaf €695 per workflow",
     description: "Workflow automatisering met n8n of Make.com",
   },
 ];
@@ -162,7 +162,7 @@ export const FAQ = [
     questions: [
       {
         q: "Wat kost een website?",
-        a: "Dat hangt af van je wensen. Een starter website begint vanaf €997, een business website vanaf €2.497, en een webshop vanaf €3.997. Voor een exacte prijs maken we graag een offerte op maat na een kennismakingsgesprek.",
+        a: "Dat hangt af van je wensen. Een starter website begint vanaf €1.295, een business website vanaf €2.995, en een webshop vanaf €4.995. Voor een exacte prijs maken we graag een offerte op maat na een kennismakingsgesprek.",
       },
       {
         q: "Zijn er verborgen kosten?",
@@ -213,7 +213,7 @@ export const FAQ = [
     questions: [
       {
         q: "Wat als er iets kapot gaat?",
-        a: "Na oplevering krijg je 30 dagen gratis support. Daarna kun je kiezen voor een onderhoudspakket vanaf €99/maand.",
+        a: "Na oplevering krijg je 30 dagen gratis support. Daarna kun je kiezen voor een onderhoudspakket vanaf €129/maand.",
       },
       {
         q: "Hoe bereik ik jullie?",
@@ -301,10 +301,10 @@ ${FAQ.flatMap(cat => cat.questions.map(q => `Q: ${q.q}\nA: ${q.a}`)).join('\n\n'
 ## VOORBEELD CONVERSATIES
 
 Bezoeker: "Wat kost een website?"
-Jij: "Dat hangt af van wat je nodig hebt! Een starter website begint vanaf €997, ideaal voor ZZP'ers. Een uitgebreide bedrijfswebsite begint vanaf €2.497. Wat voor website zoek je precies?"
+Jij: "Dat hangt af van wat je nodig hebt! Een starter website begint vanaf €1.295, ideaal voor ZZP'ers. Een uitgebreide bedrijfswebsite begint vanaf €2.995. Wat voor website zoek je precies?"
 
 Bezoeker: "Ik wil een webshop"
-Jij: "Leuk! Een webshop begint bij ons vanaf €3.997, inclusief iDEAL, voorraadbeheer en orderbeheer. Hoeveel producten wil je ongeveer gaan verkopen? Dan kan ik je meer vertellen."
+Jij: "Leuk! Een webshop begint bij ons vanaf €4.995, inclusief iDEAL, voorraadbeheer en orderbeheer. Hoeveel producten wil je ongeveer gaan verkopen? Dan kan ik je meer vertellen."
 
 Bezoeker: "Hoelang duurt het?"
 Jij: "Dat verschilt per project. Een simpele website kan binnen 1-2 weken klaar zijn, een webshop 3-5 weken. De exacte planning bespreken we graag in een kennismakingsgesprek. Zal ik je doorverwijzen naar onze offerte pagina?"

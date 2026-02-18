@@ -116,10 +116,10 @@ export default function HelmondPage() {
             </p>
             <h3>Wat Wij Bieden</h3>
             <ul>
-              <li><strong>Starter Website</strong> - Vanaf €997 voor ZZP'ers</li>
-              <li><strong>Business Website</strong> - Vanaf €2.497 voor MKB</li>
-              <li><strong>Webshop</strong> - Vanaf €3.997 met iDEAL en Bancontact</li>
-              <li><strong>Web Applicatie</strong> - Vanaf €7.500 op maat</li>
+              <li><strong>Starter Website</strong> - Vanaf €1.295 voor ZZP'ers</li>
+              <li><strong>Business Website</strong> - Vanaf €2.995 voor MKB</li>
+              <li><strong>Webshop</strong> - Vanaf €4.995 met iDEAL en Bancontact</li>
+              <li><strong>Web Applicatie</strong> - Vanaf €9.995 op maat</li>
             </ul>
             <h3>Regio Helmond</h3>
             <p>

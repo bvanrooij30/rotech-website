@@ -229,11 +229,11 @@ export const faqItems = {
   support: [
     {
       question: "Wat als er iets kapot gaat?",
-      answer: "Na oplevering krijgt u gratis support (1-6 maanden afhankelijk van pakket). Daarna kunt u kiezen voor een onderhoudsabonnement vanaf €99/maand voor doorlopende support.",
+      answer: "Na oplevering krijgt u gratis support (1-6 maanden afhankelijk van pakket). Daarna kunt u kiezen voor een onderhoudsabonnement vanaf €129/maand voor doorlopende support.",
     },
     {
       question: "Bieden jullie website onderhoud aan?",
-      answer: "Ja, we hebben drie onderhoudspakketten: Basis (€99/maand), Business (€199/maand) en Premium (€399/maand). Dit omvat updates, backups, monitoring en support.",
+      answer: "Ja, we hebben drie onderhoudspakketten: Basis (€129/maand), Business (€249/maand) en Premium (€495/maand). Dit omvat updates, backups, monitoring en support.",
     },
   ],
 };

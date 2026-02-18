@@ -43,8 +43,8 @@ export const automationPlans: AutomationPlan[] = [
     name: "Starter",
     slug: "starter",
     description: "Perfect voor kleine bedrijven die beginnen met automation",
-    monthlyPrice: 99,
-    yearlyPrice: 990, // 2 maanden gratis
+    monthlyPrice: 129,
+    yearlyPrice: 1290, // 2 maanden gratis
     isPopular: false,
     features: [
       { text: "Tot 3 actieve workflows", included: true },
@@ -75,8 +75,8 @@ export const automationPlans: AutomationPlan[] = [
     name: "Business",
     slug: "business",
     description: "Ideaal voor groeiende bedrijven met meerdere processen",
-    monthlyPrice: 249,
-    yearlyPrice: 2490, // 2 maanden gratis
+    monthlyPrice: 349,
+    yearlyPrice: 3490, // 2 maanden gratis
     isPopular: true,
     features: [
       { text: "Tot 10 actieve workflows", included: true },
@@ -107,8 +107,8 @@ export const automationPlans: AutomationPlan[] = [
     name: "Professional",
     slug: "professional",
     description: "Voor bedrijven die zwaar leunen op automation",
-    monthlyPrice: 499,
-    yearlyPrice: 4990, // 2 maanden gratis
+    monthlyPrice: 649,
+    yearlyPrice: 6490, // 2 maanden gratis
     isPopular: false,
     features: [
       { text: "Onbeperkt actieve workflows", included: true },
@@ -142,7 +142,7 @@ export const enterprisePlan = {
   name: "Enterprise",
   slug: "enterprise",
   description: "Maatwerk oplossing voor grote organisaties",
-  startingPrice: 999,
+  startingPrice: 1299,
   features: [
     "Alles van Professional",
     "Dedicated n8n instance",
@@ -176,104 +176,64 @@ export interface OneTimeService {
 export const oneTimeServices: OneTimeService[] = [
   {
     id: "quick-wins",
-    name: "Quick Win Automations",
-    description: "Simpele, snelle automations die direct resultaat opleveren",
-    priceRange: { min: 150, max: 500 },
-    deliveryDays: { min: 1, max: 3 },
+    name: "Quick Wins",
+    description: "Directe tijdsbesparing op dagelijkse taken. Binnen een week operationeel.",
+    priceRange: { min: 49, max: 149 },
+    deliveryDays: { min: 1, max: 5 },
     complexity: "low",
     examples: [
-      "Lead capture formulier → CRM",
-      "Email notificaties naar Slack/Teams",
-      "Welkomstmail automatisering",
-      "Formulier → Google Sheets",
-      "Sociale media scheduler",
-      "Automatische betaalherinneringen",
+      "Automatische email-responder buiten kantooruren",
+      "Google Reviews verzamelaar voor lokale SEO",
+      "Afspraakbevestiging & herinnering via SMS/WhatsApp",
+      "Social media auto-posting op al uw kanalen",
+      "Nieuwe lead → directe notificatie in Slack of Teams",
+      "Factuurherinneringen voor onbetaalde rekeningen",
     ],
   },
   {
     id: "business-automation",
-    name: "Business Automations",
-    description: "Complexere workflows voor bedrijfskritische processen",
-    priceRange: { min: 500, max: 1500 },
+    name: "Core Business",
+    description: "Volledige bedrijfsprocessen automatiseren. Van klantcontact tot facturatie.",
+    priceRange: { min: 149, max: 449 },
     deliveryDays: { min: 5, max: 14 },
     complexity: "medium",
     examples: [
-      "Order processing pipeline",
-      "Content distributie (blog → social)",
-      "Klant onboarding flow",
-      "Factuur automatisering",
-      "Review aggregatie dashboard",
-      "AI email categorisatie",
+      "WhatsApp Business Bot voor klantenservice",
+      "Lead capture → CRM → automatische opvolging",
+      "E-facturatie automatisering (Peppol, verplicht in BE)",
+      "Offerte-generator: formulier → PDF → email",
+      "Klant-onboarding flow met welkomstmail en checklist",
+      "Review management met AI-antwoorden",
     ],
   },
   {
     id: "advanced-automation",
-    name: "Geavanceerde Automations",
-    description: "Complexe, multi-system integraties met AI",
-    priceRange: { min: 1500, max: 5000 },
+    name: "AI-Powered & Enterprise",
+    description: "Geavanceerde AI-workflows en multi-systeem integraties voor maximale efficiëntie.",
+    priceRange: { min: 449, max: 1495 },
     deliveryDays: { min: 14, max: 28 },
     complexity: "high",
     examples: [
-      "AI Chatbot backend (WhatsApp/Telegram)",
-      "Lead scoring met AI",
-      "Multi-platform content publishing",
-      "Realtime data sync pipelines",
-      "Automatische rapportage dashboards",
-      "Faceless content productie",
+      "AI klantenservice agent die 70% vragen automatisch afhandelt",
+      "AI content pipeline: blog → social → newsletter → planning",
+      "Factuur OCR + automatische boekhouding",
+      "Volledig CRM sync ecosysteem (alle tools in één)",
+      "E-commerce order pipeline: bestelling → voorraad → verzending → review",
+      "GDPR/AVG compliance bot voor data-verzoeken",
     ],
   },
 ];
 
 // Automation categories for filtering
 export const automationCategories = [
-  {
-    id: "lead-generation",
-    name: "Lead Generation",
-    icon: "Users",
-    description: "Leads verzamelen en verwerken",
-  },
-  {
-    id: "sales",
-    name: "Sales & CRM",
-    icon: "TrendingUp",
-    description: "Sales processen stroomlijnen",
-  },
-  {
-    id: "marketing",
-    name: "Marketing",
-    icon: "Megaphone",
-    description: "Content en campagnes automatiseren",
-  },
-  {
-    id: "e-commerce",
-    name: "E-commerce",
-    icon: "ShoppingCart",
-    description: "Orders en voorraad beheren",
-  },
-  {
-    id: "finance",
-    name: "Financieel",
-    icon: "CreditCard",
-    description: "Facturen en betalingen",
-  },
-  {
-    id: "customer-service",
-    name: "Klantenservice",
-    icon: "MessageCircle",
-    description: "Support en tickets afhandelen",
-  },
-  {
-    id: "ai-powered",
-    name: "AI-Powered",
-    icon: "Brain",
-    description: "Slimme AI integraties",
-  },
-  {
-    id: "integrations",
-    name: "Integraties",
-    icon: "Link2",
-    description: "Systemen koppelen",
-  },
+  { id: "klantenservice", name: "Klantenservice & Chatbots", icon: "MessageCircle", description: "WhatsApp, Telegram en AI-assistenten" },
+  { id: "leads-crm", name: "Leads & CRM", icon: "Users", description: "Lead capture, scoring en opvolging" },
+  { id: "facturatie", name: "Facturatie & Boekhouding", icon: "CreditCard", description: "E-facturatie, Peppol en OCR" },
+  { id: "content", name: "Content & Social Media", icon: "Megaphone", description: "Automatisch posten en plannen" },
+  { id: "e-commerce", name: "E-commerce & Orders", icon: "ShoppingCart", description: "Orderverwerking en voorraad" },
+  { id: "hr-recruitment", name: "HR & Recruitment", icon: "Users", description: "Sollicitatie-intake en vacatures" },
+  { id: "ai-powered", name: "AI-Powered", icon: "Brain", description: "Slimme AI workflows" },
+  { id: "rapportage", name: "Rapportage & Monitoring", icon: "BarChart", description: "Dashboards en alerts" },
 ];
 
 // Helper functions

@@ -68,7 +68,7 @@ export const MAINTENANCE_PLANS: MaintenancePlan[] = [
   {
     id: "basis",
     name: "Basis Onderhoud",
-    price: 99,
+    price: 129,
     interval: "monthly",
     hoursIncluded: 1,
     features: [
@@ -84,7 +84,7 @@ export const MAINTENANCE_PLANS: MaintenancePlan[] = [
   {
     id: "business",
     name: "Business Onderhoud",
-    price: 199,
+    price: 249,
     interval: "monthly",
     hoursIncluded: 3,
     features: [
@@ -100,7 +100,7 @@ export const MAINTENANCE_PLANS: MaintenancePlan[] = [
   {
     id: "premium",
     name: "Premium Onderhoud",
-    price: 399,
+    price: 495,
     interval: "monthly",
     hoursIncluded: 8,
     features: [
@@ -122,7 +122,7 @@ export const WEBSITE_PACKAGES: Package[] = [
     id: "starter",
     name: "Starter Website",
     description: "Perfect voor ZZP'ers en freelancers",
-    basePrice: 997,
+    basePrice: 1295,
     deliveryTime: "1-2 weken",
     freeSupport: 1,
     features: [
@@ -138,7 +138,7 @@ export const WEBSITE_PACKAGES: Package[] = [
     id: "business",
     name: "Business Website",
     description: "Voor professionele bedrijven",
-    basePrice: 2497,
+    basePrice: 2995,
     deliveryTime: "2-4 weken",
     freeSupport: 3,
     features: [
@@ -154,7 +154,7 @@ export const WEBSITE_PACKAGES: Package[] = [
     id: "webshop",
     name: "Webshop",
     description: "Complete e-commerce oplossing",
-    basePrice: 3997,
+    basePrice: 4995,
     deliveryTime: "4-6 weken",
     freeSupport: 3,
     features: [
@@ -170,7 +170,7 @@ export const WEBSITE_PACKAGES: Package[] = [
     id: "maatwerk",
     name: "Maatwerk",
     description: "Custom web applicaties",
-    basePrice: 7500,
+    basePrice: 9995,
     deliveryTime: "6-12 weken",
     freeSupport: 6,
     features: [
@@ -273,7 +273,7 @@ export function calculateDeposit(totalAmount: number, isLargeProject: boolean = 
   depositAmount: number;
   remainingAmount: number;
 } {
-  // Large projects (>€7500) use 30-40-30 model
+  // Large projects (>€9.995) use 30-40-30 model
   // Regular projects use 50-50 model
   const depositPercentage = isLargeProject ? 30 : 50;
   const depositAmount = Math.round((totalAmount * depositPercentage) / 100 * 100) / 100;

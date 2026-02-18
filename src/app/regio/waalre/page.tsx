@@ -6,7 +6,7 @@ import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 export const metadata: Metadata = {
   title: "Website Laten Maken Waalre | Lokale Webdesigner | RoTech",
   description:
-    "Website laten maken in Waalre? RoTech Development is uw webdesigner uit de buurt. ✓ Persoonlijk contact ✓ Moderne websites ✓ Vanaf €997. Gratis offerte!",
+    "Website laten maken in Waalre? RoTech Development is uw webdesigner uit de buurt. ✓ Persoonlijk contact ✓ Moderne websites ✓ Vanaf €1.295. Gratis offerte!",
   keywords: [
     "website laten maken waalre",
     "webdesign waalre",
@@ -115,9 +115,9 @@ export default function WaalrePage() {
             </p>
             <h3>Onze Diensten voor Waalre</h3>
             <ul>
-              <li><strong>Starter Website</strong> - Vanaf €997 voor ZZP'ers</li>
-              <li><strong>Business Website</strong> - Vanaf €2.497 voor MKB</li>
-              <li><strong>Webshop</strong> - Vanaf €3.997 met iDEAL</li>
+              <li><strong>Starter Website</strong> - Vanaf €1.295 voor ZZP'ers</li>
+              <li><strong>Business Website</strong> - Vanaf €2.995 voor MKB</li>
+              <li><strong>Webshop</strong> - Vanaf €4.995 met iDEAL</li>
             </ul>
             <p>
               <Link href="/offerte">Vraag een gratis offerte aan</Link> of bel direct:{" "}

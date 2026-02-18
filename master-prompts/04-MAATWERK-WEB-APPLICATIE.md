@@ -2,7 +2,7 @@
 
 ## Pakket Informatie
 - **Pakket:** Maatwerk (Custom Web Applicatie)
-- **Prijsrange:** Vanaf €7.500
+- **Prijsrange:** Vanaf €9.995
 - **Doorlooptijd:** In overleg (6-12+ weken typisch)
 - **Complexiteit:** Hoog - Volledig op specificatie
 

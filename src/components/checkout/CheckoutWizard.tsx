@@ -52,7 +52,7 @@ export default function CheckoutWizard() {
   const projectTotal = 2500; // Default estimate - actual amount comes from quote
   const { depositAmount, remainingAmount, depositPercentage } = calculateDeposit(
     projectTotal,
-    projectTotal > 7500
+    projectTotal > 9995
   );
   const monthlyMaintenance = selectedPlan?.price || 0;
 

@@ -135,13 +135,13 @@ Ro-Tech Development uses a transparent, feature-based pricing model. Customers s
 
 ## Payment Terms
 - Standard: 50% deposit, 50% upon delivery
-- Large projects (>€7,500): 30-40-30 model
+- Large projects (>€9.995): 30-40-30 model
 - Payment methods: Bank transfer, iDEAL, Credit card
 
 ## Maintenance Packages
-- Basis: €99/month - Updates, backups, monitoring
-- Business: €199/month - Includes 2 hours of changes
-- Premium: €399/month - Includes 5 hours of changes, SEO, priority support
+- Basis: €129/month - Updates, backups, monitoring
+- Business: €249/month - Includes 2 hours of changes
+- Premium: €495/month - Includes 5 hours of changes, SEO, priority support
 
 ================================================================================
 QUALITY GUARANTEES
@@ -197,7 +197,7 @@ Q: Do I own my website after delivery?
 A: Yes. After full payment, you receive complete ownership of the code and design. We do not charge license fees.
 
 Q: Do you offer maintenance?
-A: Yes. We offer optional maintenance packages starting at €99/month. These include updates, backups, and support.
+A: Yes. We offer optional maintenance packages starting at €129/month. These include updates, backups, and support.
 
 Q: What payment methods do you accept?
 A: We accept bank transfer, iDEAL, and credit cards. Payment is typically 50% upfront and 50% upon delivery.

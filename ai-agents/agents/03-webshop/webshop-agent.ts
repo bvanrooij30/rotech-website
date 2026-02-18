@@ -1,6 +1,6 @@
 /**
  * RoTech AI Agents - Webshop Agent
- * Agent voor e-commerce projecten (€3.997+)
+ * Agent voor e-commerce projecten (€4.995+)
  * 
  * STATUS: Template - Nog te implementeren
  */
@@ -12,7 +12,7 @@ export class WebshopAgent extends BaseAgent {
   readonly agentName = 'Webshop Agent';
   readonly agentType: AgentType = 'webshop';
   readonly version = '0.1.0';
-  readonly description = 'E-commerce projecten beheren (€3.997+)';
+  readonly description = 'E-commerce projecten beheren (€4.995+)';
 
   constructor() {
     super();

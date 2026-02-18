@@ -1,6 +1,6 @@
 /**
  * RoTech AI Agents - Starter Website Agent
- * Agent voor one-page website projecten (€997+)
+ * Agent voor one-page website projecten (€1.295+)
  * 
  * STATUS: Template - Nog te implementeren
  */
@@ -12,7 +12,7 @@ export class StarterWebsiteAgent extends BaseAgent {
   readonly agentName = 'Starter Website Agent';
   readonly agentType: AgentType = 'starter-website';
   readonly version = '0.1.0';
-  readonly description = 'One-page website projecten beheren (€997+)';
+  readonly description = 'One-page website projecten beheren (€1.295+)';
 
   constructor() {
     super();

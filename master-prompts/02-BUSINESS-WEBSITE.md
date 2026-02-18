@@ -2,7 +2,7 @@
 
 ## Pakket Informatie
 - **Pakket:** Business Website (Professionele Bedrijfswebsite)
-- **Prijsrange:** Vanaf €2.497
+- **Prijsrange:** Vanaf €2.995
 - **Doorlooptijd:** 2-4 weken
 - **Pagina's:** 5-10 pagina's
 - **Inclusief:** CMS, Blog, Geavanceerde SEO

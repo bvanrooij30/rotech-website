@@ -4,9 +4,9 @@
 - **Dienst:** Website Onderhoud & Beheer
 - **Type:** Maandelijks/Jaarlijks abonnement
 - **Prijsrange:** 
-  - Basis: €99/maand
-  - Standaard: €199/maand
-  - Premium: €349/maand
+  - Basis: €129/maand
+  - Standaard: €249/maand
+  - Premium: €495/maand
 - **Facturatie:** Maandelijks of jaarlijks (10% korting)
 
 ---
@@ -37,7 +37,7 @@ FACTURATIE: [Maandelijks / Jaarlijks]
 
 ## 📦 PAKKETTEN OVERZICHT
 
-### Basis (€99/maand)
+### Basis (€129/maand)
 ```
 ✅ Hosting monitoring
 ✅ Uptime monitoring (5 min checks)
@@ -51,7 +51,7 @@ FACTURATIE: [Maandelijks / Jaarlijks]
 ❌ Geen performance monitoring
 ```
 
-### Standaard (€199/maand)
+### Standaard (€249/maand)
 ```
 ✅ Alles van Basis, plus:
 ✅ Wekelijkse backups
@@ -63,7 +63,7 @@ FACTURATIE: [Maandelijks / Jaarlijks]
 ✅ Telefoon support (kantooruren)
 ```
 
-### Premium (€349/maand)
+### Premium (€495/maand)
 ```
 ✅ Alles van Standaard, plus:
 ✅ Dagelijkse backups

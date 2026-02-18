@@ -245,12 +245,12 @@ Lead gegevens:
 - Bericht: ${leadData.message || 'Geen bericht'}
 
 Ro-Tech pakketten en prijzen:
-- Starter Website: €997+ (one-page voor ZZP/freelancers)
-- Business Website: €2.497+ (multi-page met CMS)
-- Webshop: €3.997+ (e-commerce met iDEAL)
-- Maatwerk: €7.500+ (custom applicaties)
-- SEO: €750+ eenmalig, €199+/maand onderhoud
-- Onderhoud: €99-399/maand
+- Starter Website: €1.295+ (one-page voor ZZP/freelancers)
+- Business Website: €2.995+ (multi-page met CMS)
+- Webshop: €4.995+ (e-commerce met iDEAL)
+- Maatwerk: €9.995+ (custom applicaties)
+- SEO: €750+ eenmalig, €249+/maand onderhoud
+- Onderhoud: €129-495/maand
 
 Geef een score (0-100), aanbeveling, en volgende stappen.`;
 

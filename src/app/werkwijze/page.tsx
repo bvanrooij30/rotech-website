@@ -149,7 +149,7 @@ const afterCareFeatures = [
   {
     icon: Shield,
     title: "Onderhoudspakketten",
-    description: "Optioneel doorlopend onderhoud vanaf €99/maand voor updates, backups en support.",
+    description: "Optioneel doorlopend onderhoud vanaf €129/maand voor updates, backups en support.",
   },
   {
     icon: Zap,

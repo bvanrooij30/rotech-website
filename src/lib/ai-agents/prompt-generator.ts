@@ -82,7 +82,7 @@ const PROJECT_TEMPLATES: Record<string, {
 }> = {
   starter: {
     name: 'Starter Website',
-    basePrice: 997,
+    basePrice: 1295,
     estimatedHours: { min: 8, max: 16 },
     defaultFeatures: [
       'Responsive design (mobile-first)',
@@ -95,7 +95,7 @@ const PROJECT_TEMPLATES: Record<string, {
   },
   business: {
     name: 'Business Website',
-    basePrice: 2497,
+    basePrice: 2995,
     estimatedHours: { min: 20, max: 40 },
     defaultFeatures: [
       'Responsive design (mobile-first)',
@@ -111,7 +111,7 @@ const PROJECT_TEMPLATES: Record<string, {
   },
   webshop: {
     name: 'Webshop',
-    basePrice: 3997,
+    basePrice: 4995,
     estimatedHours: { min: 40, max: 80 },
     defaultFeatures: [
       'Responsive design (mobile-first)',
@@ -127,7 +127,7 @@ const PROJECT_TEMPLATES: Record<string, {
   },
   maatwerk: {
     name: 'Maatwerk Web Applicatie',
-    basePrice: 7500,
+    basePrice: 9995,
     estimatedHours: { min: 80, max: 200 },
     defaultFeatures: [
       'Custom design',

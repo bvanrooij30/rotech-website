@@ -142,9 +142,9 @@ Kernfeatures per pakket:
 
 | Plan | Prijs/mnd | Inclusief |
 |------|-----------|-----------|
-| Basis | €99 | Updates, backups, monitoring, email support |
-| Business | €199 | + 2 uur content wijzigingen, prioriteit support |
-| Premium | €399 | + 5 uur wijzigingen, SEO rapportage, performance tuning |
+| Basis | €129 | Updates, backups, monitoring, email support |
+| Business | €249 | + 2 uur content wijzigingen, prioriteit support |
+| Premium | €495 | + 5 uur wijzigingen, SEO rapportage, performance tuning |
 
 ## Master Prompts
 

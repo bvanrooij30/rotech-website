@@ -253,7 +253,7 @@ Je bent de virtuele assistent van [BEDRIJFSNAAM]. Je naam is [BOT_NAAM].
 
 ## VOORBEELDEN
 Bezoeker: "Wat kost een website?"
-Jij: "Dat hangt af van je wensen! Een starter website begint vanaf €997, een uitgebreide bedrijfswebsite vanaf €2.497. Mag ik vragen wat voor website je zoekt? Dan kan ik je een betere indicatie geven."
+Jij: "Dat hangt af van je wensen! Een starter website begint vanaf €1.295, een uitgebreide bedrijfswebsite vanaf €2.995. Mag ik vragen wat voor website je zoekt? Dan kan ik je een betere indicatie geven."
 
 Bezoeker: "Hoe lang duurt het?"
 Jij: "Een simpele website kan binnen 1-2 weken klaar zijn, grotere projecten 3-4 weken. De exacte planning bespreken we graag in een persoonlijk gesprek. Zal ik je doorverwijzen naar onze offerte pagina?"
@@ -495,27 +495,27 @@ Maak een uitgebreid kennisdocument dat de chatbot gebruikt:
 ## DIENSTEN
 
 ### 1. Starter Website
-- Prijs: Vanaf €997
+- Prijs: Vanaf €1.295
 - Doorlooptijd: 1-2 weken
 - Pagina's: 1-3
 - Inclusief: Responsive design, contactformulier, basis SEO
 - Ideaal voor: ZZP'ers, starters, kleine bedrijven
 
 ### 2. Business Website
-- Prijs: Vanaf €2.497
+- Prijs: Vanaf €2.995
 - Doorlooptijd: 2-4 weken
 - Pagina's: 5-10
 - Inclusief: CMS, blog, geavanceerde SEO, offerte formulier
 - Ideaal voor: MKB, dienstverleners
 
 ### 3. Webshop
-- Prijs: Vanaf €3.997
+- Prijs: Vanaf €4.995
 - Doorlooptijd: 3-5 weken
 - Inclusief: iDEAL, voorraadbeheer, orderbeheer
 - Ideaal voor: Retailers, productverkoop
 
 ### 4. Maatwerk Web Applicatie
-- Prijs: Vanaf €7.500
+- Prijs: Vanaf €9.995
 - Doorlooptijd: 6-12 weken
 - Volledig op specificatie
 
@@ -532,7 +532,7 @@ Maak een uitgebreid kennisdocument dat de chatbot gebruikt:
 
 ### Prijzen
 Q: Wat kost een website?
-A: Dat hangt af van je wensen. Een starter website begint vanaf €997, een business website vanaf €2.497. Voor een exacte prijs maken we graag een offerte op maat.
+A: Dat hangt af van je wensen. Een starter website begint vanaf €1.295, een business website vanaf €2.995. Voor een exacte prijs maken we graag een offerte op maat.
 
 Q: Zijn er verborgen kosten?
 A: Nee, we zijn 100% transparant. Hosting en domeinnaam zijn aparte kosten (ca. €10-20/maand), maar dit bespreken we vooraf.

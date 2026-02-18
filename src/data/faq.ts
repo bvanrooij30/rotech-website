@@ -54,7 +54,7 @@ export const faqItems: FAQItem[] = [
   {
     id: "9",
     question: "Zijn er maandelijkse kosten na oplevering?",
-    answer: "Hosting en onderhoud zijn optioneel maar aanbevolen. Onze onderhoudspakketten beginnen vanaf €99/maand en omvatten updates, backups, beveiliging en support. Hosting is het eerste jaar vaak gratis inbegrepen.",
+    answer: "Hosting en onderhoud zijn optioneel maar aanbevolen. Onze onderhoudspakketten beginnen vanaf €129/maand en omvatten updates, backups, beveiliging en support. Hosting is het eerste jaar vaak gratis inbegrepen.",
     category: "prijzen",
   },
   {
@@ -112,7 +112,7 @@ export const faqItems: FAQItem[] = [
   {
     id: "18",
     question: "Bieden jullie website onderhoud aan?",
-    answer: "Ja, wij bieden onderhoudspakketten vanaf €99/maand. Dit omvat updates, backups, beveiliging, uptime monitoring en support. Zo blijft uw website altijd veilig en up-to-date.",
+    answer: "Ja, wij bieden onderhoudspakketten vanaf €129/maand. Dit omvat updates, backups, beveiliging, uptime monitoring en support. Zo blijft uw website altijd veilig en up-to-date.",
     category: "proces",
   },
   {

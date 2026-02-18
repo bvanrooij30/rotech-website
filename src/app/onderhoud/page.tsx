@@ -5,8 +5,8 @@ import { MaintenanceCheckout } from "@/components/checkout/MaintenanceCheckout";
 import { Check, Shield, Clock, Headphones, Loader2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Website Onderhoud | Maandelijks abonnement vanaf €99",
-  description: "Professioneel website onderhoud met updates, backups, monitoring en support. Kies uw plan en start direct. Prijzen vanaf €99 per maand.",
+  title: "Website Onderhoud | Maandelijks abonnement vanaf €129",
+  description: "Professioneel website onderhoud met updates, backups, monitoring en support. Kies uw plan en start direct. Prijzen vanaf €129 per maand.",
   keywords: ["website onderhoud", "website beheer", "website support", "maandelijks onderhoud", "website updates"],
   alternates: {
     canonical: "/onderhoud",

@@ -87,14 +87,16 @@ export const serviceTypes: ServiceTypeDefinition[] = [
   },
 ];
 
-// Alle beschikbare features met MARKTCONFORME prijzen
+// Alle beschikbare features - Prijslijst v2.0 (februari 2026)
+// Marktconform gepositioneerd: onderkant markt (goedkoper dan bureaus, marktconform voor freelancer)
+// Referenties: websteen.nl, onlinelabs.nl, apikoppelingen.nl, freelance-seospecialist.nl
 export const allFeatures: SelectableFeature[] = [
   // === DESIGN & DEVELOPMENT ===
   {
     id: "pages",
     name: "Pagina's",
     description: "Aantal pagina's voor uw website",
-    price: 225, // Was 175, marktwaarde €200-400
+    price: 295, // Markt: €200-500, positie: onder midden
     category: "design",
     unit: "pagina",
     minQuantity: 1,
@@ -105,7 +107,7 @@ export const allFeatures: SelectableFeature[] = [
     id: "responsive-design",
     name: "Responsive Design",
     description: "Perfect weergave op mobiel, tablet en desktop",
-    price: 0, // Altijd inbegrepen - onderscheidend
+    price: 0,
     category: "design",
     isIncluded: true,
     isRequired: true,
@@ -114,28 +116,28 @@ export const allFeatures: SelectableFeature[] = [
     id: "custom-design",
     name: "Maatwerk Design",
     description: "Uniek ontwerp afgestemd op uw huisstijl",
-    price: 595, // Was 395, marktwaarde €500-1.500
+    price: 895, // Markt: €800-2.000, positie: onderkant
     category: "design",
   },
   {
     id: "premium-design",
     name: "Premium Design",
     description: "Exclusief premium design met geavanceerde visuele elementen",
-    price: 995, // Was 695, marktwaarde €1.000-3.000
+    price: 1495, // Markt: €1.000-3.000, positie: onder midden
     category: "design",
   },
   {
     id: "animations",
     name: "Geavanceerde Animaties",
     description: "Subtiele animaties en micro-interacties",
-    price: 495, // Was 395, marktwaarde €500-1.500
+    price: 695, // Markt: €500-1.500, positie: onder midden
     category: "design",
   },
   {
     id: "ssl-certificate",
     name: "SSL Certificaat (HTTPS)",
     description: "Veilige verbinding voor uw bezoekers",
-    price: 0, // Altijd inbegrepen
+    price: 0,
     category: "development",
     isIncluded: true,
     isRequired: true,
@@ -144,35 +146,35 @@ export const allFeatures: SelectableFeature[] = [
     id: "speed-optimization",
     name: "Snelheidsoptimalisatie",
     description: "Laadtijd onder 2 seconden gegarandeerd",
-    price: 245, // Was 145, marktwaarde €200-500
+    price: 395, // Markt: €300-800, positie: onder midden
     category: "development",
   },
   {
     id: "cms",
     name: "CMS (Content Management)",
     description: "Zelf teksten en afbeeldingen aanpassen",
-    price: 695, // Was 395, marktwaarde €500-2.000
+    price: 895, // Markt: €500-2.000, positie: onder midden
     category: "development",
   },
   {
     id: "blog-module",
     name: "Blog/Nieuws Module",
     description: "Publiceer artikelen en nieuws op uw website",
-    price: 395, // Was 295, marktwaarde €400-1.000
+    price: 595, // Markt: €500-1.200, positie: onderkant
     category: "content",
   },
   {
     id: "contact-form",
     name: "Contactformulier",
     description: "Contactformulier met e-mail notificatie",
-    price: 145, // Was 95, marktwaarde €100-300
+    price: 195, // Markt: €100-300, positie: midden
     category: "development",
   },
   {
     id: "custom-forms",
     name: "Complexe Formulieren",
     description: "Uitgebreide formulieren met validatie",
-    price: 295, // Was 195, marktwaarde €200-500
+    price: 445, // Markt: €300-800, positie: onder midden
     category: "development",
     unit: "formulier",
     minQuantity: 1,
@@ -185,21 +187,21 @@ export const allFeatures: SelectableFeature[] = [
     id: "basic-seo",
     name: "Basis SEO",
     description: "Meta tags, sitemap, robots.txt, basis optimalisatie",
-    price: 345, // Was 195, marktwaarde €300-600
+    price: 495, // Markt: €500-1.000, positie: onderkant
     category: "seo",
   },
   {
     id: "advanced-seo",
     name: "Geavanceerde SEO",
-    description: "Lokale SEO, schema markup, keyword optimalisatie",
-    price: 745, // Was 495, marktwaarde €800-2.000
+    description: "Schema.org markup, AI-vindbaarheid, E-E-A-T, lokale SEO",
+    price: 1295, // Markt: €1.000-3.000, positie: onder midden
     category: "seo",
   },
   {
     id: "google-analytics",
     name: "Google Analytics & Search Console",
     description: "Volg uw bezoekers en zoekprestaties",
-    price: 145, // Was 95, marktwaarde €100-200
+    price: 195, // Markt: €150-400, positie: onder midden
     category: "seo",
   },
   
@@ -208,35 +210,35 @@ export const allFeatures: SelectableFeature[] = [
     id: "seo-audit",
     name: "SEO Audit & Analyse",
     description: "Complete analyse van uw huidige SEO status met rapport",
-    price: 495, // Marktwaarde €400-800
+    price: 695, // Markt: €500-1.200 (bron: heyrene.nl audit €792)
     category: "seo",
   },
   {
     id: "seo-technical",
     name: "Technische SEO Optimalisatie",
     description: "Snelheid, indexering, structured data, core web vitals",
-    price: 695, // Marktwaarde €500-1.200
+    price: 995, // Markt: €800-2.000
     category: "seo",
   },
   {
     id: "seo-content",
     name: "Content SEO Optimalisatie",
     description: "Keyword research, content optimalisatie, meta tags",
-    price: 595, // Marktwaarde €400-1.000
+    price: 795, // Markt: €600-1.500
     category: "seo",
   },
   {
     id: "seo-local",
     name: "Lokale SEO Setup",
     description: "Google Mijn Bedrijf, lokale schema markup, citaties",
-    price: 445, // Marktwaarde €300-700
+    price: 595, // Markt: €500-1.000
     category: "seo",
   },
   {
     id: "seo-monthly",
     name: "Maandelijkse SEO Ondersteuning",
     description: "Doorlopende optimalisatie, rapportages, advies",
-    price: 395, // Per maand, marktwaarde €300-600/maand
+    price: 495, // Per maand, markt: €472-872/mnd (bron: heyrene.nl)
     category: "seo",
     unit: "maand",
     minQuantity: 3,
@@ -247,65 +249,65 @@ export const allFeatures: SelectableFeature[] = [
   // === E-COMMERCE ===
   {
     id: "webshop-basic",
-    name: "Webshop Basis",
+    name: "Webshop / Bestelsysteem",
     description: "E-commerce functionaliteit tot 25 producten",
-    price: 1495, // Was 895, marktwaarde €1.500-3.000
+    price: 2495, // Markt: €2.000-5.000 (bron: websteen.nl webshop vanaf €15.920)
     category: "ecommerce",
   },
   {
     id: "webshop-extended",
     name: "Webshop Uitgebreid",
     description: "Uitbreiding tot 100 producten",
-    price: 795, // Was 595, marktwaarde €500-1.000
+    price: 1195, // Markt: €800-1.500
     category: "ecommerce",
   },
   {
     id: "webshop-unlimited",
     name: "Webshop Onbeperkt",
     description: "Onbeperkt aantal producten",
-    price: 1295, // Was 995, marktwaarde €1.000-2.000
+    price: 1995, // Markt: €1.500-3.000
     category: "ecommerce",
   },
   {
     id: "payment-ideal",
     name: "iDEAL & Bancontact",
     description: "Betalen via iDEAL en Bancontact",
-    price: 245, // Was 195, marktwaarde €200-500
+    price: 345, // Markt: €250-500
     category: "ecommerce",
   },
   {
     id: "payment-creditcard",
     name: "Creditcard Betaling",
     description: "Visa, Mastercard, American Express",
-    price: 195, // Was 125, marktwaarde €150-300
+    price: 295, // Markt: €200-400
     category: "ecommerce",
   },
   {
     id: "payment-paypal",
     name: "PayPal Integratie",
     description: "Betalen via PayPal",
-    price: 145, // Was 95, marktwaarde €100-200
+    price: 195, // Markt: €150-300
     category: "ecommerce",
   },
   {
     id: "inventory-management",
     name: "Voorraad- & Orderbeheer",
     description: "Beheer voorraad en bestellingen",
-    price: 595, // Was 345, marktwaarde €500-1.500
+    price: 1295, // Markt: €1.000-3.000
     category: "ecommerce",
   },
   {
     id: "order-emails",
     name: "Automatische Bestelbevestigingen",
     description: "E-mails bij bestelling, verzending, etc.",
-    price: 245, // Was 175, marktwaarde €200-400
+    price: 395, // Markt: €300-800
     category: "ecommerce",
   },
   {
     id: "product-filters",
     name: "Productfilters & Zoekfunctie",
     description: "Filter op categorie, prijs, kenmerken",
-    price: 395, // Was 245, marktwaarde €300-800
+    price: 595, // Markt: €400-1.000
     category: "ecommerce",
   },
   
@@ -314,35 +316,35 @@ export const allFeatures: SelectableFeature[] = [
     id: "social-media",
     name: "Social Media Integratie",
     description: "Links en feeds van social media",
-    price: 175, // Was 125, marktwaarde €100-300
+    price: 245, // Markt: €150-400
     category: "integration",
   },
   {
     id: "newsletter",
     name: "Nieuwsbrief Integratie",
     description: "Mailchimp, ActiveCampaign, etc.",
-    price: 295, // Was 195, marktwaarde €200-500
+    price: 395, // Markt: €300-600
     category: "integration",
   },
   {
     id: "accounting",
     name: "Boekhouding Koppeling",
     description: "Koppeling met Exact, Moneybird, e-Boekhouden",
-    price: 795, // Was 495, marktwaarde €800-2.000
+    price: 1495, // Markt: €2.400-3.000 (bron: apikoppelingen.nl), positie: ruim onder
     category: "integration",
   },
   {
     id: "crm",
     name: "CRM Integratie",
     description: "Koppeling met HubSpot, Salesforce, Pipedrive",
-    price: 995, // Was 595, marktwaarde €1.000-3.000
+    price: 1495, // Markt: €2.400-3.000, positie: ruim onder
     category: "integration",
   },
   {
     id: "api-integration",
     name: "API Integratie",
     description: "Koppeling met externe systemen",
-    price: 695, // Was 495, marktwaarde €500-2.000
+    price: 1495, // Markt: €2.400-3.000 per koppeling (bron: apikoppelingen.nl)
     category: "integration",
     unit: "koppeling",
     minQuantity: 1,
@@ -353,44 +355,44 @@ export const allFeatures: SelectableFeature[] = [
     id: "booking-system",
     name: "Boekingssysteem",
     description: "Online afspraken maken en beheren",
-    price: 1195, // Was 695, marktwaarde €1.000-3.000
+    price: 1795, // Markt: €1.500-3.000
     category: "integration",
   },
   
-  // === AUTOMATISERING (nieuwe categorie) ===
+  // === AUTOMATISERING ===
   {
     id: "automation-consultation",
     name: "Automatisering Consultatie",
     description: "Analyse van uw processen en automatiseringsmogelijkheden",
-    price: 295, // 2-3 uur, marktwaarde €200-400
+    price: 395, // Markt: €300-600
     category: "automation",
   },
   {
     id: "automation-simple",
     name: "Eenvoudige Workflow",
     description: "Automatisering van één proces (bijv. lead naar CRM)",
-    price: 495, // Marktwaarde €400-800
+    price: 695, // Markt: €500-1.000
     category: "automation",
   },
   {
     id: "automation-medium",
     name: "Medium Workflow",
     description: "Complexere automatisering met meerdere stappen en condities",
-    price: 995, // Marktwaarde €800-1.500
+    price: 1495, // Markt: €1.000-2.500
     category: "automation",
   },
   {
     id: "automation-complex",
     name: "Complexe Workflow",
     description: "Geavanceerde automatisering met AI, meerdere systemen",
-    price: 1995, // Marktwaarde €1.500-3.000
+    price: 2995, // Markt: €2.000-5.000
     category: "automation",
   },
   {
     id: "automation-n8n-hosting",
     name: "n8n Hosting & Beheer",
     description: "Zelf-gehoste n8n instantie met onderhoud",
-    price: 149, // Per maand
+    price: 179, // Per maand, markt: n8n Pro €50-60 + server + beheer
     category: "automation",
     unit: "maand",
     minQuantity: 1,
@@ -401,7 +403,7 @@ export const allFeatures: SelectableFeature[] = [
     id: "automation-training",
     name: "Automatisering Training",
     description: "Leer zelf workflows bouwen in n8n of Make",
-    price: 595, // 4 uur training
+    price: 795, // 4-6 uur training à €90/uur + voorbereiding
     category: "automation",
   },
   
@@ -410,7 +412,7 @@ export const allFeatures: SelectableFeature[] = [
     id: "multilingual",
     name: "Meertaligheid",
     description: "Extra taal voor uw website",
-    price: 495, // Was 345, marktwaarde €500-1.000
+    price: 695, // Markt: €500-1.500 per taal
     category: "advanced",
     unit: "taal",
     minQuantity: 1,
@@ -421,28 +423,28 @@ export const allFeatures: SelectableFeature[] = [
     id: "user-portal",
     name: "Klantportaal met Login",
     description: "Beveiligde omgeving voor klanten",
-    price: 1795, // Was 995, marktwaarde €2.000-5.000
+    price: 2995, // Markt: €3.000-8.000, positie: onderkant
     category: "advanced",
   },
   {
     id: "user-roles",
     name: "Gebruikersbeheer met Rollen",
     description: "Verschillende toegangsniveaus",
-    price: 1295, // Was 795, marktwaarde €1.500-4.000
+    price: 1995, // Markt: €2.000-5.000, positie: onderkant
     category: "advanced",
   },
   {
     id: "database-custom",
     name: "Database Architectuur op Maat",
     description: "Custom database structuur",
-    price: 1995, // Was 995, marktwaarde €2.000-8.000
+    price: 2995, // Markt: €3.000-8.000, positie: onderkant
     category: "advanced",
   },
   {
     id: "documentation",
     name: "Uitgebreide Documentatie",
     description: "Technische documentatie en handleidingen",
-    price: 545, // Was 445, marktwaarde €500-1.000
+    price: 595, // Markt: €500-1.500, positie: onderkant
     category: "advanced",
   },
   
@@ -457,23 +459,23 @@ export const allFeatures: SelectableFeature[] = [
   },
   {
     id: "support-3months",
-    name: "3 Maanden Gratis Support",
+    name: "3 Maanden Support",
     description: "Uitgebreide ondersteuning na oplevering",
-    price: 395, // Was 295, marktwaarde €300-600
+    price: 495, // Markt: €400-800
     category: "support",
   },
   {
     id: "support-6months",
-    name: "6 Maanden Gratis Support",
+    name: "6 Maanden Support",
     description: "Premium ondersteuning na oplevering",
-    price: 695, // Was 545, marktwaarde €600-1.200
+    price: 895, // Markt: €700-1.500
     category: "support",
   },
   {
     id: "project-manager",
     name: "Persoonlijke Projectmanager",
     description: "Dedicated contactpersoon voor uw project",
-    price: 695, // Was 495, marktwaarde €500-1.500
+    price: 895, // Markt: €700-1.500
     category: "support",
   },
 ];
@@ -642,11 +644,12 @@ export function calculateCancellationFee(
 // MAINTENANCE PLANS
 // ============================================
 
+// Onderhoudspakketten v2.0 - Markt: websteen.nl €69-380/mnd, B2B platforms €450-2.500/mnd
 export const maintenancePlans: MaintenancePlan[] = [
   {
     id: "basis",
     name: "Basis",
-    price: 99,
+    price: 129,
     interval: "monthly",
     features: [
       "Maandelijkse updates",
@@ -659,7 +662,7 @@ export const maintenancePlans: MaintenancePlan[] = [
   {
     id: "business",
     name: "Business",
-    price: 199,
+    price: 249,
     interval: "monthly",
     features: [
       "Alles van Basis",
@@ -672,7 +675,7 @@ export const maintenancePlans: MaintenancePlan[] = [
   {
     id: "premium",
     name: "Premium",
-    price: 399,
+    price: 495,
     interval: "monthly",
     features: [
       "Alles van Business",

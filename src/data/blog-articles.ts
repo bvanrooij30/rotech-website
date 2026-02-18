@@ -33,7 +33,7 @@ Een van de meest gestelde vragen die wij krijgen is: "Wat kost een website laten
 - Basis SEO
 - CMS voor zelf aanpassen
 
-**Uitgebreide zakelijke website (10-20 pagina's):** €3.500 - €7.500
+**Uitgebreide zakelijke website (10-20 pagina's):** €4.500 - €9.995
 - Alles van eenvoudige website
 - Blog sectie
 - Geavanceerde SEO

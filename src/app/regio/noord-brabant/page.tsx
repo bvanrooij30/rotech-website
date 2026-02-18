@@ -16,7 +16,7 @@ import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 export const metadata: Metadata = {
   title: "Website Laten Maken Noord-Brabant | Webdesign Brabant | RoTech",
   description:
-    "Website laten maken in Noord-Brabant? RoTech Development is uw Brabantse webdesigner. ✓ Websites vanaf €997 ✓ Persoonlijke service ✓ Lokale expertise. Vraag offerte aan!",
+    "Website laten maken in Noord-Brabant? RoTech Development is uw Brabantse webdesigner. ✓ Websites vanaf €1.295 ✓ Persoonlijke service ✓ Lokale expertise. Vraag offerte aan!",
   keywords: [
     "website laten maken noord-brabant",
     "webdesign brabant",
@@ -288,17 +288,17 @@ export default function NoordBrabantPage() {
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="bg-white rounded-2xl p-6 shadow-lg text-center">
               <h3 className="text-xl font-bold text-slate-900 mb-2">Starter</h3>
-              <p className="text-3xl font-bold text-indigo-600 mb-2">Vanaf €997</p>
+              <p className="text-3xl font-bold text-indigo-600 mb-2">Vanaf €1.295</p>
               <p className="text-slate-600">One-page website voor ZZP'ers</p>
             </div>
             <div className="bg-white rounded-2xl p-6 shadow-lg text-center border-2 border-indigo-600">
               <h3 className="text-xl font-bold text-slate-900 mb-2">Business</h3>
-              <p className="text-3xl font-bold text-indigo-600 mb-2">Vanaf €2.497</p>
+              <p className="text-3xl font-bold text-indigo-600 mb-2">Vanaf €2.995</p>
               <p className="text-slate-600">Complete bedrijfswebsite</p>
             </div>
             <div className="bg-white rounded-2xl p-6 shadow-lg text-center">
               <h3 className="text-xl font-bold text-slate-900 mb-2">Webshop</h3>
-              <p className="text-3xl font-bold text-indigo-600 mb-2">Vanaf €3.997</p>
+              <p className="text-3xl font-bold text-indigo-600 mb-2">Vanaf €4.995</p>
               <p className="text-slate-600">Online verkopen met iDEAL</p>
             </div>
           </div>

@@ -26,7 +26,7 @@ import { oneTimeServices, automationCategories } from "@/data/automation-subscri
 export const metadata: Metadata = {
   title: "Automation Services | Bedrijfsprocessen Automatiseren | RoTech",
   description:
-    "Automatiseer uw bedrijfsprocessen en bespaar uren per week. Van simpele workflows tot complexe AI-integraties. Gratis automation scan. Prijzen vanaf €99/maand.",
+    "Automatiseer uw bedrijfsprocessen en bespaar uren per week. Van simpele workflows tot complexe AI-integraties. Gratis automation scan. Prijzen vanaf €129/maand.",
   keywords: [
     "automation",
     "automatisering",
@@ -134,14 +134,15 @@ export default function AutomationPage() {
               Automation Services
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-              Automatiseer uw bedrijfsprocessen
+              Uw bedrijfsprocessen op automatisch
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-violet-300">
-                Bespaar uren per week
+                Van handwerk naar workflows
               </span>
             </h1>
             <p className="text-xl text-indigo-100 mb-8 max-w-2xl">
-              Stop met repetitieve taken. Laat slimme workflows uw handmatige
-              processen overnemen - 24/7, foutloos, en zonder vakantiedagen.
+              Facturen die zichzelf versturen. Klanten die automatisch antwoord krijgen.
+              Leads die direct in uw CRM belanden. Wij bouwen de workflows die uw
+              dagelijkse taken overnemen — van kleine quick wins tot complete bedrijfsautomatisering.
             </p>
 
             {/* Stats */}
@@ -182,12 +183,14 @@ export default function AutomationPage() {
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Wat is Workflow Automation?
+              Wat doen wij precies?
             </h2>
             <p className="text-lg text-slate-600">
-              Workflow automation verbindt uw software systemen en laat taken
-              automatisch uitvoeren. U bespaart tijd, voorkomt fouten, en kunt
-              focussen op wat écht belangrijk is.
+              Wij koppelen uw bestaande systemen aan elkaar en bouwen workflows die 
+              handmatige taken automatisch uitvoeren. Denk aan: een klant vult een 
+              formulier in en binnen 10 seconden staat de lead in uw CRM, krijgt uw 
+              team een melding, en ontvangt de klant een bevestiging. Zonder dat u 
+              er iets voor hoeft te doen.
             </p>
           </div>
 
@@ -272,11 +275,11 @@ export default function AutomationPage() {
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Eenmalige Automation Diensten
+              Kies uw niveau
             </h2>
             <p className="text-lg text-slate-600">
-              Geen subscription nodig? Wij bouwen ook losse workflows op
-              projectbasis.
+              Van een simpele email-responder tot een volledig geautomatiseerd bedrijf. 
+              Wij hebben voor elke fase een passende oplossing.
             </p>
           </div>
 
@@ -368,62 +371,85 @@ export default function AutomationPage() {
         </div>
       </section>
 
-      {/* Use Cases */}
+      {/* Use Cases - Herkenbare voorbeelden */}
       <section className="section-padding bg-gradient-to-b from-slate-50 to-white">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Automation Use Cases
+              Herkenbaar? Dit automatiseren wij
             </h2>
             <p className="text-lg text-slate-600">
-              Ontdek hoe bedrijven zoals het uwe automation inzetten.
+              Concrete voorbeelden van workflows die wij dagelijks bouwen voor 
+              ondernemers in Nederland en België.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               {
-                icon: Users,
-                title: "Lead Processing",
-                description:
-                  "Automatisch leads verzamelen, scoren, en opvolgen. Van formulier tot CRM tot gepersonaliseerde email sequences.",
+                icon: MessageSquare,
+                title: "Klantenservice & Chatbots",
+                problem: "Klanten verwachten direct antwoord, maar u kunt niet 24/7 bereikbaar zijn.",
                 examples: [
-                  "Website leads → HubSpot/Pipedrive",
-                  "LinkedIn leads → automatische outreach",
-                  "Lead scoring met AI",
+                  "WhatsApp Business Bot die veelgestelde vragen beantwoordt",
+                  "Automatische email-responder buiten kantooruren",
+                  "AI klantenservice agent die 70% van vragen afhandelt",
+                  "Multi-channel inbox: email + WhatsApp + chat → 1 overzicht",
                 ],
               },
               {
-                icon: ShoppingCart,
-                title: "E-commerce Orders",
-                description:
-                  "Complete orderverwerking automatiseren: van betaling tot verzending tot boekhouding.",
+                icon: Users,
+                title: "Leads & Sales",
+                problem: "Leads komen binnen via uw website, maar worden niet snel genoeg opgepakt.",
                 examples: [
-                  "Shopify/WooCommerce → Mollie → Factuur",
-                  "Voorraad synchronisatie",
-                  "Automatische track & trace emails",
+                  "Nieuwe lead → direct in CRM + notificatie in Slack/Teams",
+                  "Automatische opvolg-emails na contact",
+                  "AI lead scoring: prioriteer de beste kansen",
+                  "Offerte-generator: formulier invullen → PDF → email",
                 ],
               },
               {
                 icon: FileText,
-                title: "Content Automation",
-                description:
-                  "Content creatie en distributie stroomlijnen. Blog posts automatisch delen op alle kanalen.",
+                title: "Facturatie & Boekhouding",
+                problem: "Facturen blijven liggen, handmatig invoeren kost uren per week.",
                 examples: [
-                  "Blog → LinkedIn, X, Facebook posts",
-                  "Video upload → transcriptie → samenvatting",
-                  "Newsletter automation",
+                  "E-facturatie via Peppol (verplicht in België per 2026)",
+                  "Automatische factuurherinneringen bij onbetaalde rekeningen",
+                  "Factuur OCR: inkomende facturen → automatisch in boekhouding",
+                  "Financieel rapportage dashboard vanuit al uw bronnen",
                 ],
               },
               {
                 icon: Bot,
-                title: "AI Chatbots",
-                description:
-                  "Slimme chatbots die klantvragen beantwoorden en doorverwijzen wanneer nodig.",
+                title: "Content & Marketing",
+                problem: "Geen tijd om consistent te posten op social media en blog bij te houden.",
                 examples: [
-                  "WhatsApp/Telegram bots",
-                  "Website chat met AI",
-                  "Support ticket automatisering",
+                  "Social media auto-posting op al uw kanalen",
+                  "Blog → automatisch LinkedIn, Facebook en Instagram posts",
+                  "Google Reviews verzamelaar voor betere lokale vindbaarheid",
+                  "Competitor monitoring: dagelijks concurrenten scannen",
+                ],
+              },
+              {
+                icon: ShoppingCart,
+                title: "E-commerce & Orders",
+                problem: "Orderverwerking kost te veel tijd en er sluipen fouten in.",
+                examples: [
+                  "Bestelling → voorraadcheck → verzending → track & trace",
+                  "Automatische review-verzoeken na levering",
+                  "Klant-churn preventie: win-back bij inactieve klanten",
+                  "Volledige CRM sync tussen al uw tools",
+                ],
+              },
+              {
+                icon: Cog,
+                title: "HR & Interne Processen",
+                problem: "Personeelstekort maakt werving en onboarding een uitdaging.",
+                examples: [
+                  "Klant-onboarding: welkomstmail → documenten → toegang → checklist",
+                  "CV screening met AI: score → uitnodiging of afwijzing",
+                  "Vacature → automatisch op Indeed, LinkedIn en uw website",
+                  "Dagelijkse/wekelijkse rapportages uit meerdere bronnen",
                 ],
               },
             ].map((useCase) => (
@@ -431,15 +457,15 @@ export default function AutomationPage() {
                 key={useCase.title}
                 className="bg-white rounded-2xl p-8 border border-slate-200"
               >
-                <div className="flex items-start gap-4 mb-6">
+                <div className="flex items-start gap-4 mb-4">
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shrink-0">
                     <useCase.icon className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-2">
+                    <h3 className="text-xl font-bold text-slate-900 mb-1">
                       {useCase.title}
                     </h3>
-                    <p className="text-slate-600">{useCase.description}</p>
+                    <p className="text-sm text-slate-500 italic">{useCase.problem}</p>
                   </div>
                 </div>
                 <ul className="space-y-2">
@@ -482,7 +508,7 @@ export default function AutomationPage() {
       <section className="section-padding bg-gradient-to-br from-indigo-900 via-violet-900 to-purple-900 text-white">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Hoe Het Werkt</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Hoe het werkt</h2>
             <p className="text-lg text-indigo-200">
               Van eerste gesprek tot werkende automation in 5 stappen.
             </p>
