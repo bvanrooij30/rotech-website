@@ -100,7 +100,7 @@ Verkoop online met een professionele webshop — compleet met iDEAL betaling,
 voorraadbeheer en automatische orderverwerking. Wij bouwen webshops die
 niet alleen mooi zijn, maar ook converteren.
 
-Vanaf €4.995 | Binnen 4-6 weken live
+Vanaf €4.995 | Binnen 3-5 weken live
 ```
 
 ### Case Study Opening

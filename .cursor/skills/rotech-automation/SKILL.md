@@ -17,22 +17,24 @@ description: Enterprise automation engineering standaard voor n8n workflows, API
 
 ## Diensten Aanbod
 
-### Eenmalige Automations
+### Eenmalige Automations (v2.0 - februari 2026)
 
 | Tier | Prijs | Levertijd | Voorbeelden |
 |------|-------|-----------|-------------|
-| Quick Win | €150-€500 | 1-3 dagen | Lead capture, email notificaties, formulier automaties |
-| Business | €500-€1.500 | 5-14 dagen | Order processing, content distributie, onboarding flows |
-| Geavanceerd | €1.500-€5.000 | 14-28 dagen | AI chatbot backends, lead scoring, multi-platform sync |
+| Quick Win | €49-€149 | 1-3 dagen | Email responder, social posting, review alerts |
+| Core Business | €149-€449 | 5-14 dagen | WhatsApp bot, lead→CRM, offerte generator |
+| AI-Powered | €449-€1.495 | 14-28 dagen | AI klantenservice, content pipeline, CRM sync |
 
-### Abonnementen
+### Abonnementen (v2.0 - februari 2026)
 
 | Plan | Prijs/mnd | Workflows | Executions | Support |
 |------|-----------|-----------|------------|---------|
-| Starter | €129 | 3 | 5.000 | Email |
-| Business | €249 | 10 | 25.000 | Prioriteit |
-| Professional | €499 | Onbeperkt | 100.000 | Dedicated |
-| Enterprise | Op maat | Onbeperkt | Onbeperkt | Full-service |
+| Starter | €129 | 3 | 5.000 | Email (48u) |
+| Business | €349 | 10 | 25.000 | Prioriteit (24u) |
+| Professional | €649 | Onbeperkt | 100.000 | Dedicated (4u) |
+| Enterprise | Vanaf €1.299 | Onbeperkt | Onbeperkt | Full-service |
+
+> Prijzen halfjaarlijks gereviewed. Zie `rotech-pricing` skill voor volledig overzicht en update-protocol.
 
 ## Workflow Design Principes
 

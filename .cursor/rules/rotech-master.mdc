@@ -145,7 +145,7 @@ alwaysApply: true
 - **Telefoon:** +31 6 57 23 55 74
 - **Adres:** Kruisstraat 64, 5502 JG Veldhoven
 
-### Diensten & Prijzen
+### Diensten & Prijzen (v2.0 - februari 2026)
 
 | Pakket | Prijs vanaf | Doelgroep |
 |--------|-------------|-----------|
@@ -154,13 +154,18 @@ alwaysApply: true
 | Webshop | €4.995 | Retailers |
 | Maatwerk | €9.995+ | Complexe processen |
 
+**Uurtarief:** €90 excl. BTW | **Minimum:** 30 min (€45)
+
 ### Onderhoudspakketten
 
 | Pakket | Prijs/maand | Uren |
 |--------|-------------|------|
-| Basis | €129 | 1 uur |
-| Business | €249 | 3 uur |
-| Premium | €495 | 8 uur |
+| Basis | €129 | 0 uur |
+| Business | €249 | 2 uur |
+| Premium | €495 | 5 uur |
+
+> Volledig prijzensysteem met marktpositionering: zie `rotech-pricing` skill.
+> Prijzen worden halfjaarlijks gereviewed (feb + aug) op basis van actuele marktwaarde.
 
 ---
 
